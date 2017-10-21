@@ -67,6 +67,8 @@ Global
 		Source\Format\Format.projitems*{7d8a8d70-8e7a-4580-8839-3545745c3d97}*SharedItemsImports = 4
 		Source\Model\Model.projitems*{7d8a8d70-8e7a-4580-8839-3545745c3d97}*SharedItemsImports = 4
 		Source\SystemIo\SystemIo.projitems*{7d8a8d70-8e7a-4580-8839-3545745c3d97}*SharedItemsImports = 4
+		Source\Crypto\Crypto.projitems*{8417d9cd-0d71-4d83-be9a-68d2577a3b2f}*SharedItemsImports = 4
+		Source\Format\Format.projitems*{8417d9cd-0d71-4d83-be9a-68d2577a3b2f}*SharedItemsImports = 4
 		Source\Model\Model.projitems*{d9ce09ba-a0b7-4d92-ad0b-207c8b7bcb29}*SharedItemsImports = 13
 		Source\SystemIo\SystemIo.projitems*{e1fef0b7-1f2c-4aae-a280-b2f4f299e302}*SharedItemsImports = 13
 		Source\DiagsModel\DiagsModel.projitems*{e31d2b5e-7c26-4616-b752-40a9ee5ec14c}*SharedItemsImports = 13
