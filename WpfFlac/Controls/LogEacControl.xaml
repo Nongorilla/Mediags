@@ -1,0 +1,268 @@
+﻿<UserControl x:Class="AppController.LogEacControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:app="clr-namespace:AppController"
+             xmlns:issue="clr-namespace:NongIssue"
+             mc:Ignorable="d"
+             Name="log" DataContext="{Binding Path=Rip.Log}"
+             d:DesignHeight="300" d:DesignWidth="350">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ThemeDark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource darkTextBlock}"/>
+            <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="9"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="9"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Text="Rip album:"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="7" Text="{Binding Path=RipArtistAlbum, Mode=OneWay}"/>
+        <TextBlock Grid.Row="1" Text="Rip date:"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="7" Text="{Binding Path=RipDate, Mode=OneWay}"/>
+        <TextBlock Grid.Row="2" Text="Drive:"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7" Text="{Binding Path=Drive, Mode=OneWay}"/>
+        <TextBlock Grid.Row="3" Text="Interface:"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="7" Text="{Binding Path=Interface, Mode=OneWay}"/>
+        <TextBlock Grid.Row="4" Text="Read mode:"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="7" Text="{Binding Path=ReadModeLong, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DsIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding DsIssue.Level}" Value="{x:Static issue:Severity.Error}">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <TextBlock Grid.Row="5" Text="Gap:"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="7" Text="{Binding Path=GapHandling, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding GpIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding GpIssue.Level}" Value="{x:Static issue:Severity.Error}">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        
+        <TextBlock Grid.Row="6" Text="Drive offset:"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=ReadOffset, Mode=OneWay}"/>
+        <TextBlock Grid.Row="7" Text="Overread:"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Overread, Mode=OneWay}"/>
+        <TextBlock Grid.Row="8" Text="Fill missing samples:"/>
+        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=FillWithSilence, Mode=OneWay}"/>
+        <TextBlock Grid.Row="9" Text="Delete edge silence:"/>
+        <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=TrimSilence, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding TsIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding TsIssue.Level}" Value="{x:Static issue:Severity.Error}">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        
+        <TextBlock Grid.Row="6" Grid.Column="3" Text="Use nulls in CRCs:"/>
+        <TextBox Grid.Row="6" Grid.Column="4" Text="{Binding Path=CalcWithNulls, Mode=OneWay}"/>
+        <TextBlock Grid.Row="7" Grid.Column="3" Text="Quality:"/>
+        <TextBox Grid.Row="7" Grid.Column="4" Text="{Binding Path=Quality, Mode=OneWay}"/>
+        <TextBlock Grid.Row="8" Grid.Column="3" Text="Normalization:"/>
+        <TextBox Grid.Row="8" Grid.Column="4" Text="{Binding Path=NormalizeTo, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding NzIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding NzIssue.Level}" Value="{x:Static issue:Severity.Error}">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <TextBlock Grid.Row="9" Grid.Column="3" Text="Track count:"/>
+        <TextBox Name="tkCount" Grid.Row="9" Grid.Column="4" Text="{Binding Path=GuiTracks.Items.Count, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding TkIssue.Success}" Value="true">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding TkIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding TkIssue.Level}" Value="{x:Static issue:Severity.Error}">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+        <TextBlock Grid.Row="6" Grid.Column="6" Text="EAC version:"/>
+        <TextBox Grid.Row="6" Grid.Column="7" Text="{Binding Path=EacVersionLong, Mode=OneWay}"/>
+        <TextBlock Grid.Row="7" Grid.Column="6" Text="EAC self-hash:"/>
+        <TextBox Grid.Row="7" Grid.Column="7" Text="{Binding Path=SelfHashLong, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShIssue.Success}" Value="true">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ShIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ShIssue.Level}" Value="{x:Static issue:Severity.Error}">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <TextBlock Grid.Row="8" Grid.Column="6" Text="AccurateRip:"/>
+        <TextBox Grid.Row="8" Grid.Column="7" Text="{Binding Path=AccurateRipLong, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ArIssue.Success}" Value="true">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ArIssue.Failure}" Value="true">
+                            <Setter Property="Background" Value="Orange"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ArIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <TextBlock Grid.Row="9" Grid.Column="6" Text="CueTools DB:"/>
+        <TextBox Grid.Row="9" Grid.Column="7" Text="{Binding Path=CueToolsLong, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CtIssue.Success}" Value="true">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CtIssue.Level}" Value="{x:Static issue:Severity.Warning}">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CtIssue.Level}" Value="{x:Static issue:Severity.Error}">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+        <ListView Grid.Row="11" Grid.ColumnSpan="8" ItemsSource="{Binding GuiTracks.Items}" GridViewColumnHeader.Click="HeaderClicked">
+            <ListView.Resources>
+                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource darkHeader}"/>
+                <Style TargetType="ListView" BasedOn="{StaticResource darkListView}"/>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView x:Name="logColumnsGv">
+                    <GridView.Columns>
+                        <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Number, Mode=OneWay}"/>
+                        <GridViewColumn Header="Quality">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Qual, Mode=OneWay}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Is OK" DisplayMemberBinding="{Binding HasOK, Mode=OneWay}"/>
+                        <GridViewColumn Header="Test CRC" x:Name="testCRC" DisplayMemberBinding="{Binding TestCRC, StringFormat={}{0:X8}, Mode=OneWay}">
+                            <GridViewColumn.HeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource darkHeader}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding TpIssue.Failure}" Value="true">
+                                            <Setter Property="Foreground" Value="DarkRed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </GridViewColumn.HeaderContainerStyle>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Copy CRC" DisplayMemberBinding="{Binding CopyCRC, StringFormat={}{0:X8}, Mode=OneWay}"/>
+                        <GridViewColumn Header="Matched FLAC" DisplayMemberBinding="{Binding Match.Name, Mode=OneWay}"/>
+                        <GridViewColumn Header="File size">
+                            <GridViewColumn.HeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource darkHeader}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                                </Style>
+                            </GridViewColumn.HeaderContainerStyle>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Match.FileSize, Mode=OneWay}" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="log_PreviewMouseLeftButtonDown"/>
+                    <Setter Property="FontFamily" Value="Lucida Console"/>
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Focusable" Value="false"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsRipOK}" Value="false">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsRipOK}" Value="true">
+                            <Setter Property="Foreground" Value="Chartreuse"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </Grid>
+</UserControl>

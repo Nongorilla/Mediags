@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="AppController.M3uControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:app="clr-namespace:AppController"
+             mc:Ignorable="d"
+             Name="m3u" DataContext="{Binding Path=Rip.M3u}"
+             d:DesignHeight="200" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ThemeDark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource darkHeader}"/>
+            <Style TargetType="ListView" BasedOn="{StaticResource darkListView}"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <app:FileHeaderControl/>
+        <ListView Name="m3uList" Grid.Row="1" SelectionMode="Multiple" ItemsSource="{Binding Files.Items}" MouseMove="m3uList_MouseMove">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="File name" DisplayMemberBinding="{Binding Name, Mode=OneWay}"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontFamily" Value="Lucida Console"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="Margin" Value="3,0,0,0"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFound}" Value="true">
+                            <Setter Property="Foreground" Value="Chartreuse"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsFound}" Value="false">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </Grid>
+</UserControl>

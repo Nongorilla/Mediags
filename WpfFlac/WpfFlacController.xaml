@@ -1,0 +1,330 @@
+﻿<Window x:Class="AppController.WpfFlacController"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="clr-namespace:AppController"
+        xmlns:issue="clr-namespace:NongIssue"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="WpfFlac loading..." Height="575" Width="560" Loaded="Controller_Loaded" Style="{DynamicResource darkApp}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Controls/ThemeDark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <app:ComparisonConverter x:Key="compConverter"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="GridSplitter" BasedOn="{StaticResource darkGridSplitter}"/>
+            <Style TargetType="ListBox" BasedOn="{StaticResource darkListBox}"/>
+            <Style TargetType="ListBoxItem" BasedOn="{StaticResource darkListBoxItem}"/>
+            <Style TargetType="StackPanel" BasedOn="{StaticResource darkStackPanel}"/>
+            <Style TargetType="TabControl" BasedOn="{StaticResource darkTabControl}"/>
+            <Style TargetType="TabItem" BasedOn="{StaticResource darkTabItem}"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2"/>
+            <RowDefinition Height="36" MinHeight="18" MaxHeight="54"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="3"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Margin="3,3,3,0" Grid.ColumnSpan="2" VerticalAlignment="Top">
+                <Label Content="&#x2388;" Margin="-3,-10,-9,-10" VerticalAlignment="Top" AllowDrop="True" Drop="FileLbl_Drop" FontSize="25"/>
+                <Label Content="EAC _log:" Margin="0,-1,0,0" VerticalAlignment="Center" Target="{Binding ElementName=pathBox}" AllowDrop="True" Drop="FileLbl_Drop"/>
+                <TextBox x:Name="pathBox" Width="Auto" HorizontalAlignment="Stretch" DockPanel.Dock="Right" TabIndex="0">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource darkTextInputBox}"/>
+                    </TextBox.Style>
+                </TextBox>
+            </DockPanel>
+            <Button Content=" Browse... " Grid.Row="0" Grid.Column="2" Margin="6,6,6,3" Click="Browse_Click" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
+            <DockPanel x:Name="sigWrap" Grid.Row="1" Grid.Column="1" Margin="3,0,3,0" VerticalAlignment="Top">
+                <TextBox x:Name="signatureBox" Text="{Binding Path=UserSig, Mode=TwoWay, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=true}" DockPanel.Dock="Right" Width="155" TabIndex="1">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource darkTextInputBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Rip.IsWip}" Value="true">
+                                    <Setter Property="IsReadOnly" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <Label Content="_Signature:" Target="{Binding ElementName=signatureBox}" DockPanel.Dock="Right"/>
+            </DockPanel>
+            <Button Name="SignBtn" Grid.Row="1" Grid.Column="2" Click="Sign_Click" IsDefault="True" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value=" Sign "/>
+                        <Setter Property="IsEnabled" Value="true"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=commentBox, Path=IsEnabled}" Value="true">
+                                <Setter Property="Content" Value=" Sign "/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=signatureBox, Path=Text.Length}" Value="0">
+                                <Setter Property="Content" Value=" Verify "/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Rip.IsWip}" Value="true">
+                                <Setter Property="IsEnabled" Value="false"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <DockPanel Name="commentPnl" Grid.Row="2" Grid.Column="1" Margin="3,0" VerticalAlignment="Top">
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rip.IsCommentable}" Value="true">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Rip.IsCommentable}" Value="false">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+                <TextBox Name="commentBox" DockPanel.Dock="Right" Width="155">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource darkTextInputBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Rip.IsWip}" Value="true">
+                                    <Setter Property="IsReadOnly" Value="false"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Rip.IsWip}" Value="false">
+                                    <Setter Property="IsReadOnly" Value="true"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <Label Content="_Comment:" Target="{Binding ElementName=commentBox}" DockPanel.Dock="Right" Margin="0,1,0,0" VerticalAlignment="Top"/>
+            </DockPanel>
+            <Button Name="CommitBtn" Grid.Row="2" Grid.Column="2" Content=" Commit " Click="CommitBtn_Click" Visibility="{Binding ElementName=commentPnl, Path=Visibility}" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="IsEnabled" Value="false"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rip.IsCommitable}" Value="true">
+                                <Setter Property="IsEnabled" Value="true"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=commentBox, Path=Text.Length}" Value="0">
+                                <Setter Property="IsEnabled" Value="false"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <WrapPanel Grid.Row="1" Grid.RowSpan="3" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <GroupBox Header="Options" HorizontalAlignment="Left" Margin="3,3,3,3">
+                    <WrapPanel Orientation="Vertical">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Content="Require highest quality rips" Margin="0" ToolTip="gets caustic over FLAC version, EAC version, AR, CTDB..." IsChecked="{Binding WillProve}"/>
+                            <TextBlock Grid.Column="1" Text="?" Margin="3,0,0,0" Foreground="White" MouseDown="ProveBlock_MouseDown" FontWeight="Bold" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <CheckBox Content="Verify EAC 1.x self-hash online" Margin="0" ToolTip="www.exactaudiocopy.de/log/checklog.html" IsChecked="{Binding IsWebCheckEnabled}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Content="Require Uber Guide tagging" Margin="0" ToolTip="takes a stand on a tagging standard" IsChecked="{Binding IsBestTags}"/>
+                            <TextBlock Grid.Column="1" Text="?" Margin="3,0,0,0" Foreground="White" MouseDown="GuideBlock_MouseDown" FontWeight="Bold" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <CheckBox Content="Do extra MD5 check of FLACs" Margin="0" ToolTip="for the paranoid" IsChecked="{Binding IsParanoid}"/>
+                        <CheckBox Content="Apply ReplayGain on first sign" Margin="0" ToolTip="requires metaflac.exe and time" IsChecked="{Binding ApplyRG}"/>
+                    </WrapPanel>
+                </GroupBox>
+                <GroupBox Header="Console report" HorizontalAlignment="Left" Margin="3,3,3,3">
+                    <WrapPanel Orientation="Vertical">
+                        <RadioButton Name="TerseBtn" Content="Terse" Margin="3,0" IsChecked="{Binding Path=Scope, Converter={StaticResource compConverter}, ConverterParameter={x:Static issue:Granularity.Terse}}" ToolTip="shorter report"/>
+                        <RadioButton Name="AdvisoryBtn" Content="Advisory" Margin="3,0" IsChecked="{Binding Path=Scope, Converter={StaticResource compConverter}, ConverterParameter={x:Static issue:Granularity.Advisory}}" ToolTip="short report"/>
+                        <RadioButton Name="VerboseBtn" Content="Verbose" Margin="3,0,0,0" IsChecked="{Binding Path=Scope, Converter={StaticResource compConverter}, ConverterParameter={x:Static issue:Granularity.Verbose}}" ToolTip="now we're talking"/>
+                        <RadioButton Name="DetailBtn" Content="Detail" Margin="3,0,0,0" IsChecked="{Binding Path=Scope, Converter={StaticResource compConverter}, ConverterParameter={x:Static issue:Granularity.Detail}}" ToolTip="walls of text"/>
+                    </WrapPanel>
+                </GroupBox>
+                <GroupBox Header="File naming strategy" HorizontalAlignment="Left" Margin="3,3,3,3">
+                    <WrapPanel Loaded="strategyWrap_Loaded" Orientation="Vertical">
+                        <!-- content generated at runtime -->
+                    </WrapPanel>
+                </GroupBox>
+            </WrapPanel>
+            <TextBlock Name="signal1Box" Grid.Row="3" Grid.Column="1" FontSize="60" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,54,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rip.IsWip}" Value="true">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Name="signal2Box" Grid.Row="3" Grid.Column="2" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text" Value=" "/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rip.Status}" Value="1">
+                                <Setter Property="Text" Value="."/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Rip.Status}" Value="2">
+                                <Setter Property="Text" Value=":"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding Rip.Status}" Value="3">
+                                <Setter Property="Text" Value="&#x2665;"/>   <!-- solid heart -->
+                                <Setter Property="Foreground" Value="Chartreuse"/>
+                            </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Rip.Status}" Value="3"/>
+                                    <Condition Binding="{Binding Rip.Md5}" Value="{x:Null}"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Text" Value="&#x2661;"/>   <!-- hollow heart -->
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+
+                            <DataTrigger Binding="{Binding Rip.Status}" Value="{x:Static issue:Severity.Warning}">
+                                <Setter Property="Text" Value="&#x2665;"/>   <!-- solid heart -->
+                                <Setter Property="Foreground" Value="Yellow"/>
+                            </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Rip.Status}" Value="{x:Static issue:Severity.Warning}"/>
+                                    <Condition Binding="{Binding Rip.Md5}" Value="{x:Null}"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Text" Value="&#x2661;"/> <!-- hollow heart -->
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+
+                            <DataTrigger Binding="{Binding Rip.IsProven}" Value="true">
+                                <Setter Property="Text" Value="&#x2605;"/>   <!-- solid star -->
+                            </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Rip.IsProven}" Value="true"/>
+                                    <Condition Binding="{Binding Rip.Md5}" Value="{x:Null}"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Text" Value="&#x2606;"/> <!-- hollow star -->
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+
+                            <DataTrigger Binding="{Binding Rip.Status}" Value="{x:Static issue:Severity.Error}">
+                                <Setter Property="Text" Value="&#x2612;"/>
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Rip.Status}" Value="{x:Static issue:Severity.Fatal}">
+                                <Setter Property="Text" Value="&#x2612;"/>
+                                <Setter Property="Foreground" Value="Pink"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Rip.IsWip}" Value="true">
+                                <Setter Property="Text" Value=" "/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Rip.Log}" Value="{x:Null}">
+                                <Setter Property="Text" Value=" "/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+        <TabControl x:Name="infoTabs" Grid.Row="1" SelectionChanged="infoTabs_SelectionChanged" VerticalContentAlignment="Stretch">
+            <TabItem x:Name="mainTab" Header="Console">
+                <DockPanel>
+                    <StackPanel>
+                        <Button Content=" Clear " Margin="6,12,6,6" Click="ConsoleClearBtn_Click"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content=" - " Margin="6,6,3,6" Click="ConsoleMinusBtn_Click" HorizontalAlignment="Center" FontFamily="Lucida Console"/>
+                            <Button Content=" + " Margin="3,6,6,6" Click="ConsolePlusBtn_Click" HorizontalAlignment="Center" FontFamily="Lucida Console"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <GroupBox Header="Output">
+                        <TextBox x:Name="consoleBox" FontFamily="Lucida Console" FontSize="10" Background="Black" Foreground="Cyan" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Focusable="True"/>
+                    </GroupBox>
+                </DockPanel>
+            </TabItem>
+            <TabItem x:Name="logTab" Header="log" HorizontalAlignment="Left" Margin="0" Width="57">
+                <TabItem.Style>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rip.Log}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabItem.Style>
+                <app:LogEacControl x:Name="logCtrl"/>
+            </TabItem>
+            <TabItem x:Name="md5Tab" Header="md5" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"  Width="57" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <TabItem.Style>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rip.Md5}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabItem.Style>
+                <app:Md5Control x:Name="md5Ctrl"/>
+            </TabItem>
+            <TabItem x:Name="m3uTab" Header="m3u" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="57">
+                <TabItem.Style>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Rip.M3u}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabItem.Style>
+                <app:M3uControl/>
+            </TabItem>
+        </TabControl>
+        <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+        <ListBox x:Name="diagsList" Grid.Row="3" ItemsSource="{Binding GuiIssues.Items, Mode=OneWay}" DisplayMemberPath="FixedMessage">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="Margin" Value="3,0,0,0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </Grid>
+</Window>

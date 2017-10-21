@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AppView.WpfFlacView" Collapsed="true">
+    <Position X="1" Y="2.5" Width="1.5" />
+    <AssociationLine Name="controller" Type="AppController.WpfFlacController" FixedToPoint="true">
+      <Path>
+        <Point X="1.188" Y="3.062" />
+        <Point X="1.188" Y="3.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.921" Y="0.143" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="modelBind" Type="NongMediaDiags.FlacDiags" FixedFromPoint="true">
+      <Path>
+        <Point X="2.5" Y="2.875" />
+        <Point X="3.25" Y="2.875" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.029" Y="-0.442" Height="0.182" Width="0.881" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAIAAAEAgAAQAAEAEAAEAACAAAAAAACAAAA=</HashCode>
+      <FileName>WpfFlacView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="controller" />
+      <Field Name="modelBind" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppController.WpfFlacController" Collapsed="true">
+    <Position X="0.75" Y="3.5" Width="1.75" />
+    <AssociationLine Name="viewFactory" Type="AppController.IWpfFlacViewFactory">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.981" Y="0.142" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgTBAAAAAAEIEACBAQAAEJACAAASAAQFAAAEAkAMAAA=</HashCode>
+      <FileName>WpfFlacController.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="viewFactory" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AppView.WpfFlacViewFactory" Collapsed="true">
+    <Position X="0.75" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>WpfFlacView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NongMediaDiags.FlacDiags">
+    <Position X="3.25" Y="2.5" Width="1.5" />
+    <Members>
+      <Property Name="FailPrefix" Hidden="true" />
+      <Method Name="FlacDiags" Hidden="true" />
+      <Field Name="FlacFormat" Hidden="true" />
+      <Property Name="Issues" Hidden="true" />
+      <Field Name="LogFormat" Hidden="true" />
+      <Field Name="M3uFormat" Hidden="true" />
+      <Field Name="Md5Format" Hidden="true" />
+      <Property Name="NoncompliantName" Hidden="true" />
+      <Method Name="NotifyPropertyChanged" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongMediaDiags.FlacDiags.Model" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FlacDiagsModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" Collapsed="true" />
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="Rip" Type="NongMediaDiags.FlacRip">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.515" Y="0.102" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAEBCAAAAAAAEIAAAAAMAAAAgAAAAEAAAAAAAAAAAQA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FlacDiags.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Rip" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NongMediaDiags.FlacRip">
+    <Position X="3.25" Y="5" Width="1.5" />
+    <Members>
+      <Field Name="BindOwner" Hidden="true" />
+      <Field Name="filterOnConversion" Hidden="true" />
+      <Field Name="flacInfos" Hidden="true" />
+      <Field Name="flacModels" Hidden="true" />
+      <Method Name="FlacRip" Hidden="true" />
+      <Field Name="isWip" Hidden="true" />
+      <Field Name="logInfos" Hidden="true" />
+      <Method Name="NotifyPropertyChanged" Hidden="true" />
+      <Field Name="path" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongMediaDiags.FlacRip.Model" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FlacRipModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ECJgAAAEhCAQAKAghAACEIAAgAgAIIAACggCpAgAAAE=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FlacRip.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NongMediaDiags.Diags">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <Members>
+      <Property Name="ApplyRG" Hidden="true" />
+      <Property Name="Autoname" Hidden="true" />
+      <Property Name="CurrentDirectory" Hidden="true" />
+      <Property Name="CurrentFile" Hidden="true" />
+      <Method Name="Diags" Hidden="true" />
+      <Property Name="ErrEscalator" Hidden="true" />
+      <Property Name="Exclusion" Hidden="true" />
+      <Property Name="ExpectedFiles" Hidden="true" />
+      <Property Name="FileFormats" Hidden="true" />
+      <Event Name="FileVisit" Hidden="true" />
+      <Property Name="Filter" Hidden="true" />
+      <Property Name="FormatDomainVersionText" Hidden="true" />
+      <Property Name="FormatListText" Hidden="true" />
+      <Method Name="GetRollups" Hidden="true" />
+      <Property Name="HashFlags" Hidden="true" />
+      <Field Name="InputLine" Hidden="true" />
+      <Event Name="MessageSend" Hidden="true" />
+      <Method Name="OnFileVisit" Hidden="true" />
+      <Method Name="OnMessageSend" Hidden="true" />
+      <Method Name="OnReportClose" Hidden="true" />
+      <Property Name="Product" Hidden="true" />
+      <Property Name="ProductVersion" Hidden="true" />
+      <Field Name="QuestionAsk" Hidden="true" />
+      <Method Name="QuestionAskDefault" Hidden="true" />
+      <Property Name="Report" Hidden="true" />
+      <Event Name="ReportClose" Hidden="true" />
+      <Property Name="Response" Hidden="true" />
+      <Property Name="Root" Hidden="true" />
+      <Property Name="TotalErrors" Hidden="true" />
+      <Property Name="TotalFiles" Hidden="true" />
+      <Property Name="TotalRepairable" Hidden="true" />
+      <Property Name="TotalRepairs" Hidden="true" />
+      <Property Name="TotalSignable" Hidden="true" />
+      <Property Name="TotalWarnings" Hidden="true" />
+      <Property Name="ValidationFlags" Hidden="true" />
+      <Property Name="WarnEscalator" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongMediaDiags.Diags.Model" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\DiagsModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BAECACAggABgECAEAJAAcAAgEBEAIAEIAQAAMEQgJAU=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Diags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FileFormat">
+    <Position X="5.5" Y="1.5" Width="1.5" />
+    <Members>
+      <Method Name="FileFormat" Hidden="true" />
+      <Field Name="names" Hidden="true" />
+      <Property Name="Names" Hidden="true" />
+      <Property Name="PrimaryName" Hidden="true" />
+      <Property Name="Subname" Hidden="true" />
+      <Property Name="TotalConverted" Hidden="true" />
+      <Property Name="TotalCreated" Hidden="true" />
+      <Property Name="TotalDataErrors" Hidden="true" />
+      <Property Name="TotalHeaderErrors" Hidden="true" />
+      <Property Name="TotalMisnamed" Hidden="true" />
+      <Property Name="TotalMissing" Hidden="true" />
+      <Property Name="TotalSigned" Hidden="true" />
+      <Property Name="TrueTotal" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongFormat.FileFormat.Vector">
+        <Members>
+          <Field Name="items" Hidden="true" />
+          <Method Name="Vector" Hidden="true" />
+        </Members>
+        <Compartments>
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="NongFormat.FileFormat.Vector.Model" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="ModelFactory" Type="NongFormat.FormatModelFactory">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.149" Y="0.127" Height="0.182" Width="1.124" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAcAAAACAgAAAAAAASJAAAEAAAAAAAAAAEAIA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ModelFactory" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="AppController.IWpfFlacViewFactory" Collapsed="true">
+    <Position X="0.75" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>WpfFlacController.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="NongFormat.FormatModelFactory" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

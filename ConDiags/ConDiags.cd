@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AppController.ConDiagsController">
+    <Position X="0.75" Y="4.75" Width="1.75" />
+    <Members>
+      <Field Name="action" Hidden="true" />
+      <Field Name="args" Hidden="true" />
+      <Method Name="ConDiagsController" Hidden="true" />
+      <Field Name="errEscalator" Hidden="true" />
+      <Field Name="exclusion" Hidden="true" />
+      <Field Name="filter" Hidden="true" />
+      <Field Name="hashes" Hidden="true" />
+      <Field Name="helpText" Hidden="true" />
+      <Field Name="mirrorName" Hidden="true" />
+      <Field Name="notifyEvery" Hidden="true" />
+      <Property Name="NotifyEvery" Hidden="true" />
+      <Method Name="ParseArgs" Hidden="true" />
+      <Property Name="ProductText" Hidden="true" />
+      <Field Name="report" Hidden="true" />
+      <Method Name="Run" Hidden="true" />
+      <Method Name="ShowUsage" Hidden="true" />
+      <Field Name="validations" Hidden="true" />
+      <Property Name="VersionText" Hidden="true" />
+      <Field Name="waitForKeyPress" Hidden="true" />
+      <Field Name="warnEscalator" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="viewFactory" Type="AppController.IConDiagsViewFactory">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.004" Y="0.133" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQEBQAAABEIIAAIAAAAGEAAAAAAAAAAAAAFEgAIQEo=</HashCode>
+      <FileName>ConDiagsController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="viewFactory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppView.ConDiagsViewFactory" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>ConDiagsView.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AppView.ConDiagsView" Collapsed="true">
+    <Position X="1" Y="3.75" Width="1.5" />
+    <AssociationLine Name="modelBind" Type="NongMediaDiags.Diags">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.13" Y="-0.482" Height="0.182" Width="0.902" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="controller" Type="AppController.ConDiagsController" FixedToPoint="true">
+      <Path>
+        <Point X="1.125" Y="4.312" />
+        <Point X="1.125" Y="4.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.931" Y="0.113" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAgAIAAAEAAAAQAAEAEgAEAACEAAIADACAAAA=</HashCode>
+      <FileName>ConDiagsView.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="modelBind" />
+      <Field Name="controller" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongIssue.Issue">
+    <Position X="1" Y="6.5" Width="1.5" />
+    <Members>
+      <Property Name="FixedMessage" Hidden="true" />
+      <Property Name="IsRepairable" Hidden="true" />
+      <Property Name="IsRepairSuccessful" Hidden="true" />
+      <Method Name="IsReportable" Hidden="true" />
+      <Method Name="Issue" Hidden="true" />
+      <Property Name="Message" Hidden="true" />
+      <Method Name="NotifyPropertyChanged" Hidden="true" />
+      <Field Name="owner" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+      <Property Name="RepairError" Hidden="true" />
+      <Property Name="RepairPrompt" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongIssue.Issue.Vector">
+        <Members>
+          <Property Name="ErrEscalator" Hidden="true" />
+          <Property Name="HasError" Hidden="true" />
+          <Property Name="HasFatal" Hidden="true" />
+          <Field Name="items" Hidden="true" />
+          <Property Name="MaxSeverity" Hidden="true" />
+          <Method Name="NotifyPropertyChanged" Hidden="true" />
+          <Event Name="PropertyChanged" Hidden="true" />
+          <Field Name="repairableCount" Hidden="true" />
+          <Property Name="RepairableCount" Hidden="true" />
+          <Property Name="Severest" Hidden="true" />
+          <Method Name="Vector" Hidden="true" />
+          <Property Name="WarnEscalator" Hidden="true" />
+        </Members>
+        <Compartments>
+          <Compartment Name="Fields" Collapsed="true" />
+          <Compartment Name="Methods" Collapsed="true" />
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="NongIssue.Issue.Vector.Model" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" Collapsed="true" />
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="BaseLevel" Type="NongIssue.Severity" FixedFromPoint="true">
+      <Path>
+        <Point X="2.5" Y="8.188" />
+        <Point X="3.5" Y="8.188" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.051" Y="0.119" Height="0.182" Width="0.853" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Tag" Type="NongIssue.IssueTags">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.27" Y="0.095" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Repairer" Type="System.Func&lt;TResult&gt;">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.327" Y="-0.502" Height="0.182" Width="0.735" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="EscalatedLevel" Type="NongIssue.Severity" FixedFromPoint="true">
+      <Path>
+        <Point X="2.5" Y="8.312" />
+        <Point X="3.5" Y="8.312" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.213" Y="0.452" Height="0.182" Width="1.12" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAEAgwIAEAAoAAACAgAAAAEAAQAAAIAAAIAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BaseLevel" />
+      <Property Name="Tag" />
+      <Property Name="Repairer" />
+      <Property Name="EscalatedLevel" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NongFormat.FileFormat">
+    <Position X="5.5" Y="3" Width="1.5" />
+    <Members>
+      <Method Name="FileFormat" Hidden="true" />
+      <Field Name="names" Hidden="true" />
+      <Property Name="Names" Hidden="true" />
+      <Property Name="PrimaryName" Hidden="true" />
+      <Property Name="Subname" Hidden="true" />
+      <Property Name="TotalConverted" Hidden="true" />
+      <Property Name="TotalCreated" Hidden="true" />
+      <Property Name="TotalDataErrors" Hidden="true" />
+      <Property Name="TotalHeaderErrors" Hidden="true" />
+      <Property Name="TotalMisnamed" Hidden="true" />
+      <Property Name="TotalMissing" Hidden="true" />
+      <Property Name="TotalSigned" Hidden="true" />
+      <Property Name="TrueTotal" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongFormat.FileFormat.Vector">
+        <Members>
+          <Field Name="items" Hidden="true" />
+          <Method Name="Vector" Hidden="true" />
+        </Members>
+        <Compartments>
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="NongFormat.FileFormat.Vector.Model" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="ModelFactory" Type="NongFormat.FormatModelFactory">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.035" Y="0.145" Height="0.182" Width="1.068" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAcAAAACAgAAAAAAASJAAAEAAAAAAAAAAEAIA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ModelFactory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongFormat.FormatBase">
+    <Position X="5.5" Y="7.75" Width="1.5" />
+    <Members>
+      <Method Name="CreateModel" Hidden="true" />
+      <Field Name="excess" Hidden="true" />
+      <Property Name="ExcessSize" Hidden="true" />
+      <Field Name="excised" Hidden="true" />
+      <Field Name="fbs" Hidden="true" />
+      <Field Name="fBuf" Hidden="true" />
+      <Field Name="fileMD5" Hidden="true" />
+      <Property Name="FileMD5" Hidden="true" />
+      <Method Name="FileMD5Equals" Hidden="true" />
+      <Property Name="FileMD5ToHex" Hidden="true" />
+      <Field Name="fileSHA1" Hidden="true" />
+      <Property Name="FileSHA1ToHex" Hidden="true" />
+      <Field Name="fileSHA256" Hidden="true" />
+      <Property Name="FileSHA256ToHex" Hidden="true" />
+      <Property Name="FileSize" Hidden="true" />
+      <Method Name="FormatBase" Hidden="true" />
+      <Method Name="GetDetailsBody" Hidden="true" />
+      <Method Name="GetDetailsHeader" Hidden="true" />
+      <Property Name="IsBadData" Hidden="true" />
+      <Property Name="IsBadHeader" Hidden="true" />
+      <Property Name="MediaCount" Hidden="true" />
+      <Field Name="mediaPosition" Hidden="true" />
+      <Field Name="mediaSHA1" Hidden="true" />
+      <Method Name="MediaSHA1ToHex" Hidden="true" />
+      <Field Name="metaSHA1" Hidden="true" />
+      <Property Name="Name" Hidden="true" />
+      <Property Name="NamedFormat" Hidden="true" />
+      <Method Name="NonmediaSHA1ToHex" Hidden="true" />
+      <Method Name="NotifyPropertyChanged" Hidden="true" />
+      <Property Name="Path" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+      <Method Name="StartsWith" Hidden="true" />
+      <Property Name="ValidNames" Hidden="true" />
+      <Property Name="ValidSize" Hidden="true" />
+      <Property Name="Watermark" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongFormat.FormatBase.ModelBase" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAGEAIBAJAFgAIJAAAQAIAQg4gEgSAAAACQgAABAhEA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NongMediaDiags.Diags" Collapsed="true">
+    <Position X="3.25" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BAECACAggABgECAEAJAAcAAgEBEAIAEIAQAAMEQgJAU=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Diags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="AppController.IConDiagsViewFactory" Collapsed="true">
+    <Position X="0.75" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>ConDiagsController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="NongIssue.Severity" Collapsed="true">
+    <Position X="3.5" Y="8" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>CAAABAAAAAAAAQAAAAAAABAAAAAABAAAAAAAAAAEACA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongIssue.IssueTags" Collapsed="true">
+    <Position X="3.5" Y="9" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAABAAAAEAAAAAAAAAAACAABwAAACAAIEAAEA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="System.Func&lt;TResult&gt;" Collapsed="true">
+    <Position X="3.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier />
+  </Delegate>
+  <Delegate Name="NongFormat.FormatModelFactory" Collapsed="true">
+    <Position X="5.25" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

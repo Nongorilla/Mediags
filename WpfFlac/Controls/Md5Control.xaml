@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="AppController.Md5Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:app="clr-namespace:AppController"
+             mc:Ignorable="d"
+             Name="md5" DataContext="{Binding Path=Rip.Md5}"
+             d:DesignHeight="200" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ThemeDark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="ListBox" BasedOn="{StaticResource darkListBox}"/>
+            <Style TargetType="StackPanel" BasedOn="{StaticResource darkStackPanel}"/>
+            <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <app:FileHeaderControl Grid.Row="0"/>
+        <app:HashFileControl Grid.Row="1"/>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <app:HistoryControl x:Name="history" Grid.Row="3"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,917 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NongFormat.ApeFormat" Collapsed="true">
+    <Position X="5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\ApeFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.AsfFormat" Collapsed="true">
+    <Position X="1.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\AsfFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.AviFormat" Collapsed="true">
+    <Position X="1.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAABQAAAAAAAAAAIEAAogAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\AviFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.CueFormat" Collapsed="true">
+    <Position X="1.25" Y="15.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAgAAAAAAAAAAAAAAAIAABggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\CueFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacBlockItem" Collapsed="true">
+    <Position X="9" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAEAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacPadBlock" Collapsed="true">
+    <Position X="11" Y="7.5" Width="1.75" />
+    <InheritanceLine Type="NongFormat.FlacBlockItem" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.062" />
+        <Point X="10.684" Y="7.062" />
+        <Point X="10.684" Y="7.812" />
+        <Point X="11" Y="7.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacAppBlock" Collapsed="true">
+    <Position X="11" Y="8.5" Width="1.75" />
+    <InheritanceLine Type="NongFormat.FlacBlockItem" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.062" />
+        <Point X="10.678" Y="7.062" />
+        <Point X="10.678" Y="8.846" />
+        <Point X="11" Y="8.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacSeekTableBlock" Collapsed="true">
+    <Position X="11" Y="9.5" Width="1.75" />
+    <InheritanceLine Type="NongFormat.FlacBlockItem" FixedFromPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.062" />
+        <Point X="10.665" Y="7.062" />
+        <Point X="10.665" Y="9.846" />
+        <Point X="11" Y="9.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABEAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacTagsBlock" Collapsed="true">
+    <Position X="11" Y="4.5" Width="1.75" />
+    <InheritanceLine Type="NongFormat.FlacBlockItem" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.062" />
+        <Point X="10.705" Y="7.062" />
+        <Point X="10.705" Y="4.846" />
+        <Point X="11" Y="4.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAgABAAAAAAAAAAAAABAgAIAAABCAKAAAAAACAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacCuesheetBlock" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.75" />
+    <InheritanceLine Type="NongFormat.FlacBlockItem" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.062" />
+        <Point X="10.691" Y="7.062" />
+        <Point X="10.691" Y="5.846" />
+        <Point X="11" Y="5.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAQAAAAAgAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacPicBlock" Collapsed="true">
+    <Position X="11" Y="6.5" Width="1.75" />
+    <InheritanceLine Type="NongFormat.FlacBlockItem" FixedFromPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.062" />
+        <Point X="10.705" Y="7.062" />
+        <Point X="10.705" Y="6.846" />
+        <Point X="11" Y="6.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAEACAAAEAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FlacBlockList" Collapsed="true">
+    <Position X="9" Y="5.75" Width="1.5" />
+    <Members>
+      <Field Name="items" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Items" Type="NongFormat.FlacBlockItem" FixedToPoint="true">
+      <Path>
+        <Point X="9.75" Y="6.312" />
+        <Point X="9.75" Y="6.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.659" Y="0.11" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAABAAACAAHAAEAAgAAAAAAAAAAEAAgAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="items" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="NongFormat.FlacFormat" Collapsed="true">
+    <Position X="9" Y="4.75" Width="1.5" />
+    <InheritanceLine Type="NongFormat.FormatBase" FixedToPoint="true">
+      <Path>
+        <Point X="1.25" Y="4.562" />
+        <Point X="1.25" Y="5.312" />
+        <Point X="9" Y="5.312" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Blocks" Type="NongFormat.FlacBlockList">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.71" Y="0.068" Height="0.182" Width="0.638" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>JAGG0MlEIAgQOCAgAABAKAEQwpAABsAQoAAAgCAgKBA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacFormat.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Blocks" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongFormat.FormatBase" Collapsed="true">
+    <Position X="0.5" Y="4" Width="1.5" />
+    <Members>
+      <Method Name="CreateModel" Hidden="true" />
+      <Field Name="excess" Hidden="true" />
+      <Property Name="ExcessSize" Hidden="true" />
+      <Field Name="excised" Hidden="true" />
+      <Field Name="fbs" Hidden="true" />
+      <Field Name="fBuf" Hidden="true" />
+      <Field Name="fileMD5" Hidden="true" />
+      <Property Name="FileMD5" Hidden="true" />
+      <Method Name="FileMD5Equals" Hidden="true" />
+      <Property Name="FileMD5ToHex" Hidden="true" />
+      <Field Name="fileSHA1" Hidden="true" />
+      <Property Name="FileSHA1ToHex" Hidden="true" />
+      <Field Name="fileSHA256" Hidden="true" />
+      <Property Name="FileSHA256ToHex" Hidden="true" />
+      <Property Name="FileSize" Hidden="true" />
+      <Method Name="FormatBase" Hidden="true" />
+      <Method Name="GetDetailsBody" Hidden="true" />
+      <Method Name="GetDetailsHeader" Hidden="true" />
+      <Property Name="IsBadData" Hidden="true" />
+      <Property Name="IsBadHeader" Hidden="true" />
+      <Property Name="MediaCount" Hidden="true" />
+      <Field Name="mediaPosition" Hidden="true" />
+      <Field Name="mediaSHA1" Hidden="true" />
+      <Method Name="MediaSHA1ToHex" Hidden="true" />
+      <Field Name="metaSHA1" Hidden="true" />
+      <Property Name="Name" Hidden="true" />
+      <Property Name="NamedFormat" Hidden="true" />
+      <Method Name="NonmediaSHA1ToHex" Hidden="true" />
+      <Method Name="NotifyPropertyChanged" Hidden="true" />
+      <Property Name="Path" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+      <Method Name="StartsWith" Hidden="true" />
+      <Property Name="ValidNames" Hidden="true" />
+      <Property Name="ValidSize" Hidden="true" />
+      <Property Name="Watermark" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongFormat.FormatBase.ModelBase" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAGEAIBAJAFgAIJAAAQAIAQg4gEgSAAAACQgAABghEA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NongFormat.GifFormat" Collapsed="true">
+    <Position X="6" Y="13" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>IAAAgAAABAAAAAAAAAAAIEAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\GifFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.IcoFormat" Collapsed="true">
+    <Position X="3" Y="13" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAIAAAACAAAAAAIAQAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\IcoFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.JpegFormat" Collapsed="true">
+    <Position X="7.5" Y="13" Width="1.25" />
+    <InheritanceLine Type="NongFormat.FormatBase" FixedToPoint="true">
+      <Path>
+        <Point X="1.25" Y="4.562" />
+        <Point X="1.25" Y="12.7" />
+        <Point X="8.125" Y="12.7" />
+        <Point X="8.125" Y="13" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AQAAgAEAAAAAAABAAgAAIAAAgggAQAAAEEAAQAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\JpegFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.LogEacFormat" Collapsed="true">
+    <Position X="9.25" Y="13" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="NongFormat.FormatBase" FixedToPoint="true">
+      <Path>
+        <Point X="1.25" Y="4.562" />
+        <Point X="1.25" Y="12.7" />
+        <Point X="10.125" Y="12.7" />
+        <Point X="10.125" Y="13" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>CAQIhKIVR0qGSYBHtCHkJAAExoMAgAAAAoQBCgEEEgk=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\LogBuffer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.M3uFormat" Collapsed="true">
+    <Position X="2.75" Y="15.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\M3uFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.M4aFormat" Collapsed="true">
+    <Position X="3.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\M4aFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Md5Format" Collapsed="true">
+    <Position X="1.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAIAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Md5Format.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.EbmlSig" Collapsed="true">
+    <Position X="9" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAQAAAAAAASAAAAAAAAAIQAAAAAAAAE=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.EbmlStackItem" Collapsed="true">
+    <Position X="7" Y="11.75" Width="1.75" />
+    <AssociationLine Name="Node" Type="NongFormat.EbmlNodeMaster">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.041" Y="0.227" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAEAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Node" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongFormat.EbmlNode" Collapsed="true">
+    <Position X="9" Y="10.5" Width="1.5" />
+    <AssociationLine Name="Element" Type="NongFormat.EbmlSig">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.775" Y="0.166" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Element" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongFormat.EbmlNodeLeaf" Collapsed="true">
+    <Position X="11.25" Y="10.5" Width="1.5" />
+    <InheritanceLine Type="NongFormat.EbmlNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="10.812" />
+        <Point X="11.25" Y="10.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.EbmlNodeCRC" Collapsed="true">
+    <Position X="9" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAABAAAAAAQAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.EbmlNodeMaster" Collapsed="true">
+    <Position X="7" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAggAAAAEAAAAAQACAAIAAAAQAAAAAgAAAAAAAAIIAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.MkvFormat" Collapsed="true">
+    <Position X="5" Y="10.5" Width="1.5" />
+    <AssociationLine Name="segment" Type="NongFormat.EbmlNodeMaster" FixedFromPoint="true">
+      <Path>
+        <Point X="6.5" Y="10.938" />
+        <Point X="7" Y="10.938" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.185" Y="-0.482" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EABCgAgACQIABQAAAyAgIQAJ4gAoAAAAAAAACAgAAAI=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="segment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongFormat.MovFormat" Collapsed="true">
+    <Position X="1.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MovFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Mp3Format" Collapsed="true">
+    <Position X="7" Y="5.5" Width="1.5" />
+    <AssociationLine Name="Lame" Type="NongFormat.Mp3LameBlock">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.071" Y="0.088" Height="0.182" Width="0.649" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AWASgYhBScAAgKECAQRhYVAMxoIAEJBgoQWBMYAwiCQ=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Mp3Format.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Lame" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongFormat.Mp4Format" Collapsed="true">
+    <Position X="5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Mp4Format.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Mpeg1Format" Collapsed="true">
+    <Position X="3.25" Y="6.75" Width="1.5" />
+    <InheritanceLine Type="NongFormat.RiffContainer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4" Y="6.191" />
+        <Point X="4" Y="6.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Mpeg1Format.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Mpeg2Format" Collapsed="true">
+    <Position X="1.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAIAAAAAAAABIAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Mpeg2Format.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Mpeg4Container" Collapsed="true">
+    <Position X="3.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAIAAAAAAAAAAAAgAIAAABAAI=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Mpeg4Container.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.OggFormat" Collapsed="true">
+    <Position X="5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAACAAAAEAAIAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\OggFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.PngFormat" Collapsed="true">
+    <Position X="4.5" Y="13" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>GAIAgFAEBgAAAAAAEAAAIEAAwgAAAAABAAAAAAIBAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\PngFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.RiffContainer" Collapsed="true">
+    <Position X="3.25" Y="5.5" Width="1.5" />
+    <InheritanceLine Type="NongFormat.FormatBase" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.25" Y="4.562" />
+        <Point X="1.25" Y="5.308" />
+        <Point X="4" Y="5.308" />
+        <Point X="4" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAACAAIAAAAAAAAAAAECAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\RiffContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Sha1Format" Collapsed="true">
+    <Position X="3.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Sha1Format.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.WavFormat" Collapsed="true">
+    <Position X="5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BACAgAgAAAAAAAUAAAAAIAAAgiAQAgAQAgAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\WavFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FilesContainer" Collapsed="true">
+    <Position X="2.75" Y="14" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAIAAAAAAAAAIAAAAQAAAAAIA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FilesContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.MovFormat2" Collapsed="true">
+    <Position X="1.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MovFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.CryptoFullHasher" Collapsed="true">
+    <Position X="9.25" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABQAAAAAAAAAAAAAAAQAAAAAAAABAQAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\CryptoHasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Sha1Hasher" Collapsed="true">
+    <Position X="11.25" Y="15.5" Width="1.5" />
+    <InheritanceLine Type="NongCrypto.CryptoFullHasher" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.75" Y="15.875" />
+        <Point X="11.25" Y="15.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Sha1Hasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Md5Hasher" Collapsed="true">
+    <Position X="11.25" Y="14.5" Width="1.5" />
+    <InheritanceLine Type="NongCrypto.CryptoFullHasher" FixedFromPoint="true">
+      <Path>
+        <Point X="10.75" Y="15.875" />
+        <Point X="10.99" Y="15.875" />
+        <Point X="10.99" Y="14.846" />
+        <Point X="11.25" Y="14.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Md5Hasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Crc8Hasher" Collapsed="true">
+    <Position X="2.25" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAQAAAAAAAAQAAAIAAQAAAAAAAABAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Crc8Hasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Crc16nHasher" Collapsed="true">
+    <Position X="4" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAQAAAAAAAAQAAAIAAQAAAAAAAABAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Crc16nHasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Crc32n0Hasher" Collapsed="true">
+    <Position X="7.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAQAAAIAAQAAAAAAAABAIAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Crc32n0Hasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Crc32rHasher" Collapsed="true">
+    <Position X="9.25" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAQAAAIAAQAAAgAAAABAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Crc32rHasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Crc16rHasher" Collapsed="true">
+    <Position X="5.75" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAQAAAAAAAAQAAAIAAQAAAAAAAABAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Crc16rHasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.CryptoHasher" Collapsed="true">
+    <Position X="5.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAQAAAAAAQAAAAAAEABAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\CryptoHasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongCrypto.Sha256Hasher" Collapsed="true">
+    <Position X="11.25" Y="16.5" Width="1.5" />
+    <InheritanceLine Type="NongCrypto.CryptoFullHasher" FixedFromPoint="true">
+      <Path>
+        <Point X="10.75" Y="15.875" />
+        <Point X="10.99" Y="15.875" />
+        <Point X="10.99" Y="16.846" />
+        <Point X="11.25" Y="16.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Crypto\Sha256Hasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.StringBuilderExtensions" Collapsed="true">
+    <Position X="10.75" Y="3" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAgAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.StreamExtensions" Collapsed="true">
+    <Position X="10.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\NongExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.ConvertTo" Collapsed="true">
+    <Position X="10.75" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAMAAQIAAAAAAAQAAAAAAAAIAAAAAEAgAACAACAAAk=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\NongExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Map1252" Collapsed="true">
+    <Position X="10.75" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACEAAAAAAAAAAgAAAAAAAABAAACAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\NongExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Sha256Format" Collapsed="true">
+    <Position X="5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Sha256Format.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.Mp3LameBlock" Collapsed="true">
+    <Position X="7" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JAQAAEAIIgkBAAAAAMAiAAAAAEAAAAAEAABBQSAAAMA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\Mp3LameBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongIssue.Issue" Collapsed="true">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <Members>
+      <Property Name="FixedMessage" Hidden="true" />
+      <Property Name="IsRepairable" Hidden="true" />
+      <Property Name="IsRepairSuccessful" Hidden="true" />
+      <Method Name="IsReportable" Hidden="true" />
+      <Method Name="Issue" Hidden="true" />
+      <Property Name="Message" Hidden="true" />
+      <Method Name="NotifyPropertyChanged" Hidden="true" />
+      <Field Name="owner" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+      <Property Name="RepairError" Hidden="true" />
+      <Property Name="RepairPrompt" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongIssue.Issue.Vector">
+        <Members>
+          <Property Name="ErrEscalator" Hidden="true" />
+          <Property Name="HasError" Hidden="true" />
+          <Property Name="HasFatal" Hidden="true" />
+          <Field Name="items" Hidden="true" />
+          <Property Name="Items" Hidden="true" />
+          <Property Name="MaxSeverity" Hidden="true" />
+          <Method Name="NotifyPropertyChanged" Hidden="true" />
+          <Event Name="PropertyChanged" Hidden="true" />
+          <Field Name="repairableCount" Hidden="true" />
+          <Property Name="RepairableCount" Hidden="true" />
+          <Property Name="Severest" Hidden="true" />
+          <Method Name="Vector" Hidden="true" />
+          <Property Name="WarnEscalator" Hidden="true" />
+        </Members>
+        <Compartments>
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="NongIssue.Issue.Vector.Model" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" Collapsed="true" />
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="BaseLevel" Type="NongIssue.Severity" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.438" Y="1.312" />
+        <Point X="1.438" Y="2.531" />
+        <Point X="2.75" Y="2.531" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.178" Y="0.057" Height="0.182" Width="0.833" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Tag" Type="NongIssue.IssueTags">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.332" Y="0.064" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Repairer" Type="System.Func&lt;TResult&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="2" Y="1.188" />
+        <Point X="2.75" Y="1.188" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.056" Y="-0.319" Height="0.182" Width="0.792" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAEAgwIAEAAoAAACAggAAAACBQAAAIAAAIAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BaseLevel" />
+      <Property Name="Tag" />
+      <Property Name="Repairer" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NongFormat.HashesContainer" Collapsed="true">
+    <Position X="3.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAQAAAAACAAKAAAAAAAAIAIAAACAABAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\HashesContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.LogEacTrack" Collapsed="true">
+    <Position X="11.25" Y="13" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgAAgAAgAAEAAgAQVAAAAABAIAAEgEACABAAQAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\LogEacTrackVector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.LogBuffer" Collapsed="true">
+    <Position X="11.25" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABBAAAACBAAAAAQABAAAAAAIAAAAAKABAAAAAAAAIEA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\LogBuffer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NongFormat.FileFormat">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <Members>
+      <Method Name="FileFormat" Hidden="true" />
+      <Field Name="names" Hidden="true" />
+      <Property Name="Names" Hidden="true" />
+      <Property Name="PrimaryName" Hidden="true" />
+      <Property Name="Subname" Hidden="true" />
+      <Property Name="TotalConverted" Hidden="true" />
+      <Property Name="TotalCreated" Hidden="true" />
+      <Property Name="TotalDataErrors" Hidden="true" />
+      <Property Name="TotalHeaderErrors" Hidden="true" />
+      <Property Name="TotalMisnamed" Hidden="true" />
+      <Property Name="TotalMissing" Hidden="true" />
+      <Property Name="TotalSigned" Hidden="true" />
+      <Property Name="TrueTotal" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NongFormat.FileFormat.Vector">
+        <Members>
+          <Field Name="items" Hidden="true" />
+          <Method Name="Vector" Hidden="true" />
+        </Members>
+        <Compartments>
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="NongFormat.FileFormat.Vector.Model" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <AssociationLine Name="ModelFactory" Type="NongFormat.FormatModelFactory">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.19" Y="0.151" Height="0.182" Width="1.124" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAcAEAACAgAAAAAAASJAAAEAAAAAAAAAAEAIA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ModelFactory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NongFormat.M3u8Format" Collapsed="true">
+    <Position X="4.25" Y="15.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\M3u8Format.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="NongFormat.FlacBlockType" Collapsed="true">
+    <Position X="9" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAABAAAAAAAAAAAAACEAAAAEAAAAIAAAAAIAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.PicType" Collapsed="true">
+    <Position X="9" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQAAEQCAAAAAAAAAQAIABAAAIICIAFAAABAIQEECgAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\FlacBlockList.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.Likeliness" Collapsed="true">
+    <Position X="7.5" Y="2.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAAAEAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.FileIntent" Collapsed="true">
+    <Position X="9" Y="3" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.Hashes" Collapsed="true">
+    <Position X="9" Y="1.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAEAAAAABAAEAAAAhBAAAAAAAAAAAAkgAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.Validations" Collapsed="true">
+    <Position X="9" Y="2.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAEAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FormatBase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.JpegUnits" Collapsed="true">
+    <Position X="7.5" Y="14" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAACEAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\JpegFormat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.JpegApps" Collapsed="true">
+    <Position X="7.5" Y="14.75" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAAAAAIAAAAAAAAEAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\JpegFormat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.EbmlType" Collapsed="true">
+    <Position X="7.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAACAAAAAAAAAAAAAAQABCAAAEAAgAAg=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.ParseFlag" Collapsed="true">
+    <Position X="7.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAQAAAAAAgEAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\MkvFormat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongFormat.WaveCompression" Collapsed="true">
+    <Position X="7" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAIAAAoAABAAAAAAAAAAAgAgAAAAAAAAAAABA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Format\WavFormat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongIssue.Granularity" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAEAAIgAAAAAAAAACAAAAAAABAAAAAAAAAAACAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongIssue.Severity" Collapsed="true">
+    <Position X="2.75" Y="2.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>CAAABAAAAAAAAQAAAAAAABAAAAAABAAAAAAAAAAEACA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongIssue.IssueTags" Collapsed="true">
+    <Position X="2.75" Y="3" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAQABAAAAEAAAAAAAAAAgAAARyAAAAAIIGAAEA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\IssueVector.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NongMediaDiags.Interaction" Collapsed="true">
+    <Position X="7.5" Y="3" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Diags.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="NongFormat.FormatModelFactory" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Func&lt;TResult&gt;" Collapsed="true">
+    <Position X="2.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier />
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
