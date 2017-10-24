@@ -1,0 +1,49 @@
+EAC extraction logfile from 3. June 2015, 3:28 for CD
+EACTestArtist / EACTestAlbum
+
+Used drive  : PIONEER DVD-RW  DVR-108   Adapter: 1  ID: 0
+Read mode   : Secure with NO C2, accurate stream, disable cache
+Read offset correction : 48
+Overread into Lead-In and Lead-Out : No
+
+Used output format : C:\Programs\foobar2000-v1.3.8\flac.exe   (User Defined Encoder)
+                     128 kBit/s
+                     Additional command line options : --best %s -T title="%t" -T artist="%a" -T date="%Y" -T genre="%m" -T album="%g" -T tracknumber="%n"
+
+Other options      : 
+    Fill up missing offset samples with silence : No
+    Delete leading and trailing silent blocks : No
+    Installed external ASPI interface
+
+
+Track  1
+   Filename C:\Rips\01 - 4 frames of silence.wav
+
+   Peak level 23.8 %
+   Track quality 100.0 %
+   Test CRC 6522DF69
+   Copy CRC 6522DF69
+   Copy OK
+
+Track  2
+   Filename C:\Rips\02 - track 2.wav
+
+   Peak level 10.4 %
+   Track quality 100.0 %
+   Test CRC 003E74D0
+   Copy CRC 003E74D0
+   Copy OK
+
+Track  3
+   Filename C:\Rips\03 - track three.wav
+
+   Peak level 20.4 %
+   Track quality 100.0 %
+   Test CRC FAB5205F
+   Copy CRC FAB5205F
+   Copy OK
+
+No errors occured
+
+
+End of status report
