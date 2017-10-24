@@ -1,8 +1,10 @@
 # Mediags: Media Diagnostics Suite
 
-## [>> DOWNLOAD <<](https://github.com/Nongorilla/Hello/releases)
+### Featuring the Mediags, UberFLAC, and UberLAME products.
 
-## [>> DOCUMENTATION <<](https://github.com/Nongorilla/Hello/wiki)
+## [>> DOWNLOAD <<](https://github.com/Nongorilla/Mediags/releases/)
+
+## [>> DOCUMENTATION <<](https://github.com/Nongorilla/Mediags/wiki/)
 
 ## Repository layout
 
