@@ -126,21 +126,21 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Targets\EacLogs\EAC1NoHashOrCT.log">
+    <Content Include="Targets\EacLogs\EAC1NoHashOrCT.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\EacLogs\Nightmare.log">
+    </Content>
+    <Content Include="Targets\EacLogs\Nightmare.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Hashes\0bytes.sha256">
+    </Content>
+    <Content Include="Targets\Hashes\0bytes.sha256">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Hashes\Bad01.sha1">
+    </Content>
+    <Content Include="Targets\Hashes\Bad01.sha1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Hashes\OK01.sha1">
+    </Content>
+    <Content Include="Targets\Hashes\OK01.sha1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Targets\Rips\Tester - 2000 - FLAC Silence Bad1\01 - 4 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -153,33 +153,33 @@
     <Content Include="Targets\Rips\Tester - 2000 - FLAC Silence Bad1\Tester - 2000 - FLAC Silence Bad1.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Targets\Hashes\OK03.sha256">
+    <Content Include="Targets\Hashes\OK03.sha256">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Rips\Tester - 2000 - FLAC Not Super\01 - 4 frames of silence.flac">
+    </Content>
+    <Content Include="Targets\Rips\Tester - 2000 - FLAC Not Super\01 - 4 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Rips\Tester - 2000 - FLAC Not Super\02 - 8 frames of silence.flac">
+    </Content>
+    <Content Include="Targets\Rips\Tester - 2000 - FLAC Not Super\02 - 8 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Rips\Tester - 2000 - FLAC Not Super\03 - 12 frames of silence.flac">
+    </Content>
+    <Content Include="Targets\Rips\Tester - 2000 - FLAC Not Super\03 - 12 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Targets\Rips\Tester - 2000 - FLAC Not Super\Tester - 2000 - FLAC Not Super.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\01 - 4 frames of silence.flac">
+    <Content Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\01 - 4 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\02 - 8 frames of silence.flac">
+    </Content>
+    <Content Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\02 - 8 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\03 - 12 frames of silence.flac">
+    </Content>
+    <Content Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\03 - 12 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\Tester - 2000 - FLAC Silence OK1.log">
+    </Content>
+    <Content Include="Targets\Rips\Tester - 2000 - FLAC Silence OK1\Tester - 2000 - FLAC Silence OK1.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Targets\Rips\Tester - 2002 - FLAC Silence OK2\01 - 4 frames of silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -192,9 +192,9 @@
     <Content Include="Targets\Rips\Tester - 2002 - FLAC Silence OK2\Tester - 2002 - FLAC Silence OK2.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Targets\Singles\03-Silence.flac">
+    <Content Include="Targets\Singles\03-Silence.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Targets\Singles\04-BadCRC.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
