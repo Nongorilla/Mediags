@@ -469,7 +469,7 @@ namespace NongFormat
             return v1tag[0x7D] != 0 || v1tag[0x7E] == 0? 0 : 1;
         }
 
-        static private readonly string[] blessedLames = { "LAME3.90.", "LAME3.90r", "LAME3.92 ", "LAME3.99r" };
+        static private readonly string[] blessedLames = { "LAME3.90.", "LAME3.90r", "LAME3.92 ", "LAME3.99r", "LAME3.100" };
 
         static private readonly int?[] bitRateMap1L3 =
         { 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, null };  // 0=free, null=reserved
