@@ -53,7 +53,6 @@ namespace AppController
         private IWpfFlacViewFactory viewFactory;
         private FlacDiags.Model model;
 
-        //private static string uberGuide =
         public static string UberGuide { get { return @"TRACKNUMBER
 Required.  Must be digits only with no leading zeroes.  Must be sequential and the order must match the order of tracks in the EAC log.
 
@@ -192,12 +191,12 @@ Optional.  If present, must be consistent for all tracks.";
                     model.Bind.ApplyRG = true;
                     argOK = true;
                 }
-                else if (arg == "/strict")
+                else if (arg == "/prove")
                 {
                     model.Bind.WillProve = true;
                     argOK = true;
                 }
-                else if (arg == "/strict:web")
+                else if (arg == "/prove:web")
                 {
                     model.Bind.WillProve = true;
                     model.Bind.IsWebCheckEnabled = true;
