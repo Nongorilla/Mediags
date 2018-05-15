@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("GitHub.com/Nongorilla")]
 [assembly: AssemblyProduct ("Mediags, UberFLAC, UberLAME")]
-[assembly: AssemblyCopyright ("Copyright © 2014-2017 GitHub.com/Nongorilla")]
+[assembly: AssemblyCopyright ("Copyright © 2014-2018 GitHub.com/Nongorilla")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 [assembly: ComVisible (false)]

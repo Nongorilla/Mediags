@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("GitHub.com/Nongorilla")]
 [assembly: AssemblyProduct ("GenMap1252")]
-[assembly: AssemblyCopyright ("Copyright © 2015-2017 GitHub.com/Nongorilla")]
+[assembly: AssemblyCopyright ("Copyright © 2015-2018 GitHub.com/Nongorilla")]
 [assembly: AssemblyTrademark ("Freeware")]
 [assembly: AssemblyCulture ("")]
 [assembly: ComVisible (false)]

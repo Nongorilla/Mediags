@@ -2,7 +2,7 @@
 // Product: UberFLAC
 // File:    WpfFlacController.xaml.cs
 //
-// Copyright © 2015-2017 GitHub.com/Nongorilla
+// Copyright © 2015-2018 GitHub.com/Nongorilla
 // MIT License - Use and redistribute freely
 //
 

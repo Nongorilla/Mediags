@@ -7,7 +7,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("GitHub.com/Nongorilla")]
 [assembly: AssemblyProduct ("UberFLAC")]
-[assembly: AssemblyCopyright ("Copyright © 2016-2017 GitHub.com/Nongorilla")]
+[assembly: AssemblyCopyright ("Copyright © 2016-2018 GitHub.com/Nongorilla")]
 [assembly: AssemblyTrademark ("Freeware")]
 [assembly: AssemblyCulture ("")]
 [assembly: ComVisible (false)]

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("GitHub.com/Nongorilla")]
 [assembly: AssemblyProduct ("UberLAME")]
-[assembly: AssemblyCopyright ("Copyright © 2017 GitHub.com/Nongorilla")]
+[assembly: AssemblyCopyright ("Copyright © 2017-2018 GitHub.com/Nongorilla")]
 [assembly: AssemblyTrademark ("Freeware")]
 [assembly: AssemblyCulture ("")]
 [assembly: ComVisible (false)]

@@ -2,7 +2,7 @@
 // Product: UberLAME
 // File:    ConLameController.cs
 //
-// Copyright © 2017 GitHub.com/Nongorilla
+// Copyright © 2017-2018 GitHub.com/Nongorilla
 // MIT License - Use and redistribute freely
 //
 
