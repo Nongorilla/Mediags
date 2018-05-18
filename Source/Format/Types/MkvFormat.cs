@@ -654,6 +654,7 @@ namespace NongFormat
 
             // Tracks:
             new EbmlSig (new byte[] { 0xAE },       "TrackEntry"),
+            new EbmlSig (new byte[] { 0x55, 0xB0 }, "Colour"),
             new EbmlSig (new byte[] { 0x66, 0x24 }, "TrackTranslate"),
             new EbmlSig (new byte[] { 0xE0 },       "Video"),
             new EbmlSig (new byte[] { 0xE1 },       "Audio"),
@@ -763,6 +764,8 @@ namespace NongFormat
             new EbmlSig (new byte[] { 0x54, 0xB2 }, EbmlType.Unsigned, "DisplayUnit"),
             new EbmlSig (new byte[] { 0x54, 0xB3 }, EbmlType.Unsigned, "AspectRatioType"),
             new EbmlSig (new byte[] { 0x2E, 0xB5, 0x24 }, EbmlType.Binary, "ColourSpace"),
+            new EbmlSig (new byte[] { 0x55, 0xB7 }, EbmlType.Unsigned, "ChromaSitingHorz"),
+            new EbmlSig (new byte[] { 0x55, 0xB8 }, EbmlType.Unsigned, "ChromaSitingVert"),
 
             new EbmlSig (new byte[] { 0xB5       }, EbmlType.Float,    "SamplingFrequency", ParseFlag.Persist),
             new EbmlSig (new byte[] { 0x78, 0xB5 }, EbmlType.Float,    "OutputSamplingFrequency"),
