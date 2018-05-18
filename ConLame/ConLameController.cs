@@ -33,6 +33,7 @@ namespace AppController
         private string mirrorName;
         private bool waitForKeyPress = false;
         private string signature = null;
+        private string logTag = null;
         private int? notifyEvery = null;
         public int NotifyEvery { get; private set; }
 
@@ -70,7 +71,7 @@ namespace AppController
                 if (model.Bind.Scope <= Granularity.Verbose)
                 { Trace.WriteLine (ProductText + " v" + VersionText); Trace.WriteLine (String.Empty); }
 
-                Severity worstDiagnosis = model.ValidateLameRipsDeep (signature);
+                Severity worstDiagnosis = model.ValidateLameRipsDeep (signature, logTag);
                 exitCode = worstDiagnosis < Severity.Warning? 0 : (int) worstDiagnosis;
             }
 
@@ -123,6 +124,12 @@ namespace AppController
                 {
                     argOK = true;
                     waitForKeyPress = true;
+                }
+                else if (args[an].StartsWith ("/logtag:"))
+                {
+                    logTag = args[an].Substring (8).Trim(null);
+                    argOK = ! logTag.Any (ch => Char.IsWhiteSpace (ch))
+                            && logTag.IndexOfAny (Path.GetInvalidFileNameChars()) < 0;
                 }
                 else if (args[an].StartsWith ("/out:"))
                 {
@@ -219,6 +226,9 @@ namespace AppController
 
             Console.WriteLine ();
             Console.WriteLine ("Use /sig:<signature> to sign (rename) .log file and create .md5 file.");
+
+            Console.WriteLine ();
+            Console.WriteLine ("Use /logtag:<tag> to include <tag> in EAC log file name.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /verify:web to verify EAC log hash online.");

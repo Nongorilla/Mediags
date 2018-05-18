@@ -19,13 +19,13 @@ namespace NongMediaDiags
             public LogEacFormat.Model LogModel;
             public Sha1xFormat.Model Sha1xModel = null;
 
-            public Model (LameDiags.Model model, string path, string signature)
+            public Model (LameDiags.Model model, string path, string signature, string logTag)
             {
                 if (model == null)
                     throw new NullReferenceException ("LameRip constructor missing model.");
 
                 this.Owner = model;
-                this.Bind = new LameRip (path, signature);
+                this.Bind = new LameRip (path, signature, logTag);
             }
 
 
@@ -57,13 +57,20 @@ namespace NongMediaDiags
                     return;
                 }
 
-                if (Bind.Ripper == null && Bind.Signature == null)
-                {
-                    Owner.ReportFormat (Bind.Log, false);
-                    Bind.IsWip = false;
-                    Bind.Status = Bind.Log.Issues.MaxSeverity;
-                    return;
-                }
+                if (Bind.Ripper == null)
+                    if (Bind.Signature == null)
+                    {
+                        Owner.ReportFormat (Bind.Log, false);
+                        Bind.IsWip = false;
+                        Bind.Status = Bind.Log.Issues.MaxSeverity;
+                        return;
+                    }
+                    else if (Bind.DotLogTag.Length != 0 && ! Bind.Log.Name.EndsWith (Bind.DotLogTag + ".log"))
+                    {
+                        string err = LogModel.Rename (Bind.WorkName + Bind.DotLogTag + ".log");
+                        if (err != null)
+                            LogModel.IssueModel.Add ("Log rename failed: " + err, Severity.Error);
+                    }
 
                 ValidateAlbum();
                 if (Bind.Status >= Severity.Error)
@@ -158,7 +165,9 @@ namespace NongMediaDiags
                 if (Bind.digInfos.Length == 0)
                 {
                     Bind.WorkName = Path.GetFileNameWithoutExtension (Bind.LogName);
-                    Bind.DigName = Bind.WorkName + ".LAME." + Bind.Signature + ".sha1x";
+                    if (Bind.WorkName.EndsWith (Bind.DotLogTag))
+                        Bind.WorkName = Bind.WorkName.Substring (0, Bind.WorkName.Length - Bind.DotLogTag.Length);
+                    Bind.DigName = Bind.WorkName + Bind.DotLogTag + ".LAME." + Bind.Signature + ".sha1x";
                     Bind.DigPath = Bind.DirPath + Bind.DigName;
                 }
                 else
@@ -372,7 +381,7 @@ namespace NongMediaDiags
             private void ValidateDigest()
             {
                 var firstSig = Bind.Ripper ?? Bind.Signature;
-                var newDigName = Bind.WorkName + ".LAME." + firstSig + ".sha1x";
+                var newDigName = Bind.WorkName + Bind.DotLogTag + ".LAME." + firstSig + ".sha1x";
                 var newDigPath = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + newDigName;
 
                 if (Bind.Ripper == null)
@@ -557,6 +566,7 @@ namespace NongMediaDiags
         public DirectoryInfo Dir { get; private set; }
         public string WorkName { get; private set; }
         public string Signature { get; private set; }
+        public string DotLogTag { get; private set; }
 
         public Severity Status { get; private set; }
         public Severity MaxTrackSeverity { get; private set; }
@@ -574,10 +584,11 @@ namespace NongMediaDiags
             private set { path = value; this.Dir = value==null? null : new DirectoryInfo (value); }
         }
 
-        private LameRip (string path, string signature)
+        private LameRip (string path, string signature, string logTag)
         {
             this.DirPath = path;
             this.Signature = signature;
+            this.DotLogTag = logTag == null ? String.Empty : "." + logTag;
         }
 
 
