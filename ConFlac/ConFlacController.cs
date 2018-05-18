@@ -122,16 +122,14 @@ namespace AppController
                 }
                 else if (args[an].StartsWith ("/autoname:"))
                 {
-                    NamingStrategy arg;
-                    argOK = Enum.TryParse<NamingStrategy> (args[an].Substring (10), true, out arg);
+                    argOK = Enum.TryParse<NamingStrategy> (args[an].Substring (10), true, out NamingStrategy arg);
                     argOK = argOK && Enum.IsDefined (typeof (NamingStrategy), arg);
                     if (argOK)
                         model.Bind.Autoname = arg;
                 }
                 else if (args[an].StartsWith ("/g:"))
                 {
-                    Granularity arg;
-                    argOK = Enum.TryParse<Granularity> (args[an].Substring (3), true, out arg);
+                    argOK = Enum.TryParse<Granularity> (args[an].Substring (3), true, out Granularity arg);
                     argOK = argOK && Enum.IsDefined (typeof (Granularity), arg) && arg <= maxGranularity;
                     if (argOK)
                         model.Bind.Scope = arg;
@@ -148,8 +146,7 @@ namespace AppController
                 }
                 else if (args[an].StartsWith ("/p:"))
                 {
-                    int arg;
-                    argOK = int.TryParse (args[an].Substring (3), out arg);
+                    argOK = int.TryParse (args[an].Substring (3), out int arg);
                     if (argOK)
                         notifyEvery = arg;
                 }

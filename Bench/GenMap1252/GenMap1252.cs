@@ -110,8 +110,7 @@ namespace AppMain
         {
             if (lx[1].Contains (filterText + Char.ToUpper(cleanLetter) + " WITH") || lx[1].EndsWith (filterText + Char.ToUpper(cleanLetter)))
             {
-                int point;
-                var isOk = Int32.TryParse (lx[0], NumberStyles.AllowHexSpecifier, null, out point);
+                var isOk = Int32.TryParse (lx[0], NumberStyles.AllowHexSpecifier, null, out int point);
                 System.Diagnostics.Debug.Assert (isOk);
 
                 string utf16Char = Char.ConvertFromUtf32 (point);

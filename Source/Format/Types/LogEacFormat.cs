@@ -101,8 +101,7 @@ namespace NongFormat
                             if (lx.Contains ("ccurately ripped (confidence "))
                             {
                                 int arVersion = lx.Contains("AR v2")? 2 : 1;
-                                int val;
-                                bool isOk = ToInt (lx, 40, out val);
+                                bool isOk = ToInt (lx, 40, out int val);
                                 int arConfidence = isOk && val > 0? val : -1;
                                 lx = parser.ReadLineLTrim();
 
@@ -175,8 +174,7 @@ namespace NongFormat
                     MatchCollection reMatches = integerRegex.Matches (trackNumTag);
                     string trackNumTagCapture = reMatches.Count == 1? reMatches[0].Groups[1].ToString() : trackNumTag;
 
-                    int trackNum;
-                    if (! int.TryParse (trackNumTagCapture, out trackNum))
+                    if (! int.TryParse (trackNumTagCapture, out int trackNum))
                         IssueModel.Add ("Invalid TRACKNUMBER tag '" + trackNumTag + "'.");
                     else
                     {
@@ -326,8 +324,7 @@ namespace NongFormat
                 else if (isSameTrackTotal == true)
                 {
                     string ttt = Bind.Tracks.Items[0].Match.GetTag ("TRACKTOTAL");
-                    int ttn = 0;
-                    bool isOK = int.TryParse (ttt, out ttn);
+                    bool isOK = int.TryParse (ttt, out int ttn);
                     if (! isOK)
                         IssueModel.Add ("Malformed TRACKTOTAL tag '" + ttt + "'.");
 

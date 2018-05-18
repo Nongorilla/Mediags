@@ -163,8 +163,7 @@ namespace NongFormat
 
                             if (lx.Length >= 60)
                             {
-                                int tn = 0;
-                                if (int.TryParse (lx.Substring (0, 9), out tn))
+                                if (int.TryParse (lx.Substring (0, 9), out int tn))
                                     ++Bind.TocTrackCount;
                             }
                         }
@@ -254,8 +253,7 @@ namespace NongFormat
                         continue;
                     }
 
-                    int num;
-                    bool success = Int32.TryParse (lx.Substring (6), out num);
+                    bool success = Int32.TryParse (lx.Substring (6), out int num);
                     if (! success)
                     {
                         Bind.TkIssue = IssueModel.Add ("Invalid track " + parser.GetPlace(), Severity.Fatal, IssueTags.Failure);
@@ -340,8 +338,7 @@ namespace NongFormat
                 if (lx.StartsWith ("Accurately ripped (confidence "))
                 {
                     arVersion = lx.Contains("AR v2")? 2 : 1;
-                    int val;
-                    bool isOk = ToInt (lx, 30, out val);
+                    bool isOk = ToInt (lx, 30, out int val);
                     arConfidence = isOk && val > 0? val : -1;
                     lx = parser.ReadLineLTrim();
                 }

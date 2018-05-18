@@ -49,9 +49,8 @@ namespace NongFormat
                 {
                     BindHashed.Generator = reMatches[0].Groups[1].ToString();
 
-                    int major, minor;
-                    var isOK = Int32.TryParse (reMatches[0].Groups[2].ToString(), out major);
-                    isOK = Int32.TryParse (reMatches[0].Groups[3].ToString(), out minor);
+                    var isOK = Int32.TryParse (reMatches[0].Groups[2].ToString(), out int major);
+                    isOK = Int32.TryParse (reMatches[0].Groups[3].ToString(), out int minor);
 
                     {
                         BindHashed.mediaPosition = lx.Length + 4;
@@ -60,8 +59,7 @@ namespace NongFormat
                         lx = tr.ReadLine();
                         string crcText = lx.Substring (2, 8);
 
-                        UInt32 crc;
-                        isOK = UInt32.TryParse (crcText, System.Globalization.NumberStyles.HexNumber, null, out crc);
+                        isOK = UInt32.TryParse (crcText, System.Globalization.NumberStyles.HexNumber, null, out UInt32 crc);
                         if (! isOK)
                         {
                             IssueModel.Add ("Self-CRC is missing or invalid.", Severity.Fatal);

@@ -167,16 +167,14 @@ Optional.  If present, must be consistent for all tracks.";
                 }
                 else if (arg.StartsWith ("/autoname:"))
                 {
-                    NamingStrategy ns;
-                    argOK = Enum.TryParse<NamingStrategy> (arg.Substring (10), true, out ns);
+                    argOK = Enum.TryParse<NamingStrategy> (arg.Substring (10), true, out NamingStrategy ns);
                     argOK = argOK && Enum.IsDefined (typeof (NamingStrategy), ns);
                     if (argOK)
                         model.Bind.Autoname = ns;
                 }
                 else if (arg.StartsWith ("/g:"))
                 {
-                    Granularity gran;
-                    argOK = Enum.TryParse<Granularity> (arg.Substring (3), true, out gran);
+                    argOK = Enum.TryParse<Granularity> (arg.Substring (3), true, out Granularity gran);
                     argOK = argOK && Enum.IsDefined (typeof (Granularity), gran) && gran <= Granularity.Advisory;
                     if (argOK)
                         model.Bind.Scope = gran;

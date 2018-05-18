@@ -145,8 +145,7 @@ namespace NongFormat
             var hash = new byte[len];
             for (var hx = 0; hx < len; ++hx)
             {
-                byte octet;
-                if (! Byte.TryParse (hs.Substring (start+hx*2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out octet))
+                if (! Byte.TryParse (hs.Substring (start+hx*2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte octet))
                     return null;
                 hash[hx] = octet;
             }

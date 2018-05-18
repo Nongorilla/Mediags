@@ -361,8 +361,7 @@ namespace NongFormat
                     if (bb[0] == voidSig.Sig32)
                     {
                         Bind.fbs.Position = Bind.ValidSize + 1;
-                        long voidLen;
-                        var voidLenBuf = ReadMTF (Bind.fbs, out voidLen);
+                        var voidLenBuf = ReadMTF (Bind.fbs, out long voidLen);
                         if (voidLen < 0)
                         { IssueModel.Add ("File truncated near void.", Severity.Fatal); return; }
 
@@ -383,8 +382,7 @@ namespace NongFormat
 
                             if ((mstr.Flag & ParseFlag.PrunePayload) != 0)
                             {
-                                long payloadLen;
-                                var payloadLenBuf = ReadMTF (Bind.fbs, out payloadLen);
+                                var payloadLenBuf = ReadMTF (Bind.fbs, out long payloadLen);
                                 if (payloadLen < 0)
                                 { IssueModel.Add ("File corrupt or truncated.", Severity.Fatal); return; }
 
@@ -430,8 +428,7 @@ namespace NongFormat
             EbmlNodeMaster ParseTree (EbmlSig element)
             {
                 string err = null;
-                long contentLen;
-                var contentLenBuf = ReadMTF (Bind.fbs, out contentLen);
+                var contentLenBuf = ReadMTF (Bind.fbs, out long contentLen);
                 if (contentLen < 0)
                     return null;
                 Bind.ValidSize += contentLenBuf.Length;
@@ -469,8 +466,7 @@ namespace NongFormat
                             Bind.fbs.Position = Bind.ValidSize = Bind.ValidSize + item.Signature.Count;
 
                             byte[] payload = null;
-                            long payloadLen;
-                            byte[] payloadHdr = ReadMTF (Bind.fbs, out payloadLen);
+                            byte[] payloadHdr = ReadMTF (Bind.fbs, out long payloadLen);
                             if (payloadHdr == null)
                             { err = "File truncated or corrupt"; goto FATAL; }
 
@@ -527,8 +523,7 @@ namespace NongFormat
                 if (buf[0] != m1 || buf[1] != m2 || buf[2] != m3 || buf[3] != m4)
                     return -1;
 
-                long result;
-                buf = ReadMTF (Bind.fbs, out result);
+                buf = ReadMTF (Bind.fbs, out long result);
                 if (buf != null)
                     Bind.ValidSize += 4 + buf.Length;
 

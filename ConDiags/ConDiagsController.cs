@@ -177,8 +177,7 @@ namespace AppController
                 }
                 else if (args[an].StartsWith ("/p:"))
                 {
-                    int arg;
-                    argOk = int.TryParse (args[an].Substring (3), out arg);
+                    argOk = int.TryParse (args[an].Substring (3), out int arg);
                     if (argOk)
                         notifyEvery = arg;
                 }
@@ -265,8 +264,7 @@ namespace AppController
             var groupNames = Enum.GetNames (typeof (IssueTags));
             for (var di = 1; di < groupNames.Length; ++di)
             {
-                IssueTags tag;
-                Enum.TryParse<IssueTags> (groupNames[di], true, out tag);
+                Enum.TryParse<IssueTags> (groupNames[di], true, out IssueTags tag);
                 if (((int) tag & 0x00FFFFFF) != 0)
                     Console.Write (" " + groupNames[di]);
             }

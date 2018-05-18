@@ -197,8 +197,7 @@ namespace NongFormat
 
                 Bind.mediaPosition = Bind.ValidSize;
 
-                byte[] wtfBuf;
-                Bind.SampleOrFrameNumber = Bind.fbs.ReadWobbly (out wtfBuf);
+                Bind.SampleOrFrameNumber = Bind.fbs.ReadWobbly (out byte[] wtfBuf);
                 if (Bind.SampleOrFrameNumber < 0)
                 {
                     IssueModel.Add ("File truncated or badly formed sample/frame number.", Severity.Fatal);
