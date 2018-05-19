@@ -352,22 +352,20 @@ Optional.  If present, must be consistent for all tracks.";
             stratWrap = (WrapPanel) sender;
             string[] stratNames = Enum.GetNames (typeof (NamingStrategy));
             for (int ix = 0; ix < stratNames.Length; ++ix)
-            {
-                var btn = new RadioButton();
-                btn.Tag = ix;
-                btn.Content = stratNames[ix];
-                btn.Margin = new Thickness (3, 0, 6, 0);
-                btn.GroupName = "NamingStrategy";
-                btn.IsChecked = model != null && ix == (int) model.Bind.Autoname;
-                stratWrap.Children.Add (btn);
-            }
+                stratWrap.Children.Add (new RadioButton()
+                {
+                    Tag = ix,
+                    Content = stratNames[ix],
+                    Margin = new Thickness (3, 0, 6, 0),
+                    GroupName = "NamingStrategy",
+                    IsChecked = model != null && ix == (int) model.Bind.Autoname
+                });
         }
 
 
         private void Browse_Click (object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Filter = "EAC log files (*.log)|*.log";
+            var dlg = new Microsoft.Win32.OpenFileDialog() { Filter="EAC log files (*.log)|*.log" };
             bool? result = dlg.ShowDialog();
             if (! String.IsNullOrWhiteSpace (dlg.FileName))
                 pathBox.Text = dlg.FileName;
@@ -407,10 +405,10 @@ Optional.  If present, must be consistent for all tracks.";
 
         private void ProveBlock_MouseDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var bx = new TextBox();
-            bx.TextWrapping = TextWrapping.Wrap;
-            bx.AcceptsReturn = true;
-            bx.Text = @"1. Disc must be ripped with EAC version 1 or later.
+            var bx = new TextBox()
+            {
+                TextWrapping=TextWrapping.Wrap, AcceptsReturn=true, IsReadOnly=true, Text=
+@"1. Disc must be ripped with EAC version 1 or later.
 2. EAC log self-hash must exist and pass on-line verification.
 3. CUETools verification must be attempted and no track may fail.
 4. Disc must have at least one of:
@@ -421,30 +419,17 @@ Optional.  If present, must be consistent for all tracks.";
 6. Disc must pass the standard battery of UberFLAC verifications.
 
 Steps 3 and 4 are confirmed by analyzing the EAC log contents.
-Steps 5 and 6 are confirmed by analyzing the log and FLAC files.";
-            bx.IsReadOnly = true;
-            var pp = new Popup();
+Steps 5 and 6 are confirmed by analyzing the log and FLAC files.",
+            };
 
-            pp.Child = bx;
-            pp.Placement = PlacementMode.MousePoint;
-            pp.StaysOpen = false;
-            pp.IsOpen = true;
+            var pp = new Popup() { Child=bx, Placement=PlacementMode.MousePoint, StaysOpen=false, IsOpen=true };
         }
 
 
         private void GuideBlock_MouseDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var bx = new TextBox();
-            bx.TextWrapping = TextWrapping.Wrap;
-            bx.AcceptsReturn = true;
-            bx.Text = UberGuide;
-            bx.IsReadOnly = true;
-            var pp = new Popup();
-
-            pp.Child = bx;
-            pp.Placement = PlacementMode.MousePoint;
-            pp.StaysOpen = false;
-            pp.IsOpen = true;
+            var bx = new TextBox() { TextWrapping=TextWrapping.Wrap, AcceptsReturn=true, Text=UberGuide, IsReadOnly=true };
+            var pp = new Popup() { Child=bx, Placement=PlacementMode.MousePoint, StaysOpen=false, IsOpen=true };
         }
     }
 }
