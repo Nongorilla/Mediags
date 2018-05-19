@@ -93,7 +93,7 @@ namespace NongFormat
                 report.Add ("Actual self-CRC-32 = " + (History.ActualCRC == null? "?" : String.Format ("{0:X8}", History.ActualCRC)));
             }
 
-            report.Add ("Prover = " + (History.Prover == null? "(none)" : History.Prover));
+            report.Add ("Prover = " + (History.Prover ?? "(none)"));
 
             if (report.Count > 0)
                 report.Add (String.Empty);

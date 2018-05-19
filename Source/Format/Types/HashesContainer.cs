@@ -346,7 +346,7 @@ namespace NongFormat
 
         public HashesContainer (Stream stream, string path, HashedFile.Vector hashedVector, Encoding encoding=null) : base (stream, path)
         {
-            this.encoding = encoding==null? LogBuffer.cp1252 : encoding;
+            this.encoding = encoding ?? LogBuffer.cp1252;
             this.HashedFiles = hashedVector;
         }
 

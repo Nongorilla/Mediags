@@ -86,7 +86,7 @@ namespace NongMediaDiags
 
                 if (Bind.Sha1x != null)
                 {
-                    string firstSig = Bind.Ripper != null? Bind.Ripper : Bind.Signature;
+                    string firstSig = Bind.Ripper ?? Bind.Signature;
 
                     if (Bind.Signature == null)
                         Sha1xModel.IssueModel.Escalate (IssueTags.None, IssueTags.AlbumChange|IssueTags.NameChange);
