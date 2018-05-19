@@ -164,7 +164,7 @@
                     </WrapPanel>
                 </GroupBox>
                 <GroupBox Header="File naming strategy" HorizontalAlignment="Left" Margin="3,3,3,3">
-                    <WrapPanel Loaded="strategyWrap_Loaded" Orientation="Vertical">
+                    <WrapPanel Loaded="StrategyWrap_Loaded" Orientation="Vertical">
                         <!-- content generated at runtime -->
                     </WrapPanel>
                 </GroupBox>
@@ -255,7 +255,7 @@
                 </TextBlock.Style>
             </TextBlock>
         </Grid>
-        <TabControl x:Name="infoTabs" Grid.Row="1" SelectionChanged="infoTabs_SelectionChanged" VerticalContentAlignment="Stretch">
+        <TabControl x:Name="infoTabs" Grid.Row="1" SelectionChanged="InfoTabs_SelectionChanged" VerticalContentAlignment="Stretch">
             <TabItem x:Name="mainTab" Header="Console">
                 <DockPanel>
                     <StackPanel>

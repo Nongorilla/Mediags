@@ -36,13 +36,13 @@ namespace AppMain
         private static readonly Encoding cp1252 = Encoding.GetEncoding (1252, new EncoderReplacementFallback (""), new DecoderReplacementFallback ("="));
 
         public static readonly SortedDictionary<int,Payload> map1252 = new SortedDictionary<int,Payload>();
-        static void map1252Add (int codePoint, byte octet1252)
+        static void Map1252Add (int codePoint, byte octet1252)
         {
             var toHex = codePoint.ToString ("X4");
             var desc = GenMap1252.udb.First (xx => xx[0]==toHex)[1] + "††";
             map1252.Add (codePoint, new Payload (octet1252, desc));
         }
-        static void map1252Add (int codePoint, byte octet1252, string desc)
+        static void Map1252Add (int codePoint, byte octet1252, string desc)
         {
             map1252.Add (codePoint, new Payload (octet1252, desc));
         }
@@ -60,7 +60,7 @@ namespace AppMain
                 int p32 = Char.ConvertToUtf32 (utf16, 0);
                 var row = udb.First (xx => Int32.Parse (xx[0], NumberStyles.AllowHexSpecifier) == p32);
                 if (p32 != b1252[0])
-                    GenMap1252.map1252Add (p32, b1252[0], row[1] + "**");
+                    GenMap1252.Map1252Add (p32, b1252[0], row[1] + "**");
 
                 if (b1252[0] == 0xFF) break;
             }
@@ -76,9 +76,9 @@ namespace AppMain
                 }
 
             // There are many more potential custom remaps like these:
-            map1252Add (Char.ConvertToUtf32 ("⁓", 0), (byte) '~');
-            map1252Add (Char.ConvertToUtf32 ("‒", 0), (byte) '-');
-            map1252Add (Char.ConvertToUtf32 ("―", 0), (byte) '-');
+            Map1252Add (Char.ConvertToUtf32 ("⁓", 0), (byte) '~');
+            Map1252Add (Char.ConvertToUtf32 ("‒", 0), (byte) '-');
+            Map1252Add (Char.ConvertToUtf32 ("―", 0), (byte) '-');
 
             Console.WriteLine ("// Generated from v8.0 of www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt");
             Console.WriteLine ("// Total = " + map1252.Count + ", Scrubbed = " + (map1252.Count - totalExactMaps));
@@ -118,7 +118,7 @@ namespace AppMain
                 byte[] cp1252Byte = Encoding.Convert (Encoding.Unicode, cp1252, utf16Bytes);
 
                 if (cp1252Byte.Length == 0)
-                    GenMap1252.map1252Add (point, (byte) cleanLetter, lx[1]);
+                    GenMap1252.Map1252Add (point, (byte) cleanLetter, lx[1]);
             }
         }
     }

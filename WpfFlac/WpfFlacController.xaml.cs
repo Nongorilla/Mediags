@@ -323,7 +323,7 @@ Optional.  If present, must be consistent for all tracks.";
         }
 
 
-        private void infoTabs_SelectionChanged (object sender, SelectionChangedEventArgs args)
+        private void InfoTabs_SelectionChanged (object sender, SelectionChangedEventArgs args)
         {
             if (args.Source is TabControl tabControl)
                 foreach (var added in args.AddedItems)
@@ -347,7 +347,7 @@ Optional.  If present, must be consistent for all tracks.";
 
 
         private WrapPanel stratWrap;
-        private void strategyWrap_Loaded (object sender, RoutedEventArgs rea)
+        private void StrategyWrap_Loaded (object sender, RoutedEventArgs rea)
         {
             stratWrap = (WrapPanel) sender;
             string[] stratNames = Enum.GetNames (typeof (NamingStrategy));
