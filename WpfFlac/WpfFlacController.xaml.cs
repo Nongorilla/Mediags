@@ -295,11 +295,9 @@ Optional.  If present, must be consistent for all tracks.";
         {
             if (model.RipModel != null && tab != null)
             {
-                var userControl = tab.Content as UserControl;
-                if (userControl != null)
+                if (tab.Content is UserControl userControl)
                 {
-                    var fmt = userControl.DataContext as FormatBase;
-                    if (fmt != null)
+                    if (userControl.DataContext is FormatBase fmt)
                         return fmt;
                 }
             }
@@ -327,9 +325,7 @@ Optional.  If present, must be consistent for all tracks.";
 
         private void infoTabs_SelectionChanged (object sender, SelectionChangedEventArgs args)
         {
-            var tabControl = args.Source as TabControl;
-            if (tabControl != null)
-            {
+            if (args.Source is TabControl tabControl)
                 foreach (var added in args.AddedItems)
                 {
                     var tab = added as TabItem;
@@ -340,14 +336,13 @@ Optional.  If present, must be consistent for all tracks.";
                         {
                             if (tab == logTab)
                             {
-                                var kt = gt.Items.Where (it => it.TestCRC != null).Count();
-                                logCtrl.logColumnsGv.Columns[3].Width = kt == 0? 0 : Double.NaN;
+                                var kt = gt.Items.Where (it => it.TestCRC != null).Count ();
+                                logCtrl.logColumnsGv.Columns[3].Width = kt == 0 ? 0 : Double.NaN;
                             }
                             ShowIssues (tab);
                         }
                     }
                 }
-            }
         }
 
 
@@ -404,9 +399,9 @@ Optional.  If present, must be consistent for all tracks.";
 
         private void FileLbl_Drop (object sender, DragEventArgs e)
         {
-            var drops = e.Data.GetData (DataFormats.FileDrop, true) as string[];
-            if (drops != null && drops.Length > 0)
-                pathBox.Text = drops[0];
+            if (e.Data.GetData (DataFormats.FileDrop, true) is string[] drops)
+                if (drops.Length > 0)
+                    pathBox.Text = drops[0];
         }
 
 

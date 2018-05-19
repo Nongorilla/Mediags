@@ -217,8 +217,7 @@ namespace NongFormat
             var sig32 = MkvFormat.GetLeafSigVal (elementName);
             foreach (var node in GetNodes (elementName))
             {
-                var leaf = node as EbmlNodeLeaf;
-                if (leaf != null)
+                if (node is EbmlNodeLeaf leaf)
                     yield return Encoding.ASCII.GetString (leaf.payload, 0, leaf.payload.Length);
             }
         }
