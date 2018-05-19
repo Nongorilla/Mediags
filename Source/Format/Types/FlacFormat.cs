@@ -534,13 +534,13 @@ namespace NongFormat
         public Byte? ActualAudioHeaderCRC8 { get; private set; }
         public string StoredAudioHeaderCRC8ToHex { get { return StoredAudioHeaderCRC8.ToString ("X2"); } }
         public string ActualAudioHeaderCRC8ToHex
-        { get { return ActualAudioHeaderCRC8==null? null : ActualAudioHeaderCRC8.Value.ToString ("X2"); } }
+        { get { return ActualAudioHeaderCRC8?.ToString ("X2"); } }
 
         public UInt16 StoredAudioBlockCRC16 { get; private set; }
         public UInt16? ActualAudioBlockCRC16 { get; private set; }
         public string StoredAudioBlockCRC16ToHex { get { return StoredAudioBlockCRC16.ToString ("X4"); } }
         public string ActualAudioBlockCRC16ToHex
-        { get { return ActualAudioBlockCRC16==null? null : ActualAudioBlockCRC16.Value.ToString ("X4"); } }
+        { get { return ActualAudioBlockCRC16?.ToString ("X4"); } }
 
         private byte[] storedAudioDataMD5 = null;
         private byte[] actualAudioDataMD5 = null;
@@ -549,7 +549,7 @@ namespace NongFormat
 
         public UInt32? ActualPcmCRC32 { get; private set; }
         public string ActualPcmCRC32ToHex
-        { get { return ActualPcmCRC32==null? null : ActualPcmCRC32.Value.ToString ("X8"); } }
+        { get { return ActualPcmCRC32?.ToString ("X8"); } }
 
         public bool IsBadDataCRC16 { get { return ActualAudioBlockCRC16 != null && ActualAudioBlockCRC16.Value != StoredAudioBlockCRC16; } }
         public bool IsBadDataMD5 { get { return actualAudioDataMD5 != null && ! actualAudioDataMD5.SequenceEqual (storedAudioDataMD5); } }

@@ -173,7 +173,7 @@ namespace NongFormat
         public bool IsBadCRC { get { return CopyCRC != null && TestCRC != null && TestCRC != CopyCRC; } }
 
         private FlacFormat.Model MatchModel = null;
-        public FlacFormat Match { get { return MatchModel == null? null : MatchModel.Bind; } }
+        public FlacFormat Match { get { return MatchModel?.Bind; } }
         public Issue RipSeverest { get; private set; }
     }
 }

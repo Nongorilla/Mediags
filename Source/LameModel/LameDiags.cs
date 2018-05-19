@@ -40,7 +40,7 @@ namespace NongMediaDiags
                 private set
                 {
                     ripModel = value;
-                    Bind.Rip = ripModel == null? null : ripModel.Bind;
+                    Bind.Rip = ripModel?.Bind;
                 }
             }
 

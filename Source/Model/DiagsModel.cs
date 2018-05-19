@@ -125,7 +125,7 @@ namespace NongMediaDiags
                         if (namesInfo != null && createrInfo != null)
                         {
                             var names = (string[]) namesInfo.Invoke (null, null);
-                            var subname = (string) (subnameInfo==null? null : subnameInfo.Invoke (null, null));
+                            var subname = (string) subnameInfo?.Invoke (null, null);
                             var creater = (FormatModelFactory) Delegate.CreateDelegate (typeof (FormatModelFactory), createrInfo);
                             FormatModel.Add (creater, names, subname);
                         }
