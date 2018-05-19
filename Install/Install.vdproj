@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
+        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
+        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -2255,8 +2255,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:This program is freeware.  Use, abuse, and redistribute freely."
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -2268,8 +2268,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1203"
+                            "Setting" = "3:2"
+                            "Value" = "8:You are attempting to install [ProductName] administratively. This is silly and fraught with peril. Please cancel this operation."
                             "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
