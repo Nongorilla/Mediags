@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
+        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
+        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -591,7 +591,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure file/directory autonaming strategy"
+                            "Value" = "8:Configure File/Directory Autonaming Strategy"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -769,7 +769,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure signature"
+                            "Value" = "8:Configure Signature"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1047,7 +1047,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure reporting granularity"
+                            "Value" = "8:Configure Reporting Granularity"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1282,7 +1282,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure EAC-to-LAME log file naming"
+                            "Value" = "8:Configure EAC Log File Naming"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1538,7 +1538,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure log hash validation"
+                            "Value" = "8:Configure Log Self-Hash Validation"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1794,7 +1794,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure Explorer's right-click menu"
+                            "Value" = "8:Configure Explorer's Right-Click Menu"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
