@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
+        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
+        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -214,7 +214,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UberApps"
         "ProductCode" = "8:{68DAC035-9BFF-413D-9567-F9A7E7E5BA57}"
-        "PackageCode" = "8:{D658DA56-8198-492A-8ABE-2F3D277E9F77}"
+        "PackageCode" = "8:{CDC34979-9045-4598-BF3F-8690A5ED0F49}"
         "UpgradeCode" = "8:{3901ED70-4515-492C-B113-99858FADD3AF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -604,7 +604,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:This field will be used only for signing FLAC rips. Select the desired naming strategy. For details: https://github.com/Nongorilla/Mediags/wiki/UberFLAC-Naming-Strategies"
+                            "Value" = "8:Select the desired naming strategy. This field is used only when signing FLAC rips. For details: https://github.com/Nongorilla/Mediags/wiki/UberFLAC-Naming-Strategies"
                             "DefaultValue" = "8:#1215"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -782,7 +782,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:A signature is used when naming generated hash files. Please supply a signature that includes only valid file name characters."
+                            "Value" = "8:A signature is used when naming generated hash files. Please supply a signature that includes only valid file name characters. This field is used only when signing rips."
                             "DefaultValue" = "8:#1215"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1282,7 +1282,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure EAC log file naming"
+                            "Value" = "8:Configure EAC-to-LAME log file naming"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1295,7 +1295,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:This field will be used only for signing LAME rips. Supply text that indicates the compression level used (e.g. V2, V0, CBR320)."
+                            "Value" = "8:Supply text that indicates the LAME compression level (e.g. V2, V0, CBR320). This field is used only when signing LAME rips."
                             "DefaultValue" = "8:#1215"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1538,7 +1538,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure net connection"
+                            "Value" = "8:Configure log hash validation"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1551,7 +1551,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:EAC v1.x .log file hashes can be validated with an on-line connection."
+                            "Value" = "8:EAC v1.0+ log file hashes can be validated with an online connection."
                             "DefaultValue" = "8:#1215"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1564,7 +1564,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Verify EAC 1.x log hash"
+                            "Value" = "8:Validate EAC log hashes"
                             "DefaultValue" = "8:#1234"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1794,7 +1794,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure right-click menu"
+                            "Value" = "8:Configure Explorer's right-click menu"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1924,7 +1924,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Add UberFLAC->Sign to right click menu"
+                            "Value" = "8:Add UberFLAC->Sign to right-click menu"
                             "DefaultValue" = "8:#1236"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1976,7 +1976,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Add UberFLAC->Check to right click menu"
+                            "Value" = "8:Add UberFLAC->Check to right-click menu"
                             "DefaultValue" = "8:#1237"
                             "UsePlugInResources" = "11:TRUE"
                             }
