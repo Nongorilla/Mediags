@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
+        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
+        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -359,7 +359,7 @@
                                                     "Condition" = "8:CHECKBOXA2 and CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberlame.exe\" /k /g:[BUTTON3] /verify:web \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /verify:web \"%L\"\""
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E1453B1E2E424F3FB7C86851DDD7E34D"
                                                     {
@@ -367,7 +367,7 @@
                                                     "Condition" = "8:CHECKBOXA2 and not CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberlame.exe\" /k /g:[BUTTON3] \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -403,7 +403,7 @@
                                                     "Condition" = "8:CHECKBOXA1 and CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberlame.exe\" /k /g:[BUTTON3] /sig:[EDITA1] /logtag:[EDITB1] /verify:web \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /sig:[EDITA1] /logtag:[EDITB1] /verify:web \"%L\"\""
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_5EA85FB0977A48428348B31EC41EED06"
                                                     {
@@ -411,7 +411,7 @@
                                                     "Condition" = "8:CHECKBOXA1 and not CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberlame.exe\" /k /g:[BUTTON3] /sig:[EDITA1] /logtag:[EDITB1] \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /sig:[EDITA1] /logtag:[EDITB1] \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -447,7 +447,7 @@
                                                     "Condition" = "8:CHECKBOXA4 and CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberflac.exe\" /k /g:[BUTTON3] /prove:web \"%L\"\""
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /prove:web \"%L\"\""
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3BF74A7BA99141BBB2002E22E9CBA4EA"
                                                     {
@@ -455,7 +455,7 @@
                                                     "Condition" = "8:CHECKBOXA4 and not CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberflac.exe\" /k /g:[BUTTON3] \"%L\"\""
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -491,7 +491,7 @@
                                                     "Condition" = "8:CHECKBOXA3 and CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberflac.exe\" /k /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] /prove:web \"%L\"\""
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] /prove:web \"%L\"\""
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_F36E54C7BFB144F8A6CDAAF0989A63DF"
                                                     {
@@ -499,7 +499,7 @@
                                                     "Condition" = "8:CHECKBOXA3 and not CHECKBOXB1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /c \"\"[TARGETDIR]uberflac.exe\" /k /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] \"%L\"\""
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] \"%L\"\""
                                                     }
                                                 }
                                             }
