@@ -18,6 +18,7 @@ These are the folders:
 * `ConFlac` - The console front-end branded as UberFLAC.
 * `ConLame` - The console front-end branded as UberLAME.
 * `WpfFlac` - GUI front-end of UberFLAC.
+* `Install` - Builds `UperApps.msi` installer for all tools.
 * `Test400` - A woefully short set of unit tests. Code coverage is abysmal.
 
 For additional developer notes, see:
