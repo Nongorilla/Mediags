@@ -428,7 +428,7 @@ namespace NongMediaDiags
                         return;
 
                     if (Sha1xModel.HistoryModel != null && Sha1xModel.HistoryModel.Bind.Prover != null)
-                        Sha1xModel.IssueModel.Add ("Log self-hash previously verified.", Severity.Trivia);
+                        Sha1xModel.IssueModel.Add ("EAC log self-hash previously verified.", Severity.Trivia);
                     else if (Owner.Bind.WillProve && LogModel.Bind.ShIssue == null)
                     {
                         LogModel.CalcHashWebCheck();
@@ -449,10 +449,10 @@ namespace NongMediaDiags
 
                     Sha1xModel.HashedModel.SetActualHash (0, LogModel.Bind.FileSHA1);
                     if (logHashLine.IsMatch == false)
-                        Sha1xModel.IssueModel.Add ("EAC Log has been modified.  Rip is not valid.");
+                        Sha1xModel.IssueModel.Add ("EAC log has been modified. Rip is not valid.");
 
                     if (logHashLine.FileName != LogModel.Bind.Name)
-                        Sha1xModel.IssueModel.Add ("EAC Log has been renamed.", Severity.Advisory, IssueTags.AlbumChange);
+                        Sha1xModel.IssueModel.Add ("EAC log has been renamed.", Severity.Advisory, IssueTags.AlbumChange);
 
                     for (int ix = 0; ix < Bind.mp3Models.Count; ++ix)
                     {

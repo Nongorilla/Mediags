@@ -252,9 +252,11 @@ namespace AppController
             Console.Write (maxGranularity.ToString());
             Console.WriteLine (".");
 
-
             Console.WriteLine ();
             Console.WriteLine ("Use /autoname to rename directory and files based on tags.");
+
+            Console.WriteLine ();
+            Console.WriteLine ("Use /fussy to escalate rip acceptability issues.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /g:verbose to get more feedback.");
@@ -275,13 +277,13 @@ namespace AppController
             Console.WriteLine ("Use /prove to escalate rip integrity issues.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /prove:web to escalate rip issues and verify log hash online.");
+            Console.WriteLine ("Use /prove:web to escalate rip issues and verify EAC 1.x log self-hash online.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /rg to add ReplayGain on first signing.");
+            Console.WriteLine ("Use /rg to add ReplayGain (using metaflac.exe) on first signing.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /sig:<signature> to sign (rename) .log file and create .md5 file.");
+            Console.WriteLine ("Use /sig:<signature> to sign (rename) log file and create md5 file.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /ubertags to escalate substandard tagging issues.");

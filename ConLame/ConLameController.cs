@@ -214,6 +214,9 @@ namespace AppController
             Console.WriteLine ("Use /g:verbose to get more feedback.");
 
             Console.WriteLine ();
+            Console.WriteLine ("Use /fussy to escalate rip acceptability issues.");
+
+            Console.WriteLine ();
             Console.WriteLine ("Use /k to wait for keypress before exiting.");
 
             Console.WriteLine ();
@@ -223,13 +226,13 @@ namespace AppController
             Console.WriteLine ("Use /p:0 to suppress the progress counter.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /sig:<signature> to sign (rename) .log file and create .md5 file.");
+            Console.WriteLine ("Use /sig:<signature> to sign (rename) log file and create md5 file.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /logtag:<tag> to include <tag> in EAC log file name.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /verify:web to verify EAC log hash online.");
+            Console.WriteLine ("Use /verify:web to verify EAC 1.x log self-hash online.");
 
             Console.WriteLine ();
             Console.WriteLine ("Description:");

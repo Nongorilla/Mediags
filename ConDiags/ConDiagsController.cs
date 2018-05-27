@@ -297,7 +297,7 @@ namespace AppController
             Console.WriteLine ("Use /v:0 to only parse digests and perform no hash checks.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /x:@ to ignore all paths that include the ampersand.");
+            Console.WriteLine ("Use /x:@ to ignore all paths that include the at sign.");
 
             Console.WriteLine ();
             Console.WriteLine ("Description:");

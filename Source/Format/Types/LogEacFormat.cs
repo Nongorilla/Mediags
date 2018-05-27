@@ -329,7 +329,7 @@ namespace NongFormat
                         IssueModel.Add ("Malformed TRACKTOTAL tag '" + ttt + "'.");
 
                     if (ttn != Bind.Tracks.Items.Count)
-                        IssueModel.Add ("Wrong TRACKTOTAL tag.  Expecting " + Bind.Tracks.Items.Count + ", got " + ttn + ".");
+                        IssueModel.Add ("Wrong TRACKTOTAL tag. Expecting " + Bind.Tracks.Items.Count + ", got " + ttn + ".");
                 }
 
                 bool? isSameDisc = Bind.Tracks.IsFlacTagsAllSame ("DISCNUMBER");
@@ -430,15 +430,15 @@ namespace NongFormat
                                 {
                                     string answer = rdr.ReadLine();
                                     if (answer.Contains ("is fine"))
-                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verification successful.", Severity.Trivia, IssueTags.Success);
+                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify successful.", Severity.Trivia, IssueTags.Success);
                                     else if (answer.Contains ("incorrect"))
                                         Bind.ShIssue = IssueModel.Add ("EAC log self-hash mismatch, file has been modified.", Severity.Error, IssueTags.Failure);
                                     else
-                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verification attempt returned unknown result.", Severity.Advisory, IssueTags.ProveErr);
+                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify attempt returned unknown result.", Severity.Advisory, IssueTags.ProveErr);
                                 }
                     }
                     catch (Exception ex)
-                    { Bind.ShIssue = IssueModel.Add ("EAC log self-hash verification attempt failed: " + ex.Message.Trim (null), Severity.Warning, IssueTags.ProveErr); }
+                    { Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify attempt failed: " + ex.Message.Trim (null), Severity.Warning, IssueTags.ProveErr); }
                 }
             }
 
