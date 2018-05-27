@@ -160,10 +160,21 @@ namespace AppController
                 }
             }
 
-            if (args.Length > 0 && args[args.Length-1].StartsWith ("/"))
+            if (args.Length > 0 && args[args.Length-1].StartsWith ("/") && Path.DirectorySeparatorChar != '/')
             {
                 Console.Error.WriteLine ("Invalid argument, expecting a directory last.");
                 return 1;
+            }
+
+            if (signature == null)
+            {
+                if (logTag != null)
+                    Console.Error.WriteLine ("/logtag without /sig ignored.");
+            }
+            else if (model.Bind.Scope > Granularity.Advisory)
+            {
+                Console.Error.WriteLine ("/g:" + model.Bind.Scope + " with /sig ignored.");
+                model.Bind.Scope = Granularity.Advisory;
             }
 
             return 0;

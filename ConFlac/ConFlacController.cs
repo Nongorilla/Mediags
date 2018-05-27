@@ -189,7 +189,7 @@ namespace AppController
                 }
             }
 
-            if (args.Length > 0 && args[args.Length-1].StartsWith ("/"))
+            if (args.Length > 0 && args[args.Length-1].StartsWith ("/") && Path.DirectorySeparatorChar != '/')
             {
                 Console.Error.WriteLine ("Invalid argument, expecting a directory last.");
                 return 1;
@@ -197,12 +197,12 @@ namespace AppController
 
             if (signature == null)
             {
-                if (model.Bind.Autoname != NamingStrategy.Manual && signature == null)
-                    Console.Error.WriteLine ("Ignoring /autoname without /sig.");
+                if (model.Bind.Autoname != NamingStrategy.Manual)
+                    Console.Error.WriteLine ("/autoname without /sig ignored.");
             }
             else if (model.Bind.Scope > Granularity.Advisory)
             {
-                Console.Error.WriteLine ("Ignoring /g:" + model.Bind.Scope + " with /sig.");
+                Console.Error.WriteLine ("/g:" + model.Bind.Scope + " with /sig ignored.");
                 model.Bind.Scope = Granularity.Advisory;
             }
 
