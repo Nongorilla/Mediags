@@ -219,7 +219,8 @@ namespace NongMediaDiags
                 LogModel.ClearFile();
                 Bind.Log = LogModel.Bind;
 
-                LogModel.CalcHashes (Owner.Bind.HashFlags, 0);
+                if (Bind.Ripper == null && (Owner.Bind.HashFlags & Hashes.WebCheck) != 0)
+                    LogModel.CalcHashWebCheck();
 
                 if (Bind.mp3Infos.Length != Bind.Log.Tracks.Items.Count)
                 {
@@ -426,15 +427,23 @@ namespace NongMediaDiags
                     if (Bind.Sha1x.Issues.MaxSeverity >= Severity.Error)
                         return;
 
-                    if (Sha1xModel.HistoryModel == null || Sha1xModel.HistoryModel.Bind.Prover == null)
+                    if (Sha1xModel.HistoryModel != null && Sha1xModel.HistoryModel.Bind.Prover != null)
+                        Sha1xModel.IssueModel.Add ("Log self-hash previously verified.", Severity.Trivia);
+                    else if (Owner.Bind.WillProve && LogModel.Bind.ShIssue == null)
+                    {
+                        LogModel.CalcHashWebCheck();
+                        if (LogModel.Bind.ShIssue.Failure)
+                            Sha1xModel.IssueModel.Add ("EAC log self-hash verify failed!");
+                        else
+                            Sha1xModel.IssueModel.Add ("EAC log self-hash verify successful.", Severity.Advisory);
+                    }
+                    else
                     {
                         Severity sev = Severity.Noise;
                         if (Owner.Bind.WillProve && (LogModel.Bind.ShIssue == null || ! LogModel.Bind.ShIssue.Success))
                             sev = Severity.Error;
-                        Sha1xModel.IssueModel.Add ("Log hash not previously verified.", sev);
+                        Sha1xModel.IssueModel.Add ("EAC log self-hash not previously verified.", sev);
                     }
-                    else
-                        Sha1xModel.IssueModel.Add ("Log hash previously verified.", Severity.Trivia);
 
                     var logHashLine = Bind.Sha1x.HashedFiles.Items[0];
 

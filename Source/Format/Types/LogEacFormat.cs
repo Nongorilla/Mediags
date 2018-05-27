@@ -386,16 +386,18 @@ namespace NongFormat
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
                 base.CalcHashes (hashFlags, validationFlags);
-                if (Bind.ShIssue != null)
-                    return;
 
+                if ((hashFlags & Hashes.WebCheck) != 0)
+                    CalcHashWebCheck();
+            }
+
+            public void CalcHashWebCheck()
+            {
                 if (Bind.storedHash == null)
                 {
                     Severity sev = Bind.EacVersionText != null && Bind.EacVersionText.StartsWith ("1")? Severity.Warning : Severity.Noise;
                     Bind.ShIssue = IssueModel.Add ("EAC log self-hash not present.", sev, IssueTags.ProveErr|IssueTags.Fussy);
                 }
-                else if ((hashFlags & Hashes.WebCheck) == 0)
-                    Bind.ShIssue = IssueModel.Add ("EAC log self-hash verification not attempted.", Severity.Noise, IssueTags.MissingHash);
                 else
                 {
                     string boundary = "---------------------------" + DateTime.Now.Ticks;

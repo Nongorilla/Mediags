@@ -229,7 +229,8 @@ namespace NongMediaDiags
                 LogModel.ClearFile();
                 Bind.Log = LogModel.Bind;
 
-                LogModel.CalcHashes (Owner.Bind.HashFlags, 0);
+                if (Bind.LogRipper == null && Owner.Bind.IsWebCheckEnabled)
+                    LogModel.CalcHashWebCheck();
 
                 if (Bind.flacInfos.Length != Bind.Log.Tracks.Items.Count)
                 {
@@ -560,18 +561,26 @@ namespace NongMediaDiags
                     if (Bind.Md5.Issues.MaxSeverity >= Severity.Error)
                         return;
 
-                    if (Md5Model.HistoryModel == null || Md5Model.HistoryModel.Bind.Prover == null)
-                    {
-                        Severity sev = Severity.Noise;
-                        if (Owner.Bind.WillProve && (LogModel.Bind.ShIssue == null || ! LogModel.Bind.ShIssue.Success
-                                                  || LogModel.Bind.TpIssue == null || LogModel.Bind.TpIssue.Failure))
-                            sev = Severity.Error;
-                        Md5Model.IssueModel.Add ("Highest quality not previously proven.", sev);
-                    }
-                    else
+                    if (Md5Model.HistoryModel != null && Md5Model.HistoryModel.Bind.Prover != null)
                     {
                         Md5Model.IssueModel.Add ("Highest quality previously proven.", Severity.Trivia);
                         Bind.IsProven = true;
+                    }
+                    else if (Owner.Bind.IsWebCheckEnabled && LogModel.Bind.ShIssue == null)
+                    {
+                        LogModel.CalcHashWebCheck();
+                        if (LogModel.Bind.ShIssue.Failure)
+                            Md5Model.IssueModel.Add ("EAC log self-hash verify failed!");
+                        else
+                            Md5Model.IssueModel.Add ("EAC log self-hash verify successful.", Severity.Advisory);
+                    }
+                    else
+                    {
+                        Severity sev = Severity.Noise;
+                        if (Owner.Bind.WillProve && (LogModel.Bind.ShIssue == null || !LogModel.Bind.ShIssue.Success
+                                                    || LogModel.Bind.TpIssue == null || LogModel.Bind.TpIssue.Failure))
+                            sev = Severity.Error;
+                        Md5Model.IssueModel.Add ("Highest quality not previously proven.", sev);
                     }
 
                     HashedFile m3uFile = null, logFile = null;
