@@ -241,7 +241,7 @@ namespace AppController
             Console.WriteLine (ProductText + " v" + VersionText);
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine (exe + " [/autoname[:<strategy>]] [/g:<granularity>] [/k] [/md5] [/out:<mirror>] [/p:<counter>] [/prove[:web]] [/rg] [/sig:<signature>] [/ubertags] <directory>");
+            Console.WriteLine (exe + " [/autoname[:<strategy>]] [/fussy] [/g:<granularity>] [/k] [/md5] [/out:<mirror>] [/p:<counter>] [/prove[:web]] [/rg] [/sig:<signature>] [/ubertags] <directory>");
 
             Console.WriteLine ();
             Console.WriteLine ("Where <directory> is a relative or absolute directory name without wildcards.");
@@ -277,13 +277,13 @@ namespace AppController
             Console.WriteLine ("Use /prove to escalate rip integrity issues.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /prove:web to escalate rip issues and verify EAC 1.x log self-hash online.");
+            Console.WriteLine ("Use /prove:web to escalate rip issues and verify EAC 1.x log self-hashes online.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /rg to add ReplayGain (using metaflac.exe) on first signing.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /sig:<signature> to sign (rename) log file and create md5 file.");
+            Console.WriteLine ("Use /sig:SIG to sign (rename) EAC .log and create .md5 digest.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /ubertags to escalate substandard tagging issues.");

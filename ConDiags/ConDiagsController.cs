@@ -276,7 +276,7 @@ namespace AppController
             Console.WriteLine ("Use /e:substandard to error on lower quality encodings.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /f:*.log to only diagnose files with .log ending.");
+            Console.WriteLine ("Use /f:*.log to only diagnose files with the .log extension.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /g:detail to display maximum diagnostics.");
@@ -288,7 +288,7 @@ namespace AppController
             Console.WriteLine ("Use /k to wait for keypress before exiting.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /out:results.txt to copy output to the results.txt file.");
+            Console.WriteLine ("Use /out:results.txt to mirror output to results.txt.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /p:0 to suppress the progress counter.");

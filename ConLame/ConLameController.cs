@@ -212,7 +212,7 @@ namespace AppController
             Console.WriteLine (ProductText + " v" + VersionText);
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine (exe + " [/g:<granularity>] [/k] [/out:<mirror>] [/p:<counter>] [/sig:<signature>] [/verify[:web]] <directory>");
+            Console.WriteLine (exe + " [/fussy] [/g:<granularity>] [/k] [/logtag:<text>] [/out:<mirror>] [/p:<counter>] [/sig:<signature>] [/verify[:web]] <directory>");
             Console.WriteLine ();
             Console.WriteLine ("Where <directory> is a relative or absolute directory name without wildcards.");
             Console.Write ("Where <granularity> from ");
@@ -222,13 +222,16 @@ namespace AppController
             Console.WriteLine (".");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /g:verbose to get more feedback.");
-
-            Console.WriteLine ();
             Console.WriteLine ("Use /fussy to escalate rip acceptability issues.");
 
             Console.WriteLine ();
+            Console.WriteLine ("Use /g:verbose to get more feedback.");
+
+            Console.WriteLine ();
             Console.WriteLine ("Use /k to wait for keypress before exiting.");
+
+            Console.WriteLine ();
+            Console.WriteLine ("Use /logtag:V2 to include V2 in EAC log name.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /out:results.txt to mirror output to results.txt.");
@@ -237,13 +240,10 @@ namespace AppController
             Console.WriteLine ("Use /p:0 to suppress the progress counter.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /sig:<signature> to sign (rename) log file and create md5 file.");
+            Console.WriteLine ("Use /sig:SIG to sign (rename) EAC .log and create .sha1x digest.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /logtag:<tag> to include <tag> in EAC log file name.");
-
-            Console.WriteLine ();
-            Console.WriteLine ("Use /verify:web to verify EAC 1.x log self-hash online.");
+            Console.WriteLine ("Use /verify:web to verify EAC 1.x .log self-hashes online.");
 
             Console.WriteLine ();
             Console.WriteLine ("Description:");
