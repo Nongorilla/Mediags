@@ -430,7 +430,7 @@ namespace NongFormat
                                 {
                                     string answer = rdr.ReadLine();
                                     if (answer.Contains ("is fine"))
-                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify successful.", Severity.Trivia, IssueTags.Success);
+                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify successful.", Severity.Advisory, IssueTags.Success);
                                     else if (answer.Contains ("incorrect"))
                                         Bind.ShIssue = IssueModel.Add ("EAC log self-hash mismatch, file has been modified.", Severity.Error, IssueTags.Failure);
                                     else
