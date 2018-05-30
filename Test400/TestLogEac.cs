@@ -200,43 +200,44 @@ namespace UnitTest
         [TestMethod]
         public void Test_LogEac_StrictWeb()
         {
-            var dn = baseDir + @"\Targets\EacLogs";
-            var log1Name = dn + @"\Nightmare.log";
+            var dn = baseDir + @"\Targets\EacLogs\";
 
             var model = new Diags.Model (dn);
-            model.Bind.ErrEscalator |= IssueTags.ProveErr;
 
             // Uncomment next line to test hash verification.  Requires the interweb.
             // model.Bind.HashFlags |= Hashes.WebCheck;
 
-            var s1 = new FileStream (log1Name, FileMode.Open);
+            // log1 has self-hash
+            var s1 = new FileStream (dn + "Nightmare.log", FileMode.Open);
             var h1 = new byte[0x2C];
             s1.Read (h1, 0, h1.Length);
             var log1Model = LogEacFormat.CreateModel (s1, h1, dn);
             log1Model.CalcHashes (model.Bind.HashFlags, 0);
+            model.Bind.ErrEscalator = IssueTags.ProveErr;
             log1Model.IssueModel.Escalate (model.Bind.WarnEscalator, model.Bind.ErrEscalator);
+            var b1 = log1Model.Bind;
 
-            var s2 = new FileStream (dn+"\\EAC1NoHashOrCT.log", FileMode.Open);
+            Assert.IsFalse (b1.Issues.HasError);
+            if ((model.Bind.HashFlags & Hashes.WebCheck) != 0)
+                Assert.IsTrue (b1.ShIssue.Success == true);
+            else
+                Assert.IsNull (b1.ShIssue);
+
+            // log2 has no self-hash
+            var s2 = new FileStream (dn+"EAC1NoHashOrCT.log", FileMode.Open);
             var h2 = new byte[0x2C];
             s2.Read (h2, 0, h1.Length);
             var log2Model = LogEacFormat.CreateModel (s2, h2, dn);
             log2Model.CalcHashes (model.Bind.HashFlags, 0);
+            model.Bind.ErrEscalator = IssueTags.ProveErr | IssueTags.Fussy;
             log2Model.IssueModel.Escalate (model.Bind.WarnEscalator, model.Bind.ErrEscalator);
-
-            var b1 = log1Model.Bind;
-            Assert.IsFalse (b1.Issues.HasError);
-
-            Assert.IsNotNull (log1Model.Bind.ShIssue);
-
-            if ((model.Bind.HashFlags & Hashes.WebCheck) != 0)
-                Assert.IsTrue (log1Model.Bind.ShIssue.Success == true);
-            else
-                Assert.IsTrue (log1Model.Bind.ShIssue.Success == false);
-
             var b2 = log2Model.Bind;
+
             Assert.IsTrue (b2.Issues.HasError);
-            Assert.IsTrue (log1Model.Bind.ShIssue.Success == false);
-            Assert.IsFalse (log1Model.Bind.ShIssue.Failure == true);
+            if ((model.Bind.HashFlags & Hashes.WebCheck) != 0)
+                Assert.IsTrue (b2.ShIssue.Success == false);
+            else
+                Assert.IsNull (b2.ShIssue);
         }
     }
 }
