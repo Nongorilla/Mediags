@@ -214,7 +214,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UberApps"
         "ProductCode" = "8:{68DAC035-9BFF-413D-9567-F9A7E7E5BA57}"
-        "PackageCode" = "8:{78B47E73-7CE4-4E58-BD8A-61C72867294B}"
+        "PackageCode" = "8:{A8BAC3FD-32C1-4A6A-82AC-C219D8260FBF}"
         "UpgradeCode" = "8:{3901ED70-4515-492C-B113-99858FADD3AF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -332,9 +332,45 @@
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2B6BEB491B3D413681516903EE3B6964"
+                                    {
+                                    "Name" = "8:UberFLAC->Check (EAC 0.9)"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_8CD58FF4370542FC8717ADB808F2D6D6"
+                                            {
+                                            "Name" = "8:command"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_78F4234F0780401AB93ACBD16D42F555"
+                                                    {
+                                                    "Name" = "8:"
+                                                    "Condition" = "8:CHECKBOXB4"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] \"%L\"\""
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_2F8F1D21AD5343B38703E58CA373902F"
                                     {
-                                    "Name" = "8:UberLAME->Check"
+                                    "Name" = "8:UberLAME->Check (EAC 1.x)"
                                     "Condition" = "8:"
                                     "AlwaysCreate" = "11:FALSE"
                                     "DeleteAtUninstall" = "11:FALSE"
@@ -356,18 +392,10 @@
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_0212C5C20CAA4323891865FB22B7C6B3"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA2 and CHECKBOXB1"
+                                                    "Condition" = "8:CHECKBOXA2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
                                                     "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /verify:web \"%L\"\""
-                                                    }
-                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E1453B1E2E424F3FB7C86851DDD7E34D"
-                                                    {
-                                                    "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA2 and not CHECKBOXB1"
-                                                    "Transitive" = "11:FALSE"
-                                                    "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -378,7 +406,7 @@
                                     }
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_5C8F8F1C4E954819995926B12EF21C20"
                                     {
-                                    "Name" = "8:UberLAME->Sign"
+                                    "Name" = "8:UberLAME->Sign (EAC 1.x)"
                                     "Condition" = "8:"
                                     "AlwaysCreate" = "11:FALSE"
                                     "DeleteAtUninstall" = "11:FALSE"
@@ -397,21 +425,65 @@
                                                 }
                                                 "Values"
                                                 {
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_165634BA4BA04EB085AABFB4E80C2512"
+                                                    {
+                                                    "Name" = "8:"
+                                                    "Condition" = "8:CHECKBOXA1 and CHECKBOXC1"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /verify:web /sig:[EDITA1] /logtag:[EDITB1] \"/out:[TARGETDIR]UL-EAC1x.txt\" \"%L\"\""
+                                                    }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_2026A1C3FA6F42078FA05AC786E07196"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA1 and CHECKBOXB1"
+                                                    "Condition" = "8:CHECKBOXA1 and not CHECKBOXC1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /sig:[EDITA1] /logtag:[EDITB1] /verify:web \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /verify:web \"%L\"\""
                                                     }
-                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_5EA85FB0977A48428348B31EC41EED06"
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_8A88BC673CA7461BA720470FF642AE7E"
+                                    {
+                                    "Name" = "8:UberFLAC->Sign (EAC 0.9)"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_47280E990735402E92649589562D9322"
+                                            {
+                                            "Name" = "8:command"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_C5AD9E8954DC49E48009E052736E4C07"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA1 and not CHECKBOXB1"
+                                                    "Condition" = "8:CHECKBOXB3 and CHECKBOXC1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /sig:[EDITA1] /logtag:[EDITB1] \"%L\"\""
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] \"/out:[TARGETDIR]UF-EAC09.txt\" \"%L\"\""
+                                                    }
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_C63143CDE8724FB397D62406E937C2CA"
+                                                    {
+                                                    "Name" = "8:"
+                                                    "Condition" = "8:CHECKBOXB3 and not CHECKBOXC1"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -422,7 +494,7 @@
                                     }
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_D69D06ECE3BE4DEA823886663BFA9A81"
                                     {
-                                    "Name" = "8:UberFLAC->Check"
+                                    "Name" = "8:UberFLAC->Check (EAC 1.x)"
                                     "Condition" = "8:"
                                     "AlwaysCreate" = "11:FALSE"
                                     "DeleteAtUninstall" = "11:FALSE"
@@ -444,18 +516,10 @@
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_27559BE3921344D2B1C11C716AEC7E1A"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA4 and CHECKBOXB1"
+                                                    "Condition" = "8:CHECKBOXB2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
                                                     "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /prove:web \"%L\"\""
-                                                    }
-                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3BF74A7BA99141BBB2002E22E9CBA4EA"
-                                                    {
-                                                    "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA4 and not CHECKBOXB1"
-                                                    "Transitive" = "11:FALSE"
-                                                    "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -466,7 +530,7 @@
                                     }
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_DE2FFD9468DE4CE99B8DBC627022EFE6"
                                     {
-                                    "Name" = "8:UberFLAC->Sign"
+                                    "Name" = "8:UberFLAC->Sign (EAC 1.x)"
                                     "Condition" = "8:"
                                     "AlwaysCreate" = "11:FALSE"
                                     "DeleteAtUninstall" = "11:FALSE"
@@ -488,18 +552,18 @@
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_6A41F4594CD743479D1930B2FCA20E85"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA3 and CHECKBOXB1"
+                                                    "Condition" = "8:CHECKBOXB1 and CHECKBOXC1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] /prove:web \"%L\"\""
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /prove:web /sig:[EDITA1] /autoname:[BUTTON4] \"/out:[TARGETDIR]UF-EAC1x.txt\" \"%L\"\""
                                                     }
-                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_F36E54C7BFB144F8A6CDAAF0989A63DF"
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_AA426368C7E7407C9D42B2844972FEF9"
                                                     {
                                                     "Name" = "8:"
-                                                    "Condition" = "8:CHECKBOXA3 and not CHECKBOXB1"
+                                                    "Condition" = "8:CHECKBOXB1 and not CHECKBOXC1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /sig:[EDITA1] /autoname:[BUTTON4] \"%L\"\""
+                                                    "Value" = "8:cmd /T:5F /k \"\"[TARGETDIR]uberflac.exe\" /g:[BUTTON3] /prove:web /sig:[EDITA1] /autoname:[BUTTON4] \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -742,7 +806,7 @@
                     }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_168220AADEB64AAA90CE496DB680D168"
                     {
-                    "Sequence" = "3:200"
+                    "Sequence" = "3:400"
                     "DisplayName" = "8:Textboxes   (A)"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -1018,6 +1082,262 @@
                             }
                         }
                     }
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_37D32B59A81E451C88A97950579FC6F2"
+                    {
+                    "Sequence" = "3:300"
+                    "DisplayName" = "8:Checkboxes   (B)"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdCustomCheck2Dlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BannerText"
+                            {
+                            "Name" = "8:BannerText"
+                            "DisplayName" = "8:#1014"
+                            "Description" = "8:#1114"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Configure Explorer's Right-Click Menu for EAC-to-FLAC"
+                            "DefaultValue" = "8:#1214"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BodyText"
+                            {
+                            "Name" = "8:BodyText"
+                            "DisplayName" = "8:#1015"
+                            "Description" = "8:#1115"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Signing will enforce EAC rip correctness and create a .md5 digest. Checking will not modify files or directories. An online connection is required to verify EAC 1.x self-hashes."
+                            "DefaultValue" = "8:#1215"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Label"
+                            {
+                            "Name" = "8:Checkbox1Label"
+                            "DisplayName" = "8:#1034"
+                            "Description" = "8:#1134"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Add UberFLAC->Sign (EAC 1.x) to right-click menu"
+                            "DefaultValue" = "8:#1234"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Property"
+                            {
+                            "Name" = "8:Checkbox1Property"
+                            "DisplayName" = "8:#1030"
+                            "Description" = "8:#1130"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXB1"
+                            "DefaultValue" = "8:CHECKBOXB1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Value"
+                            {
+                            "Name" = "8:Checkbox1Value"
+                            "DisplayName" = "8:#1038"
+                            "Description" = "8:#1138"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Visible"
+                            {
+                            "Name" = "8:Checkbox1Visible"
+                            "DisplayName" = "8:#1026"
+                            "Description" = "8:#1126"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Label"
+                            {
+                            "Name" = "8:Checkbox2Label"
+                            "DisplayName" = "8:#1035"
+                            "Description" = "8:#1135"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Add UberFLAC->Check (EAC 1.x) to right-click menu"
+                            "DefaultValue" = "8:#1235"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Property"
+                            {
+                            "Name" = "8:Checkbox2Property"
+                            "DisplayName" = "8:#1031"
+                            "Description" = "8:#1131"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXB2"
+                            "DefaultValue" = "8:CHECKBOXB2"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Value"
+                            {
+                            "Name" = "8:Checkbox2Value"
+                            "DisplayName" = "8:#1039"
+                            "Description" = "8:#1139"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Visible"
+                            {
+                            "Name" = "8:Checkbox2Visible"
+                            "DisplayName" = "8:#1027"
+                            "Description" = "8:#1127"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Label"
+                            {
+                            "Name" = "8:Checkbox3Label"
+                            "DisplayName" = "8:#1036"
+                            "Description" = "8:#1136"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Add UberFLAC->Sign (EAC 0.9) to right-click menu"
+                            "DefaultValue" = "8:#1236"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Property"
+                            {
+                            "Name" = "8:Checkbox3Property"
+                            "DisplayName" = "8:#1032"
+                            "Description" = "8:#1132"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXB3"
+                            "DefaultValue" = "8:CHECKBOXB3"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Value"
+                            {
+                            "Name" = "8:Checkbox3Value"
+                            "DisplayName" = "8:#1040"
+                            "Description" = "8:#1140"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Visible"
+                            {
+                            "Name" = "8:Checkbox3Visible"
+                            "DisplayName" = "8:#1028"
+                            "Description" = "8:#1128"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Label"
+                            {
+                            "Name" = "8:Checkbox4Label"
+                            "DisplayName" = "8:#1037"
+                            "Description" = "8:#1137"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Add UberFLAC->Check (EAC 0.9) to right-click menu"
+                            "DefaultValue" = "8:#1237"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Property"
+                            {
+                            "Name" = "8:Checkbox4Property"
+                            "DisplayName" = "8:#1033"
+                            "Description" = "8:#1133"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXB4"
+                            "DefaultValue" = "8:CHECKBOXB4"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Value"
+                            {
+                            "Name" = "8:Checkbox4Value"
+                            "DisplayName" = "8:#1041"
+                            "Description" = "8:#1141"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Visible"
+                            {
+                            "Name" = "8:Checkbox4Visible"
+                            "DisplayName" = "8:#1029"
+                            "Description" = "8:#1129"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_556A8AF721584C2392D8D6394F6173ED"
                     {
                     "Sequence" = "3:700"
@@ -1253,9 +1573,265 @@
                             }
                         }
                     }
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_89306A95372D4684863E7132CF3E119A"
+                    {
+                    "Sequence" = "3:310"
+                    "DisplayName" = "8:Checkboxes   (C)"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdCustomCheck3Dlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BannerText"
+                            {
+                            "Name" = "8:BannerText"
+                            "DisplayName" = "8:#1014"
+                            "Description" = "8:#1114"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Configure Mirrored Output"
+                            "DefaultValue" = "8:#1214"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BodyText"
+                            {
+                            "Name" = "8:BodyText"
+                            "DisplayName" = "8:#1015"
+                            "Description" = "8:#1115"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:If checked, output for rip signing will be mirrored to files in the directory specified in the Installation Folder dialog."
+                            "DefaultValue" = "8:#1215"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Label"
+                            {
+                            "Name" = "8:Checkbox1Label"
+                            "DisplayName" = "8:#1034"
+                            "Description" = "8:#1134"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Mirror output to application directory"
+                            "DefaultValue" = "8:#1234"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Property"
+                            {
+                            "Name" = "8:Checkbox1Property"
+                            "DisplayName" = "8:#1030"
+                            "Description" = "8:#1130"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXC1"
+                            "DefaultValue" = "8:CHECKBOXC1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Value"
+                            {
+                            "Name" = "8:Checkbox1Value"
+                            "DisplayName" = "8:#1038"
+                            "Description" = "8:#1138"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox1Visible"
+                            {
+                            "Name" = "8:Checkbox1Visible"
+                            "DisplayName" = "8:#1026"
+                            "Description" = "8:#1126"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Label"
+                            {
+                            "Name" = "8:Checkbox2Label"
+                            "DisplayName" = "8:#1035"
+                            "Description" = "8:#1135"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:#1235"
+                            "DefaultValue" = "8:#1235"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Property"
+                            {
+                            "Name" = "8:Checkbox2Property"
+                            "DisplayName" = "8:#1031"
+                            "Description" = "8:#1131"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXC2"
+                            "DefaultValue" = "8:CHECKBOXC2"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Value"
+                            {
+                            "Name" = "8:Checkbox2Value"
+                            "DisplayName" = "8:#1039"
+                            "Description" = "8:#1139"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox2Visible"
+                            {
+                            "Name" = "8:Checkbox2Visible"
+                            "DisplayName" = "8:#1027"
+                            "Description" = "8:#1127"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:0"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Label"
+                            {
+                            "Name" = "8:Checkbox3Label"
+                            "DisplayName" = "8:#1036"
+                            "Description" = "8:#1136"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:#1236"
+                            "DefaultValue" = "8:#1236"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Property"
+                            {
+                            "Name" = "8:Checkbox3Property"
+                            "DisplayName" = "8:#1032"
+                            "Description" = "8:#1132"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXC3"
+                            "DefaultValue" = "8:CHECKBOXC3"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Value"
+                            {
+                            "Name" = "8:Checkbox3Value"
+                            "DisplayName" = "8:#1040"
+                            "Description" = "8:#1140"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox3Visible"
+                            {
+                            "Name" = "8:Checkbox3Visible"
+                            "DisplayName" = "8:#1028"
+                            "Description" = "8:#1128"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:0"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Label"
+                            {
+                            "Name" = "8:Checkbox4Label"
+                            "DisplayName" = "8:#1037"
+                            "Description" = "8:#1137"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:#1237"
+                            "DefaultValue" = "8:#1237"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Property"
+                            {
+                            "Name" = "8:Checkbox4Property"
+                            "DisplayName" = "8:#1033"
+                            "Description" = "8:#1133"
+                            "Type" = "3:14"
+                            "ContextData" = "8:Public"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:CHECKBOXC4"
+                            "DefaultValue" = "8:CHECKBOXC4"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Value"
+                            {
+                            "Name" = "8:Checkbox4Value"
+                            "DisplayName" = "8:#1041"
+                            "Description" = "8:#1141"
+                            "Type" = "3:2"
+                            "ContextData" = "8:Unchecked=;Checked=1"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
+                            "DefaultValue" = "8:"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Checkbox4Visible"
+                            {
+                            "Name" = "8:Checkbox4Visible"
+                            "DisplayName" = "8:#1029"
+                            "Description" = "8:#1129"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:0"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_A38DAAE789ED42DC8C5BD26964A4AC77"
                     {
-                    "Sequence" = "3:300"
+                    "Sequence" = "3:500"
                     "DisplayName" = "8:Textboxes   (B)"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -1509,265 +2085,9 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_AF0508E288E24901B98173852FDBFCDD"
-                    {
-                    "Sequence" = "3:500"
-                    "DisplayName" = "8:Checkboxes   (B)"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdCustomCheck2Dlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "BannerText"
-                            {
-                            "Name" = "8:BannerText"
-                            "DisplayName" = "8:#1014"
-                            "Description" = "8:#1114"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:Configure Log Self-Hash Validation"
-                            "DefaultValue" = "8:#1214"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "BodyText"
-                            {
-                            "Name" = "8:BodyText"
-                            "DisplayName" = "8:#1015"
-                            "Description" = "8:#1115"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:EAC v1.0+ log file hashes can be validated with an online connection."
-                            "DefaultValue" = "8:#1215"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox1Label"
-                            {
-                            "Name" = "8:Checkbox1Label"
-                            "DisplayName" = "8:#1034"
-                            "Description" = "8:#1134"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:Validate EAC log hashes"
-                            "DefaultValue" = "8:#1234"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox1Property"
-                            {
-                            "Name" = "8:Checkbox1Property"
-                            "DisplayName" = "8:#1030"
-                            "Description" = "8:#1130"
-                            "Type" = "3:14"
-                            "ContextData" = "8:Public"
-                            "Attributes" = "3:2"
-                            "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXB1"
-                            "DefaultValue" = "8:CHECKBOXB1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox1Value"
-                            {
-                            "Name" = "8:Checkbox1Value"
-                            "DisplayName" = "8:#1038"
-                            "Description" = "8:#1138"
-                            "Type" = "3:2"
-                            "ContextData" = "8:Unchecked=;Checked=1"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:1"
-                            "DefaultValue" = "8:"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox1Visible"
-                            {
-                            "Name" = "8:Checkbox1Visible"
-                            "DisplayName" = "8:#1026"
-                            "Description" = "8:#1126"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:1"
-                            "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox2Label"
-                            {
-                            "Name" = "8:Checkbox2Label"
-                            "DisplayName" = "8:#1035"
-                            "Description" = "8:#1135"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:Mirror output to application directory"
-                            "DefaultValue" = "8:#1235"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox2Property"
-                            {
-                            "Name" = "8:Checkbox2Property"
-                            "DisplayName" = "8:#1031"
-                            "Description" = "8:#1131"
-                            "Type" = "3:14"
-                            "ContextData" = "8:Public"
-                            "Attributes" = "3:2"
-                            "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXB2"
-                            "DefaultValue" = "8:CHECKBOXB2"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox2Value"
-                            {
-                            "Name" = "8:Checkbox2Value"
-                            "DisplayName" = "8:#1039"
-                            "Description" = "8:#1139"
-                            "Type" = "3:2"
-                            "ContextData" = "8:Unchecked=;Checked=1"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:"
-                            "DefaultValue" = "8:"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox2Visible"
-                            {
-                            "Name" = "8:Checkbox2Visible"
-                            "DisplayName" = "8:#1027"
-                            "Description" = "8:#1127"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:0"
-                            "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox3Label"
-                            {
-                            "Name" = "8:Checkbox3Label"
-                            "DisplayName" = "8:#1036"
-                            "Description" = "8:#1136"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1236"
-                            "DefaultValue" = "8:#1236"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox3Property"
-                            {
-                            "Name" = "8:Checkbox3Property"
-                            "DisplayName" = "8:#1032"
-                            "Description" = "8:#1132"
-                            "Type" = "3:14"
-                            "ContextData" = "8:Public"
-                            "Attributes" = "3:2"
-                            "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXB3"
-                            "DefaultValue" = "8:CHECKBOXB3"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox3Value"
-                            {
-                            "Name" = "8:Checkbox3Value"
-                            "DisplayName" = "8:#1040"
-                            "Description" = "8:#1140"
-                            "Type" = "3:2"
-                            "ContextData" = "8:Unchecked=;Checked=1"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:"
-                            "DefaultValue" = "8:"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox3Visible"
-                            {
-                            "Name" = "8:Checkbox3Visible"
-                            "DisplayName" = "8:#1028"
-                            "Description" = "8:#1128"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:0"
-                            "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox4Label"
-                            {
-                            "Name" = "8:Checkbox4Label"
-                            "DisplayName" = "8:#1037"
-                            "Description" = "8:#1137"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1237"
-                            "DefaultValue" = "8:#1237"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox4Property"
-                            {
-                            "Name" = "8:Checkbox4Property"
-                            "DisplayName" = "8:#1033"
-                            "Description" = "8:#1133"
-                            "Type" = "3:14"
-                            "ContextData" = "8:Public"
-                            "Attributes" = "3:2"
-                            "Setting" = "3:2"
-                            "Value" = "8:CHECKBOXB4"
-                            "DefaultValue" = "8:CHECKBOXB4"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox4Value"
-                            {
-                            "Name" = "8:Checkbox4Value"
-                            "DisplayName" = "8:#1041"
-                            "Description" = "8:#1141"
-                            "Type" = "3:2"
-                            "ContextData" = "8:Unchecked=;Checked=1"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:2"
-                            "Value" = "8:"
-                            "DefaultValue" = "8:"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Checkbox4Visible"
-                            {
-                            "Name" = "8:Checkbox4Visible"
-                            "DisplayName" = "8:#1029"
-                            "Description" = "8:#1129"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:0"
-                            "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_D27B5087DD684D84A7504EAA34DDA2B2"
                     {
-                    "Sequence" = "3:110"
+                    "Sequence" = "3:200"
                     "DisplayName" = "8:Checkboxes   (A)"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -1794,7 +2114,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Configure Explorer's Right-Click Menu"
+                            "Value" = "8:Configure Explorer's Right-Click Menu for EAC-to-MP3"
                             "DefaultValue" = "8:#1214"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1807,7 +2127,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Signing will enforce your MP3 or FLAC rips. Checking will not modify files or directories."
+                            "Value" = "8:Signing will enforce EAC rip correctness and create a .sha1x digest. Checking will not modify files or directories. An online connection is required to verify EAC 1.x self-hashes."
                             "DefaultValue" = "8:#1215"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1820,7 +2140,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Add UberLAME->Sign to right-click menu"
+                            "Value" = "8:Add UberLAME->Sign (EAC 1.x) to right-click menu"
                             "DefaultValue" = "8:#1234"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1872,7 +2192,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Add UberLAME->Check to right-click menu"
+                            "Value" = "8:Add UberLAME->Check (EAC 1.x) to right-click menu"
                             "DefaultValue" = "8:#1235"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1924,7 +2244,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Add UberFLAC->Sign to right-click menu"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1236"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1963,7 +2283,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:1"
+                            "Value" = "3:0"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1976,7 +2296,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:Add UberFLAC->Check to right-click menu"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1237"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -2015,7 +2335,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:1"
+                            "Value" = "3:0"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
