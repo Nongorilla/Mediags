@@ -524,6 +524,7 @@ namespace NongFormat
 
                 report.Add ("LAME:");
                 report.Add ($"  Version = {Lame.LameVersion}");
+                report.Add ($"  Profile = {Lame.Profile}");
                 if (Lame.IsVbr)
                     report.Add ($"  VBR: minimum bit rate = {Lame.MinBitRate}, method = {Lame.BitrateMethod}");
                 else if (Lame.IsAbr)

@@ -154,5 +154,38 @@ namespace NongFormat
         public string ActualDataCrcText => $"{ActualDataCrc:X4}";
         public string StoredHeaderCrcText => $"{StoredHeaderCrc:X4}";
         public string StoredDataCrcText => $"{StoredDataCrc:X4}";
+
+        private string profile = null;
+        public string Profile
+        {
+            get
+            {
+                if (profile == null)
+                {
+                    if (IsVbr)
+                    {
+                        profile = "R" + header.BitRate;
+                        if (HasQualityIndicator && QualityIndicator >= 40 && QualityIndicator <= 100)
+                        {
+                            int freq = header.SampleRate;
+                            if (freq == 44100)
+                                profile = "V" + (10 - QualityIndicator/10);
+                            else if (freq == 32000)
+                                profile = "V7";
+                            else if (freq == 24000)
+                                profile = "V8";
+                            else if (freq == 22050)
+                                profile = "V9";
+                        }
+                    }
+                    else if (IsCbr)
+                        profile = "C" + header.BitRate;
+                    else if (IsAbr)
+                        profile = "A" + Preset;
+                }
+
+                return profile;
+            }
+        }
     }
 }
