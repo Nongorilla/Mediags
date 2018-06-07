@@ -475,7 +475,7 @@ namespace NongFormat
                     report.Add ($"LAME size = {Lame.LameSize}");
 
                 report.Add (String.Empty);
-                report.Add ("Raw audio header:" + "  " + ConvertTo.ToBinaryString (aBuf, 4));
+                report.Add ($"Raw audio header: {ConvertTo.ToBitString (Header.Bits, 32)}");
                 report.Add (String.Empty);
             }
 
@@ -539,7 +539,7 @@ namespace NongFormat
                     report.Add ($"  Tag revision = {Lame.TagRevision}");
                     report.Add ($"  Lowpass filter = {Lame.LowpassFilter}");
                     report.Add ($"  Replay Gain: Peak = {Lame.ReplayGainPeak}, Radio = {Lame.RadioReplayGain:X4}, Audiophile = {Lame.AudiophileReplayGain:X4}");
-                    report.Add ("  Lame encoding flags = " + Convert.ToString (Lame.LameFlags, 2).PadLeft (8, '0'));
+                    report.Add ($"  Lame encoding flags = {ConvertTo.ToBitString (Lame.LameFlags, 8)}");
                     report.Add ($"  Encoder delay: Start = {Lame.EncoderDelayStart}, End = {Lame.EncoderDelayEnd}");
                     report.Add ($"  LAME surround = {Lame.Surround}, LAME preset = {Lame.Preset}");
                     report.Add ($"  MP3 gain = {Lame.Mp3Gain}");

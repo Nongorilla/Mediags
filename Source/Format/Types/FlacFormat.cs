@@ -665,7 +665,7 @@ namespace NongFormat
                 report.Add ("  Total samples = " + (TotalSamples != 0? TotalSamples.ToString() : " (unknown)"));
 
                 report.Add (String.Empty);
-                report.Add ("Raw audio header:" + "  " + ConvertTo.ToBinaryString (aHdr, 1));
+                report.Add ("Raw audio header:" + "  " + ConvertTo.ToBitString (aHdr, 1));
 
                 report.Add (String.Empty);
                 report.Add ("Cooked audio header:");

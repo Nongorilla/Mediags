@@ -116,19 +116,45 @@ namespace NongFormat
         }
 
 
-        public static string ToBinaryString (byte[] data, int length)
+        public static string ToBitString (byte[] data, int length)
         {
             var sb = new StringBuilder();
-            if (length > data.Length)
-                length = data.Length;
-            if (length > 0)
-                for (var ix = 0;;)
+            for (int ix = 0;;)
+            {
+                for (int mask = 0x80;;)
                 {
-                    sb.Append (Int32.Parse (Convert.ToString (data[ix], 2)).ToString ("0000 0000"));
-                    if (++ix >= length)
+                    sb.Append ((data[ix] & mask) == 0 ? '0' : '1');
+                    mask >>= 1;
+                    if (mask == 0)
                         break;
-                    sb.Append (' ');
+                    else if (mask == 8)
+                        sb.Append (' ');
                 }
+                if (++ix >= length)
+                    break;
+                sb.Append (' ');
+            }
+            return sb.ToString();
+        }
+
+
+        public static string ToBitString (int value, int bitCount)
+        {
+            var sb = new StringBuilder();
+            if (bitCount < 0 || bitCount >= 32)
+            {
+                sb.Append ((value & 0x80000000) == 0 ? '0' : '1');
+                bitCount = 31;
+            }
+            for (int mask = 1 << (bitCount - 1);;)
+            {
+                sb.Append ((value & mask) == 0 ? '0' : '1');
+                mask >>= 1;
+                if (mask == 0)
+                    break;
+                if ((mask & 0x08888888) != 0)
+                    sb.Append (' ');
+            }
             return sb.ToString();
         }
 
