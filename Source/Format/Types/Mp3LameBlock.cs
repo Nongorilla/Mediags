@@ -1,158 +1,158 @@
 ﻿using System;
+using System.Text;
 
 namespace NongFormat
 {
     public class Mp3XingBlock
     {
+        public static Mp3XingBlock.Model Create (byte[] buf, Mp3Header header)
+        {
+            System.Diagnostics.Debug.Assert (header.IsLayer3);
+
+            int xix = header.XingOffset;
+
+            string xingString = "";
+            for (int ix = xix; ix <= xix + 4; ++ix)
+                if (buf[ix] >= 32 && buf[ix] < 127)
+                    xingString += (char) buf[ix];
+
+            if (xingString == "Info" || xingString == "Xing")
+            {
+                string lameString = "";
+                for (int ix = xix + 0x78; ix <= xix + 0x80; ++ix)
+                    if (buf[ix] >= 32 && buf[ix] < 127)
+                        lameString += (char) buf[ix];
+
+                if (lameString.StartsWith ("LAME"))
+                    return new Mp3LameBlock.Model (buf, xix, header, xingString, lameString);
+                else
+                    return new Mp3XingBlock.Model (buf, xix, header, xingString);
+            }
+
+            return null;
+        }
+
         public class Model
         {
             public Mp3XingBlock BindXing { get; protected set; }
 
-            public Model (byte[] hdr, string xingText)
-            { }
+            public Model (byte[] hdr, int xingIx, Mp3Header header, string xingText)
+            {
+                BindXing = new Mp3XingBlock (hdr, xingIx, header, xingText);
+            }
         }
 
-        protected byte[] aHdr;
+        protected byte[] buf;
+        protected int xingIx;
+        protected Mp3Header header;
+        private readonly int tocOffset;
+        public string XingString { get; private set; }
+        public int FrameCount { get; private set; }
+        public int XingSize { get; private set; }
 
-        public Mp3XingBlock (byte[] hdr, string xingText)
+        public Mp3XingBlock (byte[] frameBuf, int xix, Mp3Header header, string xingString)
         {
-            this.aHdr = hdr;
-            this.XingVersion = xingText;
+            this.buf = frameBuf;
+            this.header = header;
+            this.xingIx = xix;
+            this.XingString = xingString;
 
-            int ix = 0x2C;
-            if (IsFrameCountPresent)
-                ix += 4;
-            if (IsBytesPresent)
+            int ix = xingIx + 8;
+            if (HasFrameCount)
             {
-                this.XingSize = ConvertTo.FromBig32ToInt32 (aHdr, ix);
+                this.FrameCount = ConvertTo.FromBig32ToInt32 (frameBuf, ix);
                 ix += 4;
             }
-            if (IsTableOfContentsPresent)
+            if (HasSize)
+            {
+                this.XingSize = ConvertTo.FromBig32ToInt32 (frameBuf, ix);
+                ix += 4;
+            }
+            if (HasTableOfContents)
             {
                 this.tocOffset = ix;
                 ix += 100;
             }
-            if (IsQualityIndicatorPresent)
-                this.QualityIndicator = IsQualityIndicatorPresent? ConvertTo.FromBig32ToInt32 (aHdr, ix) : (int?) null;
+            if (HasQualityIndicator)
+                this.QualityIndicator = ConvertTo.FromBig32ToInt32 (frameBuf, ix);
         }
 
-        public string XingVersion { get; private set; }
-        public bool IsFrameCountPresent { get { return (aHdr[0x2B] & 1) != 0; } }
-        public bool IsBytesPresent { get { return (aHdr[0x2B] & 2) != 0; } }
-        public bool IsTableOfContentsPresent { get { return (aHdr[0x2B] & 4) != 0; } }
-        public bool IsQualityIndicatorPresent { get { return (aHdr[0x2B] & 8) != 0; } }
-
-        public int XingSize { get; private set; }
-        private int tocOffset;  // table of contents (100 bytes of indexes)
-
         //  0..100 - worst..best
-        //  LAME: V2=78, V0=98, altPresetExtreme=78, 320CBR=58.  Flakey.
-        public int? QualityIndicator { get; private set; }
+        // LAME3.100: V0=100, V1=90, V2=80, V3=70, V6=40, V7=50 (MPEG1,32K), V8 (50,MPEG2,24K), V9 (40,22050)
+        // LAME (other): V0=98, altPresetExtreme=78, 320CBR=58.  Flakey.
+        public int QualityIndicator { get; private set; }
+
+        public bool HasFrameCount => (buf[xingIx+7] & 1) != 0;
+        public bool HasSize => (buf[xingIx+7] & 2) != 0;
+        public bool HasTableOfContents => (buf[xingIx+7] & 4) != 0;
+        public bool HasQualityIndicator => (buf[xingIx+7] & 8) != 0;
 
         // Scan table of contents for decrements.
+        bool? isTocCorrupt = null;
         public bool IsTocCorrupt()
         {
-            for (int ii = 0;;)
-            {
-                var prev = aHdr[tocOffset+ii];
-                if (++ii >= 100)
-                    return false;
-                if (aHdr[tocOffset+ii] < prev)
-                    return true;
-            }
+            if (isTocCorrupt == null)
+                for (int ii = 0;;)
+                {
+                    var prev = buf[tocOffset+ii];
+                    if (++ii >= 100)
+                    { isTocCorrupt = false; break; }
+                    if (buf[tocOffset+ii] < prev)
+                    { isTocCorrupt = true; break; }
+                }
+            return isTocCorrupt.Value;
         }
     }
 
 
     public class Mp3LameBlock : Mp3XingBlock
     {
-        public new class Model :Mp3XingBlock.Model
+        public new class Model : Mp3XingBlock.Model
         {
             public readonly Mp3LameBlock Bind;
 
-            public Model (byte[] hdr, string lameVersion, string xingText) : base (hdr, xingText)
-            { BindXing = Bind = new Mp3LameBlock (hdr, lameVersion, xingText); }
+            public Model (byte[] buf, int hix, Mp3Header header, string xingString, string lameString) : base (buf, hix, header, xingString)
+            { BindXing = Bind = new Mp3LameBlock (buf, hix, header, xingString, lameString); }
 
-            public void SetActualAudioHeaderCRC16 (UInt16 crc)
-            { Bind.ActualAudioHeaderCRC16 = crc; }
-
-            public void SetActualAudioDataCRC16 (UInt16 crc)
-            { Bind.ActualAudioDataCRC16 = crc; }
+            public void SetActualHeaderCrc (ushort crc) => Bind.ActualHeaderCrc = crc;
+            public void SetActualDataCrc (ushort crc) => Bind.ActualDataCrc = crc;
         }
 
-        public Mp3LameBlock (byte[] hdr, string lameVersion, string xingText) : base (hdr, xingText)
-        {
-            this.Version = lameVersion;
-            this.LameSize = ConvertTo.FromBig32ToInt32 (aHdr, 0xB8);
+        public string LameVersion { get; private set; }
+        public ushort? ActualHeaderCrc { get; private set; } = null;
+        public ushort? ActualDataCrc { get; private set; } = null;
 
-            this.ActualAudioHeaderCRC16 = null;
-            this.ActualAudioDataCRC16 = null;
+        public Mp3LameBlock (byte[] buf, int xix, Mp3Header header, string xingString, string lameString) : base (buf, xix, header, xingString)
+        { LameVersion = lameString; }
 
-            int lsn = aHdr[0xA5];
-            if (lsn >= 3 && lsn <= 7)
-                IsVbr = true;
-            else if (lsn == 1 || lsn == 8)
-                IsCbr = true;
-            else if (lsn == 2 || (lsn >= 9 && lsn <= 14))
-                IsAbr = true;
+        public bool IsVbr { get { int b = buf[xingIx+0x81] & 0xF; return b >= 3 && b <= 7; } }
+        public bool IsCbr { get { int b = buf[xingIx+0x81] & 0xF; return b == 1 || b == 8; } }
+        public bool IsAbr { get { int b = buf[xingIx+0x81] & 0xF; return b == 2 || (b >= 9 && b <= 14); } }
 
-            this.TagRevision = aHdr[0xA5] >> 4;
-            this.BitrateMethod = aHdr[0xA5] & 0x0F;
-            this.LowpassFilter = aHdr[0xA6];
-            this.ReplayGainPeak = BitConverter.ToSingle (aHdr, 0xA7);
-            this.RadioReplayGain = (aHdr[0xAB] << 8) + aHdr[0xAC];
-            this.AudiophileReplayGain = (aHdr[0xAD] << 8) + aHdr[0xAE];
+        public int TagRevision => buf[xingIx+0x81] >> 4;
+        public int BitrateMethod => buf[xingIx+0x81] & 0x0F;
+        public int LowpassFilter => buf[xingIx+0x82];
+        public float ReplayGainPeak => BitConverter.ToSingle (buf, xingIx+0x83);
+        public int RadioReplayGain => (buf[xingIx+0x87] << 8) + buf[xingIx+0x88];
+        public int AudiophileReplayGain => (buf[xingIx+0x89] << 8) + buf[xingIx+0x8A];
+        public int LameFlags => buf[xingIx+0x8B];
+        public int MinBitRate => buf[xingIx+0x8C];
+        public int EncoderDelayStart => (buf[xingIx+0x8D] << 4) + (buf[xingIx+0x8E] >> 4);
+        public int EncoderDelayEnd => ((buf[xingIx+0x8E] & 0xF) << 8) + buf[xingIx+0x8F];
+        public int MiscBits => buf[xingIx+0x90];
+        public int Mp3Gain => buf[xingIx+0x91];
+        public int Surround => (buf[xingIx+0x92] & 0x38) >> 3;
+        public int Preset => ((buf[xingIx+0x92] & 7) << 8) + buf[xingIx+0x93];
+        public int LameSize => ConvertTo.FromBig32ToInt32 (buf, xingIx+0x94);
+        public ushort StoredHeaderCrc => (ushort) (buf[xingIx+0x9A] << 8 | buf[xingIx+0x9B]);
+        public ushort StoredDataCrc => (ushort) (buf[xingIx+0x98] << 8 | buf[xingIx+0x99]);
 
-            this.EncoderDelayStart = (aHdr[0xB1] << 4) + (aHdr[0xB2] >> 4);
-            this.EncoderDelayEnd = ((aHdr[0xB2] & 0xF) << 8) + aHdr[0xB3];
-            this.Mp3Gain = aHdr[0xB5];
-            this.Surround = (aHdr[0xB6] & 0x38) >> 3;
-            this.Preset = ((aHdr[0xB6] & 7) << 8) + aHdr[0xB7];
+        public int LameHeaderSize => xingIx+0x9A;
 
-            this.MinBitRate = aHdr[0xB0];
-            if (this.MinBitRate == 0xFF)
-                this.MinBitRate = 320;
-        }
-
-        public string Version { get; private set; }
-        public int LameSize { get; private set; }
-
-        public bool IsVbr { get; private set; }
-        public bool IsCbr { get; private set; }
-        public bool IsAbr { get; private set; }
-
-        public int TagRevision { get; private set; }
-        public int BitrateMethod { get; private set; }
-        public int LowpassFilter { get; private set; }
-
-        // Embedded RG is obsolete in favor of RG via id3v2 tags.
-        public float ReplayGainPeak { get; private set; }
-        public int RadioReplayGain { get; private set; }
-        public int AudiophileReplayGain { get; private set; }
-
-        public int LameFlags { get { return aHdr[0xAF]; } }
-
-        public int MinBitRate { get; private set; }
-        public int EncoderDelayStart { get; private set; }
-        public int EncoderDelayEnd { get; private set; }
-        public int Mp3Gain { get; private set; }
-        public int Surround { get; private set; }
-        public int Preset { get; private set; }
-
-        public UInt16? ActualAudioHeaderCRC16 { get; private set; }
-        public UInt16? ActualAudioDataCRC16 { get; private set; }
-
-        public UInt16 StoredAudioHeaderCRC16 { get { return (UInt16) (aHdr[0xBE] << 8 | aHdr[0xBF]); } }
-        public UInt16 StoredAudioDataCRC16 { get { return (UInt16) (aHdr[0xBC] << 8 | aHdr[0xBD]); } }
-
-        public string ActualAudioHeaderCRC16ToHex
-        { get { return String.Format ("{0:X4}", ActualAudioHeaderCRC16); } }
-        public string ActualAudioDataCRC16ToHex
-        { get { return String.Format ("{0:X4}", ActualAudioDataCRC16); } }
-
-        public string StoredAudioHeaderCRC16ToHex
-        { get { return String.Format ("{0:X4}", StoredAudioHeaderCRC16); } }
-        public string StoredAudioDataCRC16ToHex
-        { get { return String.Format ("{0:X4}", StoredAudioDataCRC16); } }
+        public string MinBitRateText { get { int br = MinBitRate; return br==255? "255+" : br.ToString(); } }
+        public string ActualHeaderCrcText => $"{ActualHeaderCrc:X4}";
+        public string ActualDataCrcText => $"{ActualDataCrc:X4}";
+        public string StoredHeaderCrcText => $"{StoredHeaderCrc:X4}";
+        public string StoredDataCrcText => $"{StoredDataCrc:X4}";
     }
 }

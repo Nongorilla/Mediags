@@ -117,55 +117,26 @@ namespace NongFormat
                     return;
                 }
 
+                Bind.Header = new Mp3Header (fBuf, (int) Bind.ValidSize);
+
                 mediaPos32 = (int) Bind.ValidSize;
                 Bind.ValidSize = Bind.FileSize;
 
                 // Keep the audio header.
-                Bind.aHdr = new byte[0xC0];
-                Array.Copy (fBuf, mediaPos32, Bind.aHdr, 0, 0xC0);
+                Bind.aBuf = new byte[Bind.Header.XingOffset + 0x9C];
+                Array.Copy (fBuf, mediaPos32, Bind.aBuf, 0, Bind.aBuf.Length);
 
                 // Basic MP3 header:
 
-                Debug.Assert ((Bind.aHdr[1] & 0x10) == 0x10);
-                Debug.Assert (Bind.MpegLayerBits == 1);
-
-                Bind.MpegVersion = Bind.MpegVersionBits == 0? 2 : 1;
-                Bind.IsProtected = Bind.ProtectedBit == 0;
-                Bind.BitRate = bitRateMap[Bind.MpegVersionBits][Bind.BitRateBits];
-                Bind.Frequency = samplingRateMap[Bind.MpegVersionBits][Bind.FrequencyBits];
-                Bind.IsFramePadded = Bind.FramePaddedBit != 0;
-                Bind.IsPrivate = Bind.PrivateBit != 0;
-                Bind.Mode = (Mp3ChannelMode) Bind.ModeBits;
-                Bind.IsIntensityStereo = Bind.IntensityStereoBit != 0;
-                Bind.IsMsStereo = Bind.MsStereoBit != 0;
-                Bind.IsCopyrighted = Bind.CopyrightBit != 0;
-                Bind.IsOriginal = Bind.OriginalBit != 0;
-                Bind.Emphasis = emphasisMap [Bind.EmphasisBits];
+                Debug.Assert ((Bind.aBuf[1] & 0x10) == 0x10);
+                Debug.Assert (Bind.Header.MpegLayerBits == 1);
 
                 // Detect Xing/LAME encodes:
 
-                string xingText = "";
-                for (var hi = mediaPos32 + 0x24; hi <= mediaPos32 + 0x27; ++hi)
-                    if (fBuf[hi] >= 32 && fBuf[hi] < 127)
-                        xingText += (char) fBuf[hi];
-
-                string lameText = "";
-                for (var hi = mediaPos32 + 0x9C; hi <= mediaPos32 + 0xA4; ++hi)
-                    if (fBuf[hi] >= 32 && fBuf[hi] < 127)
-                        lameText += (char) fBuf[hi];
-
-                if (xingText != null && (xingText == "Info" || xingText == "Xing"))
-                    if (lameText == null || ! lameText.StartsWith ("LAME"))
-                    {
-                        XingModel = new Mp3XingBlock.Model (Bind.aHdr, xingText);
-                        Bind.Xing = XingModel.BindXing;
-                    }
-                    else
-                    {
-                        XingModel = LameModel = new Mp3LameBlock.Model (Bind.aHdr, lameText, xingText);
-                        Bind.Xing = XingModel.BindXing;
-                        Bind.Lame = LameModel.Bind;
-                    }
+                XingModel = Mp3XingBlock.Create (Bind.aBuf, Bind.Header);
+                LameModel = XingModel as Mp3LameBlock.Model;
+                Bind.Xing = XingModel.BindXing;
+                Bind.Lame = Bind.Xing as Mp3LameBlock;
 
                 // Detect ID3v1 tag block:
 
@@ -250,38 +221,38 @@ namespace NongFormat
 
             private void GetDiagnostics()
             {
-                if (Bind.BitRate == null)
+                if (Bind.Header.BitRate == null)
                     IssueModel.Add ("Invalid bit rate.");
 
-                if (Bind.Mode != Mp3ChannelMode.JointStereo)
+                if (Bind.Header.ChannelMode != Mp3ChannelMode.JointStereo)
                 {
-                    IssueTags tags = Bind.Mode==Mp3ChannelMode.Stereo? IssueTags.Overstandard : IssueTags.Substandard;
-                    IssueModel.Add ("Channel mode is " + Bind.Mode + ".", Severity.Advisory, tags);
+                    IssueTags tags = Bind.Header.ChannelMode==Mp3ChannelMode.Stereo? IssueTags.Overstandard : IssueTags.Substandard;
+                    IssueModel.Add ("Channel mode is " + Bind.Header.ChannelMode + ".", Severity.Advisory, tags);
                 }
 
-                if (Bind.Frequency < 44100)
-                    IssueModel.Add ("Frequency is " + Bind.Frequency + " Hz (expecting 44100 or better)", Severity.Advisory, IssueTags.Substandard);
-                else if (Bind.Frequency > 44100)
-                    IssueModel.Add ("Frequency is " + Bind.Frequency, Severity.Advisory, IssueTags.Overstandard);
+                if (Bind.Header.SampleRate < 44100)
+                    IssueModel.Add ("Frequency is " + Bind.Header.SampleRate + " Hz (expecting 44100 or better)", Severity.Advisory, IssueTags.Substandard);
+                else if (Bind.Header.SampleRate > 44100)
+                    IssueModel.Add ("Frequency is " + Bind.Header.SampleRate, Severity.Advisory, IssueTags.Overstandard);
 
-                if (Bind.IsXing)
+                if (Bind.Xing != null)
                 {
-                    if (! Bind.IsProtected)
+                    if (Bind.Header.CrcProtectedBit == 0)
                         IssueModel.Add ("Header not flagged for CRC protection.", Severity.Noise);
 
-                    if (! Bind.Xing.IsFrameCountPresent)
+                    if (! Bind.Xing.HasFrameCount)
                         IssueModel.Add ("Missing XING frame count.");
 
-                    if (! Bind.Xing.IsBytesPresent)
+                    if (! Bind.Xing.HasSize)
                         IssueModel.Add ("Missing XING file size.");
 
-                    if (! Bind.Xing.IsTableOfContentsPresent)
+                    if (! Bind.Xing.HasTableOfContents)
                         IssueModel.Add ("Missing XING table of contents.");
                     else
                         if (Bind.Xing.IsTocCorrupt())
                             IssueModel.Add ("XING table of contents is corrupt.");
 
-                    if (Bind.Xing.QualityIndicator != null)
+                    if (Bind.Xing.HasQualityIndicator)
                     {
                         var qi = Bind.Xing.QualityIndicator;
                         if (qi < 0 || qi > 100)
@@ -292,11 +263,11 @@ namespace NongFormat
                     }
                 }
 
-                if (! Bind.IsLame)
+                if (Bind.Lame == null)
                     IssueModel.Add ("Not a LAME encoding.", Severity.Advisory, IssueTags.Substandard);
                 else
                 {
-                    var isBlessed = blessedLames.Any (item => item == Bind.Lame.Version);
+                    var isBlessed = blessedLames.Any (item => item == Bind.Lame.LameVersion);
                     if (! isBlessed)
                         IssueModel.Add ("LAME version is not favored.", Severity.Advisory, IssueTags.Substandard);
 
@@ -309,27 +280,13 @@ namespace NongFormat
                     if (Bind.Lame.BitrateMethod == 0 || Bind.Lame.BitrateMethod == 0xF)
                         IssueModel.Add ("Bitrate method " + Bind.Lame.BitrateMethod + " invalid.");
 
-                    if (Bind.Lame.LowpassFilter == 0)
-                        IssueModel.Add ("Lowpass filter " + Bind.Lame.LowpassFilter + " invalid.");
-
                     if (Bind.Lame.IsAbr)
                         IssueModel.Add ("ABR encoding method is obsolete.", Severity.Advisory, IssueTags.Substandard);
 
                     if (Bind.Lame.AudiophileReplayGain != 0)
                         IssueModel.Add ("Audiophile ReplayGain (" + Bind.Lame.AudiophileReplayGain + ") usage is obsolete.", Severity.Advisory, IssueTags.Substandard);
 
-                    var isBadRate = false;
-                    if (Bind.Lame.IsCbr)
-                        for (var ri = 0;;)
-                            if (bitRateMap1L3[ri] == Bind.Lame.MinBitRate)
-                                break;
-                            else if (++ri == bitRateMap1L3.Length - 1)
-                            {
-                                isBadRate = true;
-                                break;
-                            }
-
-                    if (isBadRate)
+                    if (Bind.Lame.IsCbr && Mp3Header.IsBadCbr (Bind.Header.MpegVersionBits, Bind.Lame.MinBitRate))
                         IssueModel.Add ("Minimum bit rate of " + Bind.Lame.MinBitRate + " not valid.", Severity.Advisory, IssueTags.Substandard);
                 }
 
@@ -389,16 +346,16 @@ namespace NongFormat
                 if (Bind.Issues.HasFatal)
                     return;
 
-                if (Bind.Lame != null && (hashFlags & Hashes.Intrinsic) != 0 && Bind.Lame.ActualAudioDataCRC16 == null)
+                if (Bind.Lame != null && (hashFlags & Hashes.Intrinsic) != 0 && Bind.Lame.ActualDataCrc == null)
                 {
                     var hasher = new Crc16rHasher();
-                    hasher.Append (Bind.fBuf, (int) Bind.mediaPosition, 0xBE);
+                    hasher.Append (Bind.fBuf, (int) Bind.mediaPosition, Bind.Lame.LameHeaderSize);
                     byte[] hash = hasher.GetHashAndReset();
-                    LameModel.SetActualAudioHeaderCRC16 (BitConverter.ToUInt16 (hash, 0));
+                    LameModel.SetActualHeaderCrc (BitConverter.ToUInt16 (hash, 0));
 
                     hasher.Append (Bind.fBuf, (int) Bind.mediaPosition + 0xC0, (int) Bind.MediaCount - 0xC0);
                     hash = hasher.GetHashAndReset();
-                    LameModel.SetActualAudioDataCRC16 (BitConverter.ToUInt16 (hash, 0));
+                    LameModel.SetActualDataCrc (BitConverter.ToUInt16 (hash, 0));
 
                     if (Bind.IsBadHeader)
                         IssueModel.Add ("CRC-16 check failed on audio header.");
@@ -464,78 +421,14 @@ namespace NongFormat
         }
 
 
-        private static int GetMinorOfV1 (byte[] v1tag)
-        {
-            return v1tag[0x7D] != 0 || v1tag[0x7E] == 0? 0 : 1;
-        }
-
         static private readonly string[] blessedLames = { "LAME3.90.", "LAME3.90r", "LAME3.92 ", "LAME3.99r", "LAME3.100" };
 
-        static private readonly int?[] bitRateMap1L3 =
-        { 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, null };  // 0=free, null=reserved
-
-        static private readonly int?[] bitRateMap2L3 =
-        { 0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, null };  // 0=free, null=reserved
-
-        static private readonly int?[][] bitRateMap =
-        { bitRateMap2L3, bitRateMap1L3 };
-
-        static private readonly int[] samplingRateMap1L3 = { 44100, 48000, 32000, 0 };  // 0 = reserved
-        static private readonly int[] samplingRateMap2L3 = { 22050, 24000, 16000, 0 };  // 0 = reserved
-
-        static private readonly int[][] samplingRateMap = { samplingRateMap2L3, samplingRateMap1L3 };
-
-        static private readonly string[] emphasisMap = { "None", "50/15 MS", "Reserved", "CCIT J.17" };
-
+        private byte[] aBuf;   // Keeps the lame header loaded.
+        public Mp3Header Header { get; private set; }
         public Mp3XingBlock Xing { get; private set; }
         public Mp3LameBlock Lame { get; private set; }
-        public bool IsXing { get { return Xing != null; } }
-        public bool IsLame { get { return Lame != null; } }
 
-        private byte[] aHdr;   // Keeps the header loaded.
-
-        public int MpegVersionBits { get { return (aHdr[1] & 0x08) >> 3; } }
-        public int MpegVersion { get; private set; }
-        public int MpegLayerBits { get { return (aHdr[1] & 6) >> 1; } }
-        public int MpegLayer { get { return 3; } }
-        public int ProtectedBit { get { return aHdr[1] & 1; } }
-        public bool IsProtected { get; private set; } // Not reliable since LAME header CRC should *always* be accurate.
-        public int BitRateBits { get { return aHdr[2] >> 4; } }
-        public int? BitRate { get; private set; }
-        public string BitRateToString() { return BitRate == null? "reserved" : BitRate.ToString(); }
-        public int FrequencyBits { get { return (aHdr[2] & 0x0C) >> 2; } }
-        public int? Frequency { get; private set; }
-        public string FrequencyToString() { return Frequency == null? "reserved" : Frequency.ToString(); }
-        public int FramePaddedBit { get { return (aHdr[2] & 2) >> 1; } }
-        public bool IsFramePadded { get; private set; }
-        public int PrivateBit { get { return aHdr[2] & 1; } }
-        public bool IsPrivate { get; private set; }
-        public int ModeBits { get { return aHdr[3] >> 6; } }
-        public Mp3ChannelMode Mode { get; private set; }
-        public int IntensityStereoBit { get { return (aHdr[3] & 0x20) >> 5; } }
-        public bool IsIntensityStereo { get; private set; }
-        public int MsStereoBit { get { return (aHdr[3] & 0x10) >> 4; } }
-        public bool IsMsStereo { get; private set; }
-        public int CopyrightBit { get { return (aHdr[3] & 8) >> 3; } }
-        public bool IsCopyrighted { get; private set; }
-        public int OriginalBit { get { return (aHdr[3] & 4) >> 2; } }
-        public bool IsOriginal { get; private set; }
-        public int EmphasisBits { get { return aHdr[3] & 3; } }
-        public string Emphasis { get; private set; }
-
-        public string Codec { get { return "MPEG-" + MpegVersion + " Layer " + MpegLayer; } }
-
-        public string ModeText
-        {
-            get
-            {
-                string result = Mode.ToString();
-                if (Mode == Mp3ChannelMode.JointStereo)
-                    result += " (Intensity stereo " + (IsIntensityStereo? "on" : "off")
-                            + ", M/S stereo " + (IsMsStereo? "on" : "off") + ")";
-                return result;
-            }
-        }
+        private static int GetMinorOfV1 (byte[] v1tag) => v1tag[0x7D] != 0 || v1tag[0x7E] == 0 ? 0 : 1;
 
         private int id3v2Pos = -1;
         private int storedId3v2DataSize, actualId3v2DataSize;
@@ -557,17 +450,15 @@ namespace NongFormat
 
         public int DeadBytes { get; private set; }
 
-
         private Mp3Format (Stream stream, byte[] hdr, string path) : base (stream, path)
         { }
 
 
         public override bool IsBadHeader
-        { get { return IsLame && Lame.ActualAudioHeaderCRC16 != null && Lame.ActualAudioHeaderCRC16 != Lame.StoredAudioHeaderCRC16; } }
-
+        { get { return Lame != null && Lame.ActualHeaderCrc != null && Lame.ActualHeaderCrc != Lame.StoredHeaderCrc; } }
 
         public override bool IsBadData
-        { get { return IsLame && Lame.ActualAudioDataCRC16 != null && Lame.ActualAudioDataCRC16 != Lame.StoredAudioDataCRC16; } }
+        { get { return Lame != null && Lame.ActualDataCrc != null && Lame.ActualDataCrc != Lame.StoredDataCrc; } }
 
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
@@ -577,36 +468,31 @@ namespace NongFormat
 
             if (scope <= Granularity.Detail)
             {
-                report.Add ("MPEG size = " + MediaCount);
+                report.Add ($"MPEG size = {MediaCount}");
                 if (Xing != null)
-                    report.Add ("XING size = " + Xing.XingSize);
+                    report.Add ($"XING size = {Xing.XingSize}");
                 if (Lame != null)
-                    report.Add ("LAME size = " + Lame.LameSize);
+                    report.Add ($"LAME size = {Lame.LameSize}");
 
                 report.Add (String.Empty);
-
-                report.Add ("Raw audio header:" + "  " + ConvertTo.ToBinaryString (aHdr, 4));
+                report.Add ("Raw audio header:" + "  " + ConvertTo.ToBinaryString (aBuf, 4));
                 report.Add (String.Empty);
             }
 
             report.Add ("Cooked audio header:");
-            report.Add ("  Codec = " + Codec);
+            report.Add ($"  Codec = {Header.Codec}");
+            report.Add ($"  Bit rate = {Header.BitRateText}");
+            report.Add ($"  Frequency = {Header.SampleRateText}");
+            report.Add ($"  Mode = {Header.ModeText}");
 
             if (scope <= Granularity.Detail)
-                report.Add ("  Flagged for CRC protection = " + IsProtected);
-            report.Add ("  Bit rate = " + BitRateToString());
-            report.Add ("  Frequency = " + FrequencyToString());
-            if (scope <= Granularity.Detail)
             {
-                report.Add ("  Frame padded = " + IsFramePadded);
-                report.Add ("  Private = " + PrivateBit);
-            }
-            report.Add ("  Mode = " + ModeText);
-            if (scope <= Granularity.Detail)
-            {
-                report.Add ("  Copyrighted = " + IsCopyrighted);
-                report.Add ("  Original = " + IsOriginal);
-                report.Add ("  Emphasis = " + Emphasis);
+                report.Add ($"  CRC protection bit = {Header.CrcProtectedBit}");
+                report.Add ($"  Padding bit = {Header.PaddingBit}");
+                report.Add ($"  Private bit = {Header.PrivateBit}");
+                report.Add ($"  Copyright bit = {Header.CopyrightBit}");
+                report.Add ($"  Original bit = {Header.OriginalBit}");
+                report.Add ($"  Emphasis = {Header.EmphasisText}");
             }
 
             if (Xing != null)
@@ -614,52 +500,61 @@ namespace NongFormat
                 if (scope <= Granularity.Detail)
                     report.Add (String.Empty);
 
-                report.Add ("LAME:");
                 if (scope <= Granularity.Detail)
                 {
-                    var opts = "  Optionals layout = |";
-                    if (Lame.IsFrameCountPresent)
-                        opts += " FrameCount |";
-                    if (Lame.IsBytesPresent)
-                        opts += " Bytes |";
-                    if (Lame.IsTableOfContentsPresent)
+                    report.Add ("XING:");
+                    report.Add ($"  String = {Xing.XingString}");
+                    var opts = "  Layout = |";
+                    if (Lame.HasFrameCount)
+                        opts += " Frames (" + Xing.FrameCount + ") |";
+                    if (Lame.HasSize)
+                        opts += " Size (" + Xing.XingSize + ") |";
+                    if (Lame.HasTableOfContents)
                         opts += " ToC |";
-                    if (Lame.IsQualityIndicatorPresent)
-                        opts += " QI |";
+                    if (Lame.HasQualityIndicator)
+                        opts += " Quality (" + Xing.QualityIndicator + ") |";
                     report.Add (opts);
                 }
             }
+
             if (Lame != null)
             {
-                report.Add ("  Version string = " + Lame.Version);
+                if (scope <= Granularity.Detail)
+                    report.Add (String.Empty);
+
+                report.Add ("LAME:");
+                report.Add ($"  Version = {Lame.LameVersion}");
                 if (Lame.IsVbr)
-                { report.Add ("  VBR: min bit rate = " + BitRate + ", method = " + Lame.BitrateMethod); }
-                if (Lame.IsAbr)
-                { report.Add ("  ABR: bit rate = " + BitRate + ", method = " + Lame.BitrateMethod); }
-                if (Lame.IsCbr)
-                { report.Add ("  CBR: bit rate = " + BitRate + ", method = " + Lame.BitrateMethod); }
+                    report.Add ($"  VBR: minimum bit rate = {Lame.MinBitRate}, method = {Lame.BitrateMethod}");
+                else if (Lame.IsAbr)
+                    report.Add ($"  ABR: bit rate = {Lame.Preset}, method = {Lame.BitrateMethod}");
+                else if (Lame.IsCbr)
+                    report.Add ($"  CBR: bit rate = {Header.BitRate}, method = {Lame.BitrateMethod}");
+                else
+                    report.Add ($"  Unknown bitrate method = {Lame.BitrateMethod}");
 
                 if (scope <= Granularity.Detail)
                 {
-                    report.Add ("  Tag revision = " + Lame.TagRevision);
-                    report.Add ("  Lowpass filter = " + Lame.LowpassFilter);
-                    report.Add (String.Format ("  Replay Gain: Peak = {0}, Radio = {1:X4}, Audiophile = {2:X4}",
-                                        Lame.ReplayGainPeak, Lame.RadioReplayGain, Lame.AudiophileReplayGain));
+                    report.Add ($"  Tag revision = {Lame.TagRevision}");
+                    report.Add ($"  Lowpass filter = {Lame.LowpassFilter}");
+                    report.Add ($"  Replay Gain: Peak = {Lame.ReplayGainPeak}, Radio = {Lame.RadioReplayGain:X4}, Audiophile = {Lame.AudiophileReplayGain:X4}");
                     report.Add ("  Lame encoding flags = " + Convert.ToString (Lame.LameFlags, 2).PadLeft (8, '0'));
-                    report.Add (String.Format ("  Encoder delay start = {0}, end = {1}", Lame.EncoderDelayStart, Lame.EncoderDelayEnd));
-                    report.Add (String.Format ("  LAME surround = {0}, LAME preset = {1}", Lame.Surround, Lame.Preset));
-                    report.Add ("  MP3 gain = " + Lame.Mp3Gain.ToString());
-                    report.Add ("  Minimum bit rate = " + Lame.MinBitRate);
+                    report.Add ($"  Encoder delay: Start = {Lame.EncoderDelayStart}, End = {Lame.EncoderDelayEnd}");
+                    report.Add ($"  LAME surround = {Lame.Surround}, LAME preset = {Lame.Preset}");
+                    report.Add ($"  MP3 gain = {Lame.Mp3Gain}");
+                    report.Add ($"  Minimum bit rate = {Lame.MinBitRateText}");
                     report.Add ("  Checks:");
-                    report.Add ("    Stored: audio header CRC-16 = " + Lame.StoredAudioHeaderCRC16ToHex
-                                          + ", audio data CRC-16 = " + Lame.StoredAudioDataCRC16ToHex);
+                    report.Add ($"    Stored: audio header CRC-16 = {Lame.StoredHeaderCrcText}, audio data CRC-16 = {Lame.StoredDataCrcText}");
 
-                    string lx = "    Actual: audio header CRC-16 = " + Lame.ActualAudioHeaderCRC16ToHex;
-                    if (Lame.ActualAudioDataCRC16 >= 0)
-                        lx += ", audio data CRC-16 = " + Lame.ActualAudioDataCRC16ToHex;
+                    string lx = "    Actual: audio header CRC-16 = " + Lame.ActualHeaderCrcText;
+                    if (Lame.ActualDataCrc != null)
+                        lx += ", audio data CRC-16 = " + Lame.ActualDataCrcText;
                     report.Add (lx);
                 }
             }
+
+            if (scope <= Granularity.Detail)
+                report.Add (String.Empty);
 
             var sb = new StringBuilder();
             sb.Append ("Layout = |");
@@ -678,8 +573,6 @@ namespace NongFormat
                 sb.Append (" ID3v1 (128) |");
             if (HasId3v1)
             { sb.Append (" ID3v1."); sb.Append (GetMinorOfV1 (id3v1Block)); sb.Append (" (128) |"); }
-            if (scope <= Granularity.Detail)
-                report.Add (String.Empty);
             report.Add (sb.ToString());
         }
     }
