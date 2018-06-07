@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\Md5Format.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\MkvFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\MovFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Mp3Header.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Mp3Format.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Mp3LameBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Mp4Format.cs" />
