@@ -19,13 +19,13 @@ namespace NongMediaDiags
             public LogEacFormat.Model LogModel;
             public Sha1xFormat.Model Sha1xModel = null;
 
-            public Model (LameDiags.Model model, string path, string signature, string logTag)
+            public Model (LameDiags.Model model, string path, string signature, bool doLogTag)
             {
                 if (model == null)
                     throw new NullReferenceException ("LameRip constructor missing model.");
 
                 this.Owner = model;
-                this.Bind = new LameRip (path, signature, logTag);
+                this.Bind = new LameRip (path, signature, doLogTag);
             }
 
 
@@ -65,11 +65,11 @@ namespace NongMediaDiags
                         Bind.Status = Bind.Log.Issues.MaxSeverity;
                         return;
                     }
-                    else if (Bind.DotLogTag.Length != 0 && ! Bind.Log.Name.EndsWith (Bind.DotLogTag + ".log"))
+                    else if (Bind.LogTagEnabled && ! Bind.Log.Name.EndsWith ("." + Bind.RipProfile + ".log"))
                     {
-                        string err = LogModel.Rename (Bind.WorkName + Bind.DotLogTag + ".log");
+                        string err = LogModel.Rename (Bind.WorkName + "." + Bind.RipProfile + ".log");
                         if (err != null)
-                            LogModel.IssueModel.Add ("Log rename failed: " + err, Severity.Error);
+                            LogModel.IssueModel.Add ("Log rename failed: " + err);
                     }
 
                 ValidateAlbum();
@@ -165,9 +165,13 @@ namespace NongMediaDiags
                 if (Bind.digInfos.Length == 0)
                 {
                     Bind.WorkName = Path.GetFileNameWithoutExtension (Bind.LogName);
-                    if (Bind.WorkName.EndsWith (Bind.DotLogTag))
-                        Bind.WorkName = Bind.WorkName.Substring (0, Bind.WorkName.Length - Bind.DotLogTag.Length);
-                    Bind.DigName = Bind.WorkName + Bind.DotLogTag + ".LAME." + Bind.Signature + ".sha1x";
+                    if (Bind.LogTagEnabled)
+                    {
+                        if (Bind.WorkName.EndsWith ("." + Bind.RipProfile))
+                            Bind.WorkName = Bind.WorkName.Substring (0, Bind.WorkName.Length - 1 - Bind.RipProfile.Length);
+                        Bind.DigName = Bind.WorkName + "." + Bind.RipProfile;
+                    }
+                    Bind.DigName = ".LAME." + Bind.Signature + ".sha1x";
                     Bind.DigPath = Bind.DirPath + Bind.DigName;
                 }
                 else
@@ -291,6 +295,12 @@ namespace NongMediaDiags
                             if (mp3.IsBadData)
                                 ++Owner.Bind.Mp3Format.TotalDataErrors;
 
+                            if (mp3.Lame != null)
+                                if (Bind.RipProfile == null)
+                                    Bind.RipProfile = mp3.Lame.Profile;
+                                else if (Bind.RipProfile != mp3.Lame.Profile)
+                                    mp3Model.IssueModel.Add ($"Profile {mp3.Lame.Profile} inconsistent with rip profile of {Bind.RipProfile}.");
+
                             if (mp3.HasId3v1)
                                 ++id3v1Count;
                             if (mp3.HasId3v2)
@@ -318,6 +328,11 @@ namespace NongMediaDiags
                             return;
                     }
                 }
+
+                if (new string[] { "V2","V0","C320" }.Any (x => x == Bind.RipProfile))
+                    LogModel.IssueModel.Add ($"All tracks profile {Bind.RipProfile}.", Severity.Noise);
+                else
+                    LogModel.IssueModel.Add ($"Profile {Bind.RipProfile} is substandard.", Severity.Error, IssueTags.Substandard);
 
                 if (id3v1Count > 0 && id3v1Count != Bind.mp3Infos.Length)
                     LogModel.IssueModel.Add ("Tracks have incomplete ID3v1 tagging.");
@@ -382,7 +397,7 @@ namespace NongMediaDiags
             private void ValidateDigest()
             {
                 var firstSig = Bind.Ripper ?? Bind.Signature;
-                var newDigName = Bind.WorkName + Bind.DotLogTag + ".LAME." + firstSig + ".sha1x";
+                var newDigName = Bind.WorkName + "." + Bind.RipProfile + ".LAME." + firstSig + ".sha1x";
                 var newDigPath = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + newDigName;
 
                 if (Bind.Ripper == null)
@@ -575,7 +590,8 @@ namespace NongMediaDiags
         public DirectoryInfo Dir { get; private set; }
         public string WorkName { get; private set; }
         public string Signature { get; private set; }
-        public string DotLogTag { get; private set; }
+        public bool LogTagEnabled { get; private set; }
+        public string RipProfile { get; private set; }
 
         public Severity Status { get; private set; }
         public Severity MaxTrackSeverity { get; private set; }
@@ -593,11 +609,11 @@ namespace NongMediaDiags
             private set { path = value; this.Dir = value==null? null : new DirectoryInfo (value); }
         }
 
-        private LameRip (string path, string signature, string logTag)
+        private LameRip (string path, string signature, bool doLogTag)
         {
             this.DirPath = path;
             this.Signature = signature;
-            this.DotLogTag = logTag == null ? String.Empty : "." + logTag;
+            this.LogTagEnabled = doLogTag;
         }
 
 

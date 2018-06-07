@@ -33,7 +33,7 @@ namespace AppController
         private string mirrorName;
         private bool waitForKeyPress = false;
         private string signature = null;
-        private string logTag = null;
+        private bool doLogTag = false;
         private int? notifyEvery = null;
         public int NotifyEvery { get; private set; }
 
@@ -71,7 +71,7 @@ namespace AppController
                 if (model.Bind.Scope <= Granularity.Verbose)
                 { Trace.WriteLine (ProductText + " v" + VersionText); Trace.WriteLine (String.Empty); }
 
-                Severity worstDiagnosis = model.ValidateLameRipsDeep (signature, logTag);
+                Severity worstDiagnosis = model.ValidateLameRipsDeep (signature, doLogTag);
                 exitCode = worstDiagnosis < Severity.Warning? 0 : (int) worstDiagnosis;
             }
 
@@ -124,11 +124,10 @@ namespace AppController
                     argOK = true;
                     waitForKeyPress = true;
                 }
-                else if (args[an].StartsWith ("/logtag:"))
+                else if (args[an].StartsWith ("/logtag:") || args[an] == "/logtag")
                 {
-                    logTag = args[an].Substring (8).Trim(null);
-                    argOK = ! logTag.Any (ch => Char.IsWhiteSpace (ch))
-                            && logTag.IndexOfAny (Path.GetInvalidFileNameChars()) < 0;
+                    doLogTag = true;
+                    argOK = true;
                 }
                 else if (args[an].StartsWith ("/out:"))
                 {
@@ -168,7 +167,7 @@ namespace AppController
 
             if (signature == null)
             {
-                if (logTag != null)
+                if (doLogTag)
                     Console.Error.WriteLine ("/logtag without /sig ignored.");
             }
             else if (model.Bind.Scope > Granularity.Advisory)
@@ -212,7 +211,7 @@ namespace AppController
             Console.WriteLine (ProductText + " v" + VersionText);
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine (exe + " [/fussy] [/g:<granularity>] [/k] [/logtag:<text>] [/out:<mirror>] [/p:<counter>] [/sig:<signature>] [/verify[:web]] <directory>");
+            Console.WriteLine (exe + " [/fussy] [/g:<granularity>] [/k] [/logtag] [/out:<mirror>] [/p:<counter>] [/sig:<signature>] [/verify[:web]] <directory>");
             Console.WriteLine ();
             Console.WriteLine ("Where <directory> is a relative or absolute directory name without wildcards.");
             Console.Write ("Where <granularity> from ");
@@ -231,7 +230,7 @@ namespace AppController
             Console.WriteLine ("Use /k to wait for keypress before exiting.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /logtag:V2 to include V2 in EAC log name.");
+            Console.WriteLine ("Use /logtag to insert compression profile into EAC log name.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /out:results.txt to mirror output to results.txt.");

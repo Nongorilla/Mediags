@@ -52,7 +52,7 @@ namespace NongMediaDiags
             }
 
 
-            public Severity ValidateLameRipsDeep (string signature, string logTag)
+            public Severity ValidateLameRipsDeep (string signature, bool doLogTag)
             {
                 string err = null;
                 var exitCode = Severity.NoIssue;
@@ -63,7 +63,7 @@ namespace NongMediaDiags
                 {
                     foreach (var curDir in new DirTraverser (Bind.Root))
                     {
-                        var ripStatus = ValidateLameRip (curDir, signature, logTag);
+                        var ripStatus = ValidateLameRip (curDir, signature, doLogTag);
                         if (exitCode < ripStatus)
                             exitCode = ripStatus;
                     }
@@ -82,7 +82,7 @@ namespace NongMediaDiags
             }
 
 
-            public Severity ValidateLameRip (string arg, string signature, string lameTag)
+            public Severity ValidateLameRip (string arg, string signature, bool doLogTag)
             {
                 string err = null;
                 string newPath = null;
@@ -93,15 +93,6 @@ namespace NongMediaDiags
                     else if (Map1252.ToClean1252FileName (signature.Trim(null)) != signature || signature.Any (Char.IsWhiteSpace))
                     {
                         ReportLine ("Invalid signature '" + signature + "'.", Severity.Error, false);
-                        return Severity.Fatal;
-                    }
-
-                if (lameTag != null)
-                    if (lameTag.Length == 0)
-                        lameTag = null;
-                    else if (Map1252.ToClean1252FileName (lameTag.Trim (null)) != lameTag || lameTag.Any (Char.IsWhiteSpace))
-                    {
-                        ReportLine ("Invalid log tag '" + lameTag + "'.", Severity.Error, false);
                         return Severity.Fatal;
                     }
 
@@ -122,7 +113,7 @@ namespace NongMediaDiags
                 catch (NotSupportedException)
                 { err = "Path is not valid."; }
 
-                RipModel = new LameRip.Model (this, newPath, signature, lameTag);
+                RipModel = new LameRip.Model (this, newPath, signature, doLogTag);
 
                 if (err != null)
                 {
