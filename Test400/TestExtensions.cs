@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using NongFormat;
 
 namespace UnitTest
@@ -11,22 +10,26 @@ namespace UnitTest
     public class TestExtensions
     {
         [TestMethod]
-        public void Test_ToBinString1()
+        public void Test_ToBitString2A()
         {
-            var buf = new byte[] { 0x1E };
-            var result = new StringBuilder().AppendBinaryString (buf, 1).ToString();
-           
-            Assert.AreEqual ("0001 1110", result);
+            int val = unchecked ((int) 0xFFFF1E96);
+
+            string result10 = ConvertTo.ToBitString (val, 10);
+            string result16 = ConvertTo.ToBitString (val, 16);
+            string result32 = ConvertTo.ToBitString (val, 32);
+
+            Assert.AreEqual ("10 1001 0110", result10);
+            Assert.AreEqual ("0001 1110 1001 0110", result16);
+            Assert.AreEqual ("1111 1111 1111 1111 0001 1110 1001 0110", result32);
         }
 
-        
+
         [TestMethod]
-        public void Test_ToBinString2()
+        public void Test_ToBitString2B()
         {
-            var buf = new byte[] { 0x12, 0x34, 0x56, 0x78, 0xff };
-            var result = new StringBuilder().AppendBinaryString (buf, 2).ToString();
-           
-            Assert.AreEqual ("0001 0010 0011 0100", result);
+            var buf = new byte[] { 0x12, 0x34, 0x5E, 0x78 };
+            var result = ConvertTo.ToBitString (buf, 3);
+            Assert.AreEqual ("0001 0010 0011 0100 0101 1110", result);
         }
 
 

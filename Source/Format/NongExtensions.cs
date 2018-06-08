@@ -8,21 +8,6 @@ namespace NongFormat
 {
     public static partial class StringBuilderExtensions
     {
-        public static StringBuilder AppendBinaryString (this StringBuilder sb, byte[] data, int length)
-        {
-            if (length > data.Length)
-                length = data.Length;
-            if (length > 0)
-                for (var ix = 0;;)
-                {
-                    sb.Append (Int32.Parse (Convert.ToString (data[ix], 2)).ToString ("0000 0000"));
-                    if (++ix >= length)
-                        break;
-                    sb.Append (' ');
-                }
-            return sb;
-        }
-
         public static StringBuilder AppendHexString (this StringBuilder sb, byte[] data)
         {
             foreach (byte octet in data)
@@ -113,6 +98,18 @@ namespace NongFormat
             while (stop < data.Length && data[stop] != 0)
                 ++stop;
             return Encoding.ASCII.GetString (data, offset, stop - offset);
+        }
+
+
+        public static string FromAsciiToString (byte[] data, int offset, int length)
+        {
+            string result = String.Empty;
+            for (; --length >= 0; ++offset)
+                if (data[offset] >= 32 && data[offset] < 127)
+                    result += (char) data[offset];
+                else
+                    break;
+            return result;
         }
 
 

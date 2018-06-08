@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace NongFormat
 {
@@ -10,18 +9,11 @@ namespace NongFormat
             System.Diagnostics.Debug.Assert (header.IsLayer3);
 
             int xix = header.XingOffset;
-
-            string xingString = "";
-            for (int ix = xix; ix <= xix + 4; ++ix)
-                if (buf[ix] >= 32 && buf[ix] < 127)
-                    xingString += (char) buf[ix];
+            string xingString = ConvertTo.FromAsciiToString (buf, xix, 4);
 
             if (xingString == "Info" || xingString == "Xing")
             {
-                string lameString = "";
-                for (int ix = xix + 0x78; ix <= xix + 0x80; ++ix)
-                    if (buf[ix] >= 32 && buf[ix] < 127)
-                        lameString += (char) buf[ix];
+                string lameString = ConvertTo.FromAsciiToString (buf, xix + 0x78, 9);
 
                 if (lameString.StartsWith ("LAME"))
                     return new Mp3LameBlock.Model (buf, xix, header, xingString, lameString);
@@ -37,9 +29,7 @@ namespace NongFormat
             public Mp3XingBlock BindXing { get; protected set; }
 
             public Model (byte[] hdr, int xingIx, Mp3Header header, string xingText)
-            {
-                BindXing = new Mp3XingBlock (hdr, xingIx, header, xingText);
-            }
+            { BindXing = new Mp3XingBlock (hdr, xingIx, header, xingText); }
         }
 
         protected byte[] buf;
