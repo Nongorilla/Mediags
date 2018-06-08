@@ -24,7 +24,7 @@ namespace UnitTest
 
                 Assert.IsNotNull (mp3);
                 Assert.AreEqual (Severity.Warning, mp3.Issues.MaxSeverity);
-                Assert.AreEqual (3, mp3.Issues.Items.Count);
+                Assert.AreEqual (2, mp3.Issues.Items.Count);
                 Assert.IsTrue (mp3.HasId3v1Phantom);
 
                 var repairMessage = mp3Model.RepairPhantomTag();
