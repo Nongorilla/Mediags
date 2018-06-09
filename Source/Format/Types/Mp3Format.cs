@@ -134,9 +134,12 @@ namespace NongFormat
                 // Detect Xing/LAME encodes:
 
                 XingModel = Mp3XingBlock.Create (Bind.aBuf, Bind.Header);
-                LameModel = XingModel as Mp3LameBlock.Model;
-                Bind.Xing = XingModel.BindXing;
-                Bind.Lame = Bind.Xing as Mp3LameBlock;
+                if (XingModel != null)
+                {
+                    LameModel = XingModel as Mp3LameBlock.Model;
+                    Bind.Xing = XingModel.BindXing;
+                    Bind.Lame = Bind.Xing as Mp3LameBlock;
+                }
 
                 // Detect ID3v1 tag block:
 
@@ -506,13 +509,13 @@ namespace NongFormat
                     report.Add ($"  String = {Xing.XingString}");
                     var opts = "  Layout = |";
                     if (Lame.HasFrameCount)
-                        opts += " Frames (" + Xing.FrameCount + ") |";
+                        opts += $" Frames ({Xing.FrameCount}) |";
                     if (Lame.HasSize)
-                        opts += " Size (" + Xing.XingSize + ") |";
+                        opts += $" Size ({Xing.XingSize}) |";
                     if (Lame.HasTableOfContents)
                         opts += " ToC |";
                     if (Lame.HasQualityIndicator)
-                        opts += " Quality (" + Xing.QualityIndicator + ") |";
+                        opts += $" Quality ({Xing.QualityIndicator}) |";
                     report.Add (opts);
                 }
             }
