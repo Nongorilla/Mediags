@@ -2,7 +2,7 @@
 // Product: UberLAME
 // File:    ConLameController.cs
 //
-// Copyright © 2017-2018 GitHub.com/Nongorilla
+// Copyright © 2017-2018 github.com/Nongorilla
 // MIT License - Use and redistribute freely
 //
 
@@ -36,6 +36,8 @@ namespace AppController
         private bool doLogTag = false;
         private int? notifyEvery = null;
         public int NotifyEvery { get; private set; }
+        public string DetailSeparator => "--- --- --- --- --- --- --- ---";
+        public string SessionSeparator => "=== === === === === === === ===";
 
 
         public ConLameController (string[] args, IConLameViewFactory viewFactory)
@@ -60,6 +62,8 @@ namespace AppController
                     try
                     {
                         var mirrorWriter = new TextWriterTraceListener (mirrorName);
+                        mirrorWriter.WriteLine (String.Empty);
+                        mirrorWriter.WriteLine (SessionSeparator);
                         mirrorWriter.WriteLine (DateTime.Now);
                         Trace.Listeners.Add (mirrorWriter);
                     }

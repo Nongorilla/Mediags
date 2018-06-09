@@ -2,7 +2,7 @@
 // Product: Mediags
 // File:    ConDiagsController.cs
 //
-// Copyright © 2015-2018 GitHub.com/Nongorilla
+// Copyright © 2015-2018 github.com/Nongorilla
 // MIT License - Use and redistribute freely
 //
 
@@ -31,6 +31,9 @@ namespace AppController
         private bool waitForKeyPress = false;
         private int? notifyEvery = null;
         public int NotifyEvery { get; private set; }
+        public string DetailSeparator => "---- ---- ---- ---- ----";
+        public string SessionSeparator => "==== ==== ==== ==== ====";
+
 
         private string filter = null;
         private string mirrorName = null;
@@ -60,6 +63,8 @@ namespace AppController
                     try
                     {
                         var mirrorWriter = new TextWriterTraceListener (mirrorName);
+                        mirrorWriter.WriteLine (String.Empty);
+                        mirrorWriter.WriteLine (SessionSeparator);
                         mirrorWriter.WriteLine (DateTime.Now);
                         Trace.Listeners.Add (mirrorWriter);
                     }

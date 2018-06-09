@@ -2,7 +2,7 @@
 // Product: UberLAME
 // File:    ConLameView.cs
 //
-// Copyright © 2017-2018 GitHub.com/Nongorilla
+// Copyright © 2017-2018 github.com/Nongorilla
 // MIT License - Use and redistribute freely
 //
 
@@ -35,8 +35,7 @@ namespace AppView
         private string curDir = null, curFile = null;
         private bool dirShown = false, fileShown = false;
 
-        public string DetailSeparator { get { return "--- --- --- --- --- --- --- ---"; } }
-        public string ProgressEraser { get { return "\r              \r"; } }
+        public string ProgressEraser => "\r              \r";
 
 
         static int Main (string[] args)
@@ -89,7 +88,7 @@ namespace AppView
                 if (totalFilesReported != 0)
                 {
                     if (modelBind.Scope < Granularity.Verbose)
-                    { Trace.WriteLine (String.Empty); Trace.WriteLine (DetailSeparator); }
+                    { Trace.WriteLine (String.Empty); Trace.WriteLine (controller.DetailSeparator); }
                     else if (! dirShown)
                         Trace.WriteLine (String.Empty);
                 }
@@ -129,7 +128,7 @@ namespace AppView
                 Console.Error.Write (ProgressEraser);
 
             if (totalFilesReported != 0)
-            { Trace.WriteLine (String.Empty); Trace.WriteLine (DetailSeparator); }
+            { Trace.WriteLine (String.Empty); Trace.WriteLine (controller.DetailSeparator); }
 
             var rollups = modelBind.GetRollups (new List<string>(), "checked");
             foreach (var lx in rollups)
