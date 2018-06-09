@@ -37,7 +37,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AgTBAAAAAAEIEACBAQAAEJACAAASAAQFAAAEAkAMAAA=</HashCode>
+      <HashCode>AATBAAAGAEEKEACBAQAAEJAAAIASAAQFAAAEAgAIAAA=</HashCode>
       <FileName>WpfFlacController.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -56,9 +56,14 @@
   <Class Name="NongMediaDiags.FlacDiags">
     <Position X="3.25" Y="2.5" Width="1.5" />
     <Members>
+      <Property Name="ApplyRG" Hidden="true" />
+      <Property Name="Autoname" Hidden="true" />
       <Property Name="FailPrefix" Hidden="true" />
       <Method Name="FlacDiags" Hidden="true" />
       <Field Name="FlacFormat" Hidden="true" />
+      <Property Name="GuiIssues" Hidden="true" />
+      <Property Name="IDataErrorInfo.Error" Hidden="true" />
+      <Property Name="IDataErrorInfo.this" Hidden="true" />
       <Property Name="Issues" Hidden="true" />
       <Field Name="LogFormat" Hidden="true" />
       <Field Name="M3uFormat" Hidden="true" />
@@ -66,6 +71,8 @@
       <Property Name="NoncompliantName" Hidden="true" />
       <Method Name="NotifyPropertyChanged" Hidden="true" />
       <Event Name="PropertyChanged" Hidden="true" />
+      <Property Name="UserSig" Hidden="true" />
+      <Property Name="WillProve" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -86,8 +93,8 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAEBCAAAAAAAEIAAAAAMAAAAgAAAAEAAAAAAAAAAAQA=</HashCode>
-      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FlacDiags.cs</FileName>
+      <HashCode>EAEBCAAAACAAEIBAAAEMAAAAgAAgIEAAAAAAAAAAIQA=</HashCode>
+      <FileName>T:\Dev17\Mediags\Source\FlacModel\FlacDiags.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Rip" />
@@ -97,16 +104,40 @@
   <Class Name="NongMediaDiags.FlacRip">
     <Position X="3.25" Y="5" Width="1.5" />
     <Members>
+      <Property Name="AlbumRenameCount" Hidden="true" />
+      <Property Name="Autoname" Hidden="true" />
       <Field Name="BindOwner" Hidden="true" />
+      <Property Name="Dir" Hidden="true" />
+      <Property Name="DirPath" Hidden="true" />
       <Field Name="filterOnConversion" Hidden="true" />
       <Field Name="flacInfos" Hidden="true" />
       <Field Name="flacModels" Hidden="true" />
       <Method Name="FlacRip" Hidden="true" />
+      <Property Name="HasChange" Hidden="true" />
+      <Property Name="IsCheck" Hidden="true" />
+      <Property Name="IsCommentable" Hidden="true" />
+      <Property Name="IsCommitable" Hidden="true" />
+      <Property Name="IsProven" Hidden="true" />
       <Field Name="isWip" Hidden="true" />
+      <Property Name="IsWip" Hidden="true" />
+      <Property Name="Log" Hidden="true" />
       <Field Name="logInfos" Hidden="true" />
+      <Property Name="LogName" Hidden="true" />
+      <Property Name="LogRipper" Hidden="true" />
+      <Property Name="M3u" Hidden="true" />
+      <Property Name="MaxFlacSeverity" Hidden="true" />
+      <Property Name="Md5" Hidden="true" />
+      <Property Name="Message" Hidden="true" />
+      <Property Name="NewComment" Hidden="true" />
       <Method Name="NotifyPropertyChanged" Hidden="true" />
       <Field Name="path" Hidden="true" />
       <Event Name="PropertyChanged" Hidden="true" />
+      <Property Name="Signature" Hidden="true" />
+      <Property Name="Status" Hidden="true" />
+      <Property Name="TrackEditCount" Hidden="true" />
+      <Property Name="TrackRenameCount" Hidden="true" />
+      <Property Name="Trailer" Hidden="true" />
+      <Property Name="WorkName" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Properties" Collapsed="true" />
@@ -117,19 +148,18 @@
         <TypeIdentifier>
           <NewMemberFileName>T:\Dev15\Mediags-dev\FormatDomain\FlacRipModel.cs</NewMemberFileName>
         </TypeIdentifier>
+        <Lollipop Position="0.2" Collapsed="true" />
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>ECJgAAAEhCAQAKAghAACEIAAgAgAIIAACggCpAgAAAE=</HashCode>
-      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FlacRip.cs</FileName>
+      <HashCode>ECJgAAAEhCAQAKAghAACEIAAgAgAYIAACggCpAgAAAE=</HashCode>
+      <FileName>T:\Dev17\Mediags\Source\FlacModel\FlacRip.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="NongMediaDiags.Diags">
     <Position X="3.25" Y="0.5" Width="1.5" />
     <Members>
-      <Property Name="ApplyRG" Hidden="true" />
-      <Property Name="Autoname" Hidden="true" />
       <Property Name="CurrentDirectory" Hidden="true" />
       <Property Name="CurrentFile" Hidden="true" />
       <Method Name="Diags" Hidden="true" />
@@ -144,6 +174,10 @@
       <Method Name="GetRollups" Hidden="true" />
       <Property Name="HashFlags" Hidden="true" />
       <Field Name="InputLine" Hidden="true" />
+      <Property Name="IsBestTags" Hidden="true" />
+      <Property Name="IsFussy" Hidden="true" />
+      <Property Name="IsParanoid" Hidden="true" />
+      <Property Name="IsWebCheckEnabled" Hidden="true" />
       <Event Name="MessageSend" Hidden="true" />
       <Method Name="OnFileVisit" Hidden="true" />
       <Method Name="OnMessageSend" Hidden="true" />
@@ -152,10 +186,10 @@
       <Property Name="ProductVersion" Hidden="true" />
       <Field Name="QuestionAsk" Hidden="true" />
       <Method Name="QuestionAskDefault" Hidden="true" />
-      <Property Name="Report" Hidden="true" />
       <Event Name="ReportClose" Hidden="true" />
       <Property Name="Response" Hidden="true" />
       <Property Name="Root" Hidden="true" />
+      <Property Name="Scope" Hidden="true" />
       <Property Name="TotalErrors" Hidden="true" />
       <Property Name="TotalFiles" Hidden="true" />
       <Property Name="TotalRepairable" Hidden="true" />
@@ -166,6 +200,7 @@
       <Property Name="WarnEscalator" Hidden="true" />
     </Members>
     <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
@@ -176,14 +211,15 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>BAECACAggABgECAEAJAAcAAgEBEAIAEIAQAAMEQgJAU=</HashCode>
-      <FileName>T:\Dev15\Mediags-dev\FormatDomain\Diags.cs</FileName>
+      <HashCode>BAECACAggABgECAEhJAAcAAgEFEAAQEIAQAAMEQgAAU=</HashCode>
+      <FileName>T:\Dev17\Mediags\Source\Model\Diags.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NongFormat.FileFormat">
     <Position X="5.5" Y="1.5" Width="1.5" />
     <Members>
       <Method Name="FileFormat" Hidden="true" />
+      <Property Name="LongName" Hidden="true" />
       <Field Name="names" Hidden="true" />
       <Property Name="Names" Hidden="true" />
       <Property Name="PrimaryName" Hidden="true" />
@@ -227,8 +263,8 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAgAAAcAAAACAgAAAAAAASJAAAEAAAAAAAAAAEAIA=</HashCode>
-      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+      <HashCode>AAAAgAAAcAEAACAgAAAAAAASJAAAEAAAAAAAAAAEAIA=</HashCode>
+      <FileName>T:\Dev17\Mediags\Source\Format\FileFormatVector.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="ModelFactory" />
@@ -245,7 +281,7 @@
     <Position X="5.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
-      <FileName>T:\Dev15\Mediags-dev\FormatDomain\FileFormatVector.cs</FileName>
+      <FileName>T:\Dev17\Mediags\Source\Format\FileFormatVector.cs</FileName>
     </TypeIdentifier>
   </Delegate>
   <Font Name="Segoe UI" Size="9" />
