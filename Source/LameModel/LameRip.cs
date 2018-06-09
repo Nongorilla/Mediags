@@ -68,8 +68,10 @@ namespace NongMediaDiags
                     else if (Bind.LogTagEnabled && ! Bind.Log.Name.EndsWith ("." + Bind.RipProfile + ".log"))
                     {
                         string err = LogModel.Rename (Bind.WorkName + "." + Bind.RipProfile + ".log");
-                        if (err != null)
-                            LogModel.IssueModel.Add ("Log rename failed: " + err);
+                        if (err == null)
+                            LogModel.IssueModel.Add ($"EAC log renamed to include profile {Bind.RipProfile}.", Severity.Advisory);
+                        else
+                            LogModel.IssueModel.Add ($"Log rename failed: {err}");
                     }
 
                 ValidateAlbum();
