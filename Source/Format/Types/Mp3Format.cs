@@ -22,9 +22,7 @@ namespace NongFormat
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
-            if (hdr.Length >= 0x2C
-                    && (hdr[0]=='I' && hdr[1]=='D' && hdr[2]=='3')
-                    || (hdr[0]==0xFF && ((hdr[1]&0xF6)==0xF2)))
+            if ((hdr[0]=='I' && hdr[1]=='D' && hdr[2]=='3') || (hdr[0] == 0xFF && ((hdr[1] & 0xE6) == 0xE2)))
                 return new Model (stream, hdr, path);
             return null;
         }
@@ -107,17 +105,25 @@ namespace NongFormat
                     ++Bind.DeadBytes;
                 }
 
-                // Detect MP3 header.
-                if (Bind.FileSize-Bind.ValidSize < 0xC0 || fBuf[Bind.ValidSize] != 0xFF || (fBuf[Bind.ValidSize+1] & 0xF6) != 0xF2)
+                if (Bind.FileSize - Bind.ValidSize < 0xC0)
                 {
-                    if (Bind.HasId3v2)
-                        IssueModel.Add ("ID3v2 tag present but no MP3 marker found.", Severity.Fatal);
-                    else
-                        IssueModel.Add ("MP3 marker not found.", Severity.Fatal);
+                    IssueModel.Add ("File appears truncated.", Severity.Fatal);
                     return;
                 }
 
                 Bind.Header = new Mp3Header (fBuf, (int) Bind.ValidSize);
+
+                if (! Bind.Header.IsMpegLayer3)
+                {
+                    IssueModel.Add ("ID3v2 tag present but no MP3 marker found.", Severity.Fatal);
+                    return;
+                }
+
+                if (Bind.Header.MpegVersionBits == 1)
+                {
+                    IssueModel.Add ("MP3 marker found but MPEG version is not valid.", Severity.Fatal);
+                    return;
+                }
 
                 mediaPos32 = (int) Bind.ValidSize;
                 Bind.ValidSize = Bind.FileSize;
@@ -125,11 +131,6 @@ namespace NongFormat
                 // Keep the audio header.
                 Bind.aBuf = new byte[Bind.Header.XingOffset + 0x9C];
                 Array.Copy (fBuf, mediaPos32, Bind.aBuf, 0, Bind.aBuf.Length);
-
-                // Basic MP3 header:
-
-                Debug.Assert ((Bind.aBuf[1] & 0x10) == 0x10);
-                Debug.Assert (Bind.Header.MpegLayerBits == 1);
 
                 // Detect Xing/LAME encodes:
 

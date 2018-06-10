@@ -6,7 +6,7 @@ namespace NongFormat
     {
         public static Mp3XingBlock.Model Create (byte[] buf, Mp3Header header)
         {
-            System.Diagnostics.Debug.Assert (header.IsLayer3);
+            System.Diagnostics.Debug.Assert (header.IsMpegLayer3);
 
             int xix = header.XingOffset;
             string xingString = ConvertTo.FromAsciiToString (buf, xix, 4);

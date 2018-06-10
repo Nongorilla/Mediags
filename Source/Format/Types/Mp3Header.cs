@@ -44,7 +44,7 @@
         public int OriginalBit => (Bits & 4) >> 2;
         public int EmphasisBits => Bits & 3;
 
-        public bool IsLayer3 => (Bits & 0xFFF60000) == 0xFFF20000;  // true for Mpeg1-Layer3, MPeg2-Layer3
+        public bool IsMpegLayer3 => (Bits & 0xFFE60000) == 0xFFE20000;
         public string MpegVersion => mpegVersion[MpegVersionBits];
         public string Codec => "MPEG-" + MpegVersion + " Layer " + (4-MpegLayerBits);
         public int? BitRate => bitRateMap[MpegVersionBits][BitRateBits];
