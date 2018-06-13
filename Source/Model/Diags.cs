@@ -19,6 +19,7 @@ namespace NongMediaDiags
         public FileFormat.Vector FileFormats { get; protected set; }
 
         public Func<string, bool?> QuestionAsk;
+        public Func<string, string, char> InputChar;
         public Func<string, string, string, string> InputLine;
         public event MessageSendHandler MessageSend;
         public event ReportCloseHandler ReportClose;

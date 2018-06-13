@@ -175,6 +175,12 @@ namespace AppController
                     model.Bind.WillProve = true;
                     model.Bind.IsWebCheckEnabled = true;
                 }
+                else if (args[an].StartsWith ("/safety:"))
+                {
+                    argOK = int.TryParse (args[an].Substring (8), out int arg);
+                    if (argOK)
+                        model.Bind.StopAfter = arg;
+                }
                 else if (args[an] == "/ubertags")
                 {
                     argOK = true;
@@ -245,7 +251,7 @@ namespace AppController
             Console.WriteLine (ProductText + " v" + VersionText);
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine (exe + " [/autoname[:<strategy>]] [/fussy] [/g:<granularity>] [/k] [/md5] [/out:<mirror>] [/p:<counter>] [/prove[:web]] [/rg] [/sig:<signature>] [/ubertags] <directory>");
+            Console.WriteLine (exe + " [/autoname[:<strategy>]] [/fussy] [/g:<granularity>] [/k] [/md5] [/out:<mirror>] [/p:<n>] [/prove[:web]] [/rg] [/safety:<n>] [/sig:<signature>] [/ubertags] <directory>");
 
             Console.WriteLine ();
             Console.WriteLine ("Where <directory> is a relative or absolute directory name without wildcards.");
@@ -285,6 +291,9 @@ namespace AppController
 
             Console.WriteLine ();
             Console.WriteLine ("Use /rg to add ReplayGain (using metaflac.exe) on first signing.");
+
+            Console.WriteLine ();
+            Console.WriteLine ("Use /safety:0 to disable prompting after consecutive invalidations (default is 3).");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /sig:SIG to sign (rename) EAC .log and create .md5 digest.");

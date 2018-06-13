@@ -10,6 +10,8 @@ namespace NongMediaDiags
 {
     public partial class LameDiags : Diags
     {
+        public int StopAfter { get; set; } = 3;
+
         public bool WillProve
         {
             get { return (ErrEscalator & IssueTags.ProveErr) != 0 && (WarnEscalator & IssueTags.ProveWarn) != 0; }
@@ -30,6 +32,7 @@ namespace NongMediaDiags
 
         public new class Model : Diags.Model
         {
+            private int consecutiveErrors = 0;
             public new LameDiags Bind { get; private set; }
             public readonly Issue.Vector.Model IssueModel;
 
@@ -63,6 +66,19 @@ namespace NongMediaDiags
                 {
                     foreach (var curDir in new DirTraverser (Bind.Root))
                     {
+                        if (Bind.StopAfter > 0 && consecutiveErrors >= Bind.StopAfter)
+                        {
+                            char response = Bind.InputChar ($"\n{Bind.StopAfter} consecutive rips invalidated. Stop (S) / Resume (R) / Don't ask again (D)? ", "srd");
+                            if (response == 's')
+                            {
+                                err = "Stopped by user.";
+                                break;
+                            }
+                            consecutiveErrors = 0;
+                            if (response == 'd')
+                                Bind.StopAfter = 0;
+                        }
+
                         var ripStatus = ValidateLameRip (curDir, signature, doLogTag);
                         if (exitCode < ripStatus)
                             exitCode = ripStatus;
@@ -73,7 +89,7 @@ namespace NongMediaDiags
 
                 if (err != null)
                 {
-                    ReportLine ("Error: " + err + " Bailing out of traversal.");
+                    ReportLine ($"Bailing out of traversal: {err}");
                     exitCode = Severity.Fatal;
                 }
 
@@ -162,7 +178,7 @@ namespace NongMediaDiags
                     RipModel.CloseFiles();
 
                     var baseName = Path.GetFileName (newPath);
-                    if (RipModel.Bind.Signature != null && ! baseName.StartsWith("!!") && newPath.Length < 235)
+                    if (RipModel.Bind.Signature != null && ! baseName.StartsWith ("!!") && newPath.Length < 235)
                     {
                         var errPath = Directory.GetParent(newPath).FullName;
                         if (errPath.Length > 0 && errPath[errPath.Length-1] != Path.DirectorySeparatorChar)
@@ -172,6 +188,8 @@ namespace NongMediaDiags
                         { Directory.Move (newPath, errPath); }
                         catch (Exception)
                         { /* discard all */ }
+
+                        ++consecutiveErrors;
                     }
                 }
 
@@ -180,7 +198,6 @@ namespace NongMediaDiags
 
                 return RipModel.Bind.Status;
             }
-
 
             public override void ReportFormat (FormatBase fb, bool logErrorsToFile = false)
             {

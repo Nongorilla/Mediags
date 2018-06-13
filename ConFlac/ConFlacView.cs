@@ -55,6 +55,7 @@ namespace AppView
             this.controller = controller;
             this.modelBind = modelBind;
             this.modelBind.QuestionAsk = Question;
+            this.modelBind.InputChar = InputChar;
             this.modelBind.InputLine = Input;
             this.modelBind.MessageSend += Logger;
             this.modelBind.ReportClose += Summarize;
@@ -147,7 +148,8 @@ namespace AppView
                 dirShown = false;
                 curFile = fileName;
                 fileShown = false;
-            } else if (curFile != fileName)
+            }
+            else if (curFile != fileName)
             {
                 curFile = fileName;
                 fileShown = false;
@@ -251,6 +253,21 @@ namespace AppView
                     return false;
                 if (response == "y" || response == "yes")
                     return true;
+            }
+        }
+
+
+        public char InputChar (string prompt, string validCharAnswers)
+        {
+            for (;;)
+            {
+                if (prompt != null)
+                    Console.Error.Write (prompt);
+
+                string response = Console.ReadLine().ToLower();
+
+                if (response.Length == 1 && validCharAnswers.Contains (response))
+                    return response[0];
             }
         }
     }

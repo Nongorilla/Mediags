@@ -12,6 +12,7 @@ namespace NongMediaDiags
     {
         public new class Model : Diags.Model, IDisposable
         {
+            private int consecutiveErrors = 0;
             public new FlacDiags Bind { get; private set; }
             public readonly Issue.Vector.Model IssueModel;
 
@@ -45,6 +46,19 @@ namespace NongMediaDiags
                 {
                     foreach (var curDir in new DirTraverser (Bind.Root))
                     {
+                        if (Bind.StopAfter > 0 && consecutiveErrors >= Bind.StopAfter)
+                        {
+                            char response = Bind.InputChar ($"\n{Bind.StopAfter} consecutive rips invalidated. Stop (S) / Resume (R) / Don't ask again (D)? ", "srd");
+                            if (response == 's')
+                            {
+                                err = "Stopped by user.";
+                                break;
+                            }
+                            consecutiveErrors = 0;
+                            if (response == 'd')
+                                Bind.StopAfter = 0;
+                        }
+
                         var ripStatus = ValidateFlacRip (curDir, signature, false, true);
                         if (exitCode < ripStatus)
                             exitCode = ripStatus;
@@ -55,7 +69,7 @@ namespace NongMediaDiags
 
                 if (err != null)
                 {
-                    ReportLine ("Error: " + err + " Bailing out of traversal.");
+                    ReportLine ($"Bailing out of traversal: {err}");
                     exitCode = Severity.Fatal;
                 }
 
@@ -163,7 +177,7 @@ namespace NongMediaDiags
                     if (prefixDirOnErr)
                     {
                         var baseName = Path.GetFileName (newPath);
-                        if (RipModel.Bind.Signature != null && ! baseName.StartsWith("!!") && newPath.Length < 235)
+                        if (RipModel.Bind.Signature != null && ! baseName.StartsWith ("!!") && newPath.Length < 235)
                         {
                             var parentPath = Directory.GetParent(newPath).FullName;
                             var errPath = parentPath + Path.DirectorySeparatorChar + Bind.FailPrefix + baseName;
@@ -171,6 +185,8 @@ namespace NongMediaDiags
                             { Directory.Move (newPath, errPath); }
                             catch (Exception)
                             { /* discard all */ }
+
+                            ++consecutiveErrors;
                         }
                     }
                     RipModel.Bind.IsWip = false;

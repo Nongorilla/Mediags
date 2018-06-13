@@ -144,6 +144,12 @@ namespace AppController
                     if (argOK)
                         notifyEvery = arg;
                 }
+                else if (args[an].StartsWith ("/safety:"))
+                {
+                    argOK = int.TryParse (args[an].Substring (8), out int arg);
+                    if (argOK)
+                        model.Bind.StopAfter = arg;
+                }
                 else if (args[an] == "/verify")
                 {
                     argOK = true;
@@ -215,7 +221,7 @@ namespace AppController
             Console.WriteLine (ProductText + " v" + VersionText);
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine (exe + " [/fussy] [/g:<granularity>] [/k] [/logtag] [/out:<mirror>] [/p:<counter>] [/sig:<signature>] [/verify[:web]] <directory>");
+            Console.WriteLine (exe + " [/fussy] [/g:<granularity>] [/k] [/logtag] [/out:<mirror>] [/p:<n>] [/safety:<n>] [/sig:<signature>] [/verify[:web]] <directory>");
             Console.WriteLine ();
             Console.WriteLine ("Where <directory> is a relative or absolute directory name without wildcards.");
             Console.Write ("Where <granularity> from ");
@@ -234,13 +240,16 @@ namespace AppController
             Console.WriteLine ("Use /k to wait for keypress before exiting.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /logtag to insert compression profile into EAC log name.");
+            Console.WriteLine ("Use /logtag to insert compression profile into EAC .log name.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /out:results.txt to mirror output to results.txt.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /p:0 to suppress the progress counter.");
+
+            Console.WriteLine ();
+            Console.WriteLine ("Use /safety:0 to disable prompting after consecutive rip invalidations (default is 3).");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /sig:SIG to sign (rename) EAC .log and create .sha1x digest.");

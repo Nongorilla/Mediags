@@ -13,6 +13,7 @@ namespace NongMediaDiags
         public NamingStrategy Autoname { get; set; }
         public bool ApplyRG { get; set; }
         public string UserSig { get; set; }
+        public int StopAfter { get; set; } = 3;
 
         public bool WillProve
         {
