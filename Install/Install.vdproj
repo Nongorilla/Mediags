@@ -213,8 +213,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UberApps"
-        "ProductCode" = "8:{5E28C25C-40FB-4325-A85E-A76C7A5CFEFD}"
-        "PackageCode" = "8:{9DFFB8E2-9F0F-4929-A4B3-3E704241FCE5}"
+        "ProductCode" = "8:{07A67A48-A470-44A5-A056-B8891460E167}"
+        "PackageCode" = "8:{BAC0C464-7973-44B4-B533-418800B471B7}"
         "UpgradeCode" = "8:{3901ED70-4515-492C-B113-99858FADD3AF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -228,7 +228,7 @@
         "Title" = "8:UberApps"
         "Subject" = "8:"
         "ARPCONTACT" = "8:github.com/Nongorilla"
-        "Keywords" = "8:v4.1.0"
+        "Keywords" = "8:v4.1.0.1"
         "ARPCOMMENTS" = "8:github.com/Nongorilla/Mediags"
         "ARPURLINFOABOUT" = "8:https://github.com/Nongorilla"
         "ARPPRODUCTICON" = "8:"
@@ -2371,7 +2371,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_16554790F6EC4BCF8F45272614464AD2"
             {
-            "SourcePath" = "8:..\\WpfFlac\\obj\\Release\\WpfFlac.exe"
+            "SourcePath" = "8:..\\WpfFlac\\obj\\Debug\\WpfFlac.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2399,7 +2399,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B0ED8D49DDC14A13BF472F85A8D1A075"
             {
-            "SourcePath" = "8:..\\ConDiags\\obj\\Release\\mediags.exe"
+            "SourcePath" = "8:..\\ConDiags\\obj\\Debug\\mediags.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2427,7 +2427,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CBE85B58C8E74378B9DE47C7D631A3DE"
             {
-            "SourcePath" = "8:..\\ConFlac\\obj\\Release\\uberflac.exe"
+            "SourcePath" = "8:..\\ConFlac\\obj\\Debug\\uberflac.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2455,7 +2455,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FE92816674AA466DA5C9380CD032203C"
             {
-            "SourcePath" = "8:..\\ConLame\\obj\\Release\\uberlame.exe"
+            "SourcePath" = "8:..\\ConLame\\obj\\Debug\\uberlame.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
