@@ -115,7 +115,7 @@ namespace NongFormat
 
         public static string ToBitString (byte[] data, int length)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder (length * 10 - 1);
             for (int ix = 0;;)
             {
                 for (int mask = 0x80;;)
@@ -137,7 +137,7 @@ namespace NongFormat
 
         public static string ToBitString (int value, int bitCount)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder (bitCount + (bitCount>>2));
             if (bitCount < 0 || bitCount >= 32)
             {
                 sb.Append ((value & 0x80000000) == 0 ? '0' : '1');
