@@ -135,6 +135,8 @@ namespace NongMediaDiags
                     {
                         ++Owner.Bind.Mp3Format.TrueTotal;
                         ++Owner.Bind.TotalFiles;
+                        ++Owner.Bind.TotalErrors;
+                        ++Owner.Bind.LogFormat.TotalMissing;
                         Owner.ReportLine ("Found .mp3 file(s) without a .log file in same directory.", Severity.Error, Bind.Signature != null);
                         Bind.Status = Severity.Error;
                     }
@@ -144,8 +146,9 @@ namespace NongMediaDiags
 
                 if (Bind.logInfos.Length > 1)
                 {
-                    ++Owner.Bind.LogFormat.TrueTotal;
-                    ++Owner.Bind.TotalFiles;
+                    Owner.Bind.LogFormat.TrueTotal += Bind.logInfos.Length;
+                    Owner.Bind.TotalFiles += Bind.logInfos.Length;
+                    Owner.Bind.TotalErrors += Bind.logInfos.Length - 1;
                     Owner.ReportLine ("Directory has more than 1 .log file.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
@@ -155,6 +158,8 @@ namespace NongMediaDiags
                 {
                     ++Owner.Bind.LogFormat.TrueTotal;
                     ++Owner.Bind.TotalFiles;
+                    ++Owner.Bind.TotalErrors;
+                    ++Owner.Bind.Mp3Format.TotalMissing;
                     Owner.ReportLine ("Directory has .log file yet has no .mp3 files.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
