@@ -32,7 +32,7 @@ namespace NongMediaDiags
 
         public new class Model : Diags.Model
         {
-            private int consecutiveErrors = 0;
+            private int consecutiveInvalidations = 0;
             public new LameDiags Bind { get; private set; }
             public readonly Issue.Vector.Model IssueModel;
 
@@ -66,7 +66,7 @@ namespace NongMediaDiags
                 {
                     foreach (var curDir in new DirTraverser (Bind.Root))
                     {
-                        if (Bind.StopAfter > 0 && consecutiveErrors >= Bind.StopAfter)
+                        if (Bind.StopAfter > 0 && consecutiveInvalidations >= Bind.StopAfter)
                         {
                             char response = Bind.InputChar ($"\n{Bind.StopAfter} consecutive rips invalidated. Stop (S) / Resume (R) / Don't ask again (D)? ", "srd");
                             if (response == 's')
@@ -74,7 +74,7 @@ namespace NongMediaDiags
                                 err = "Stopped by user.";
                                 break;
                             }
-                            consecutiveErrors = 0;
+                            consecutiveInvalidations = 0;
                             if (response == 'd')
                                 Bind.StopAfter = 0;
                         }
@@ -189,7 +189,7 @@ namespace NongMediaDiags
                         catch (Exception)
                         { /* discard all */ }
 
-                        ++consecutiveErrors;
+                        ++consecutiveInvalidations;
                     }
                 }
 

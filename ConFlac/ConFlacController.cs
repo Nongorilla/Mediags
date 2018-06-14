@@ -293,7 +293,7 @@ namespace AppController
             Console.WriteLine ("Use /rg to add ReplayGain (using metaflac.exe) on first signing.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /safety:0 to disable prompting after consecutive invalidations (default is 3).");
+            Console.WriteLine ("Use /safety:0 to disable prompting after consecutive invalidations.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /sig:SIG to sign (rename) EAC .log and create .md5 digest.");

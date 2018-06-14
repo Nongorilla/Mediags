@@ -249,7 +249,7 @@ namespace AppController
             Console.WriteLine ("Use /p:0 to suppress the progress counter.");
 
             Console.WriteLine ();
-            Console.WriteLine ("Use /safety:0 to disable prompting after consecutive rip invalidations (default is 3).");
+            Console.WriteLine ("Use /safety:0 to disable prompting after consecutive rip invalidations.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /sig:SIG to sign (rename) EAC .log and create .sha1x digest.");
