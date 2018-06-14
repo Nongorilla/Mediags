@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-
 [assembly: AssemblyTitle ("UberLAME (console)")]
 [assembly: AssemblyDescription ("LAME Rip Validator")]
 [assembly: AssemblyConfiguration ("")]
@@ -12,4 +11,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture ("")]
 [assembly: ComVisible (false)]
 [assembly: Guid ("6d9a8f25-ba91-4ddb-a657-d21a1507d118")]
-[assembly: AssemblyVersion ("4.1.0.1")]
+[assembly: AssemblyVersion ("4.1.1.0")]
