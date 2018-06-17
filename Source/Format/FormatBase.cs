@@ -513,7 +513,7 @@ namespace NongFormat
 
         public virtual void GetDetailsBody (IList<string> report, Granularity scope)
         {
-            var sb = new StringBuilder ('(');
+            var sb = new StringBuilder ("(");
             using (var it = ((IEnumerable<string>) ValidNames).GetEnumerator())
             {
                 for (it.MoveNext();;)
