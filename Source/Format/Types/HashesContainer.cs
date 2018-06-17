@@ -52,58 +52,62 @@ namespace NongFormat
                     var isOK = Int32.TryParse (reMatches[0].Groups[2].ToString(), out int major);
                     isOK = Int32.TryParse (reMatches[0].Groups[3].ToString(), out int minor);
 
+                    BindHashed.mediaPosition = lx.Length + 4;
+                    BindHashed.MediaCount = 8;
+
+                    lx = tr.ReadLine();
+                    if (lx == null || lx.Length < 10)
                     {
-                        BindHashed.mediaPosition = lx.Length + 4;
-                        BindHashed.MediaCount = 8;
+                        IssueModel.Add ("File is truncated.", Severity.Fatal);
+                        return;
+                    }
 
+                    string crcText = lx.Substring (2, 8);
+
+                    isOK = UInt32.TryParse (crcText, System.Globalization.NumberStyles.HexNumber, null, out uint crc);
+                    if (! isOK)
+                    {
+                        IssueModel.Add ("Self-CRC is not valid.", Severity.Fatal);
+                        return;
+                    }
+
+                    CreateHistory();
+                    HistoryModel.SetStoredSelfCRC (crc);
+
+                    string sig = null, action = null;
+                    for (;;)
+                    {
                         lx = tr.ReadLine();
-                        string crcText = lx.Substring (2, 8);
+                        if (lx == null || ! lx.StartsWith (";"))
+                            break;
 
-                        isOK = UInt32.TryParse (crcText, System.Globalization.NumberStyles.HexNumber, null, out UInt32 crc);
-                        if (! isOK)
+                        if (lx.Length > 24)
                         {
-                            IssueModel.Add ("Self-CRC is missing or invalid.", Severity.Fatal);
-                            return;
-                        }
+                            string ly = lx.Substring (2);
+                            HistoryModel.AddLine (ly);
 
-                        CreateHistory();
-                        HistoryModel.SetStoredSelfCRC (crc);
-
-                        string sig = null, action = null;
-                        for (;;)
-                        {
-                            lx = tr.ReadLine();
-                            if (lx == null || ! lx.StartsWith (";"))
-                                break;
-
-                            if (lx.Length > 24)
+                            var hre = new Regex (@"^[1-2][0-9][0-9][0-9][0-9][0-9][0-9][0-9] [0-2][0-9]\:[0-5][0-9]\:[0-9][0-9]\: ([^\:]+)\: (.+)");
+                            MatchCollection matches = hre.Matches (ly);
+                            if (matches.Count < 1)
+                                IssueModel.Add ("Cannot find a signature.");
+                            else
                             {
-                                string ly = lx.Substring (2);
-                                HistoryModel.AddLine (ly);
+                                sig = matches[0].Groups[1].ToString();
+                                action = matches[0].Groups[2].ToString();
 
-                                var hre = new Regex (@"^[1-2][0-9][0-9][0-9][0-9][0-9][0-9][0-9] [0-2][0-9]\:[0-5][0-9]\:[0-9][0-9]\: ([^\:]+)\: (.+)");
-                                MatchCollection matches = hre.Matches (ly);
-                                if (matches.Count < 1)
-                                    IssueModel.Add ("Cannot find a signature.");
-                                else
-                                {
-                                    sig = matches[0].Groups[1].ToString();
-                                    action = matches[0].Groups[2].ToString();
-
-                                    if (action == "proved" || action == "verified")
-                                        HistoryModel.SetProver (sig);
-                                }
+                                if (action == "proved" || action == "verified")
+                                    HistoryModel.SetProver (sig);
                             }
                         }
-
-                        if (BindHashed.History.Comment.Count == 0)
-                        {
-                            DestroyHistory();
-                            IssueModel.Add ("History comments are missing.");
-                        }
-                        else
-                            HistoryModel.SetLastAction (sig, action);
                     }
+
+                    if (BindHashed.History.Comment.Count == 0)
+                    {
+                        DestroyHistory();
+                        IssueModel.Add ("History comments are missing.");
+                    }
+                    else
+                        HistoryModel.SetLastAction (sig, action);
                 }
             }
 
