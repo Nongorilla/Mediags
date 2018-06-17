@@ -403,9 +403,12 @@ namespace NongMediaDiags
 
             private void ValidateDigest()
             {
-                var firstSig = Bind.Ripper ?? Bind.Signature;
-                var newDigName = Bind.WorkName + "." + Bind.RipProfile + ".LAME." + firstSig + ".sha1x";
-                var newDigPath = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + newDigName;
+                string firstSig = Bind.Ripper ?? Bind.Signature;
+                string newDigName = Bind.WorkName;
+                if (Bind.LogTagEnabled)
+                    newDigName += "." + Bind.RipProfile;
+                newDigName += ".LAME." + firstSig + ".sha1x";
+                string newDigPath = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + newDigName;
 
                 if (Bind.Ripper == null)
                 {
