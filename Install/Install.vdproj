@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
+        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE92816674AA466DA5C9380CD032203C"
+        "OwnerKey" = "8:_16554790F6EC4BCF8F45272614464AD2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -213,22 +213,22 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UberApps"
-        "ProductCode" = "8:{1D95AD3B-DC7E-40BC-BD65-907CDF225A88}"
-        "PackageCode" = "8:{73C8E735-0B1A-4849-A4C6-2C6E1504C834}"
+        "ProductCode" = "8:{0A3E3D17-0DD7-47C2-A9F5-BFDBE1FAA93A}"
+        "PackageCode" = "8:{9DC4E868-6DF3-41D7-B6E7-8B5C1992C1CB}"
         "UpgradeCode" = "8:{3901ED70-4515-492C-B113-99858FADD3AF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:4.1.101"
+        "ProductVersion" = "8:4.2.0"
         "Manufacturer" = "8:Nongorilla"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/Nongorilla/Mediags/issues"
         "Title" = "8:UberApps"
         "Subject" = "8:"
         "ARPCONTACT" = "8:github.com/Nongorilla"
-        "Keywords" = "8:v4.1.101"
+        "Keywords" = "8:v4.2.0"
         "ARPCOMMENTS" = "8:github.com/Nongorilla/Mediags"
         "ARPURLINFOABOUT" = "8:https://github.com/Nongorilla"
         "ARPPRODUCTICON" = "8:"
