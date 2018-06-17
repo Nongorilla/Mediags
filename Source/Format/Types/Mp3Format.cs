@@ -565,13 +565,13 @@ namespace NongFormat
             sb.Append ("Layout = |");
             if (HasId3v2)
             { sb.Append (" ID3v2."); sb.Append (Id3v2Major); sb.Append (" ("); sb.Append (Id3v2Size); sb.Append (") |"); }
-            sb.Append (" Audio (");
             if (DeadBytes > 0)
             { sb.Append (" Dead ("); sb.Append (DeadBytes); sb.Append (") |"); }
+            sb.Append (" Audio (");
             sb.Append (MediaCount.ToString());
             sb.Append (") |");
             if (HasApe)
-            { sb.Append (" APE tag ("); sb.Append (ApeSize); sb.Append (") |"); }
+            { sb.Append (" APE ("); sb.Append (ApeSize); sb.Append (") |"); }
             if (HasLyrics3)
             { sb.Append (" Lyrics3v2 ("); sb.Append (Lyrics3Size); sb.Append (") |"); }
             if (HasId3v1Phantom)
