@@ -551,10 +551,8 @@ namespace NongFormat
                     report.Add ("  Checks:");
                     report.Add ($"    Stored: audio header CRC-16 = {Lame.StoredHeaderCrcText}, audio data CRC-16 = {Lame.StoredDataCrcText}");
 
-                    string lx = "    Actual: audio header CRC-16 = " + Lame.ActualHeaderCrcText;
-                    if (Lame.ActualDataCrc != null)
-                        lx += ", audio data CRC-16 = " + Lame.ActualDataCrcText;
-                    report.Add (lx);
+                    if (Lame.ActualHeaderCrc != null)
+                        report.Add ($"    Actual: audio header CRC-16 = {Lame.ActualHeaderCrcText}, audio data CRC-16 = {Lame.ActualDataCrcText}");
                 }
             }
 

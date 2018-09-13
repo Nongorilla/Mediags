@@ -90,6 +90,7 @@ namespace NongFormat
 
         private ObservableCollection<int> badPage = new ObservableCollection<int>();
         public int PageCount { get; private set; }
+        public int GoodPageCount => PageCount - badPage.Count;
 
 
         private OggFormat (Stream stream, string path) : base (stream, path)
@@ -98,11 +99,11 @@ namespace NongFormat
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {
-            report.Add ("Page count = " + PageCount);
+            report.Add ($"Total pages = {PageCount}");
 
             if (scope <= Granularity.Detail && badPage.Count != 0)
                 foreach (var pageNum in badPage)
-                    report.Add ("CRC-32 mismatch on page " + pageNum + '.');
+                    report.Add ($"CRC-32 mismatch on page {pageNum}.");
         }
     }
 }
