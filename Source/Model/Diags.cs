@@ -28,7 +28,7 @@ namespace NongMediaDiags
         public string Product { get; set; }
         public string ProductVersion { get; set; }
 
-        public string Root { get; protected set; }
+        public string Root { get; set; }
         public string Filter { get; private set; }
         public string Exclusion { get; private set; }
         public Interaction Response { get; private set; }
@@ -37,6 +37,7 @@ namespace NongMediaDiags
         public Validations ValidationFlags { get; set; }
         public IssueTags WarnEscalator { get; set; }
         public IssueTags ErrEscalator { get; set; }
+        public Severity Result { get; private set; } = Severity.NoIssue;
 
         public string CurrentFile { get; private set; }
         public string CurrentDirectory { get; private set; }
@@ -50,9 +51,9 @@ namespace NongMediaDiags
         public int ExpectedFiles { get; set; }
 
 
-        private Diags (FileFormat.Vector formats) : this()
+        protected Diags (Model model) : this()
         {
-            this.FileFormats = formats;
+            this.FileFormats = model.FormatModel.Bind;
         }
 
 

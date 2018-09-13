@@ -57,7 +57,7 @@ namespace AppController
             int exitCode = ParseArgs (args);
             if (exitCode == 0)
             {
-                NotifyEvery =  notifyEvery?? (scope < Granularity.Verbose? 0 : 1);
+                NotifyEvery = notifyEvery ?? (scope < Granularity.Verbose? 0 : 1);
 
                 if (mirrorName != null)
                     try
@@ -84,19 +84,21 @@ namespace AppController
 
                 exitCode = (int) Severity.NoIssue;
                 string err = null;
-#if DEBUG
-                exitCode = (int) model.CheckArg();
-#else
+#if ! DEBUG
                 try
                 {
-                    exitCode = (int) model.CheckArg();
+#endif
+                    foreach (FormatBase.ModelBase fmtModel in model.CheckRoot())
+                    { }
+                    exitCode = (int) model.Bind.Result;
+#if ! DEBUG
                 }
                 catch (IOException ex)
                 { err = ex.Message; }
                 catch (ArgumentException ex)
                 { err = ex.Message; }
-
 #endif
+
                 if (err != null)
                 {
                     exitCode = (int) Severity.Fatal;

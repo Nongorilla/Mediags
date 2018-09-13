@@ -19,7 +19,7 @@ namespace NongMediaDiags
                 IssueTags warnEscalator=IssueTags.None, IssueTags errEscalator=IssueTags.None)
                 : this()
             {
-                this.Bind = new Diags (FormatModel.Bind);
+                this.Bind = new Diags (this);
                 Bind.Root = root;
                 Bind.Filter = filter;
                 Bind.Exclusion = exclusion;

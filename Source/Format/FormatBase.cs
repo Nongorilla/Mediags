@@ -13,9 +13,6 @@ namespace NongFormat
     public enum Likeliness
     { None, Possible, Probable }
 
-    public enum FileIntent
-    { ReadOnly, Update }
-
     [Flags]
     public enum Hashes
     { None=0, Intrinsic=1, FileMD5=2, FileSHA1=4, FileSHA256=8, MetaSHA1=0x10, MediaSHA1=0x20, PcmCRC32=0x40, PcmMD5=0x80, WebCheck=0x100 }

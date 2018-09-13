@@ -1,5 +1,6 @@
 ﻿#if MODEL_DIAG && ! NETFX_CORE
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NongIssue;
 using NongFormat;
@@ -10,87 +11,77 @@ namespace NongMediaDiags
     {
         public partial class Model
         {
-            public Severity CheckArg()
+            public IEnumerable<FormatBase.ModelBase> CheckRoot()
             {
                 FileAttributes atts;
-                Severity result = Severity.NoIssue;
 
                 try
-                {
-                    atts = File.GetAttributes (Bind.Root);
-                }
+                { atts = File.GetAttributes (Bind.Root); }
                 catch (NotSupportedException)
-                { throw new ArgumentException ("Directory name is invalid."); }
+                {
+                    Bind.Result = Severity.Fatal;
+                    throw new ArgumentException ("Directory name is invalid.");
+                }
 
                 if ((atts & FileAttributes.Directory) == FileAttributes.Directory)
-                    result = CheckDirs();
+                {
+                    Bind.Result = Severity.NoIssue;
+                    foreach (FormatBase.ModelBase fmtModel in CheckRootDir())
+                        yield return fmtModel;
+                }
                 else
                 {
-                    if (Bind.Filter != null)
-                        throw new ArgumentException ("Wildcard not valid with a file argument.");
-
-                    Bind.Filter = Bind.Root;
-
-                    var access = Bind.Response == Interaction.PromptToRepair? FileAccess.ReadWrite : FileAccess.Read;
-                    var fInfo = new FileInfo (Bind.Root);
-                    var fs0 = new FileStream (fInfo.FullName, FileMode.Open, access, FileShare.Read);
-
-                    result = CheckFile (fs0, fInfo.FullName);
+                    var access = Bind.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
+                    Stream st = new FileStream (Bind.Root, FileMode.Open, access, FileShare.Read);
+                    var fmtModel = CheckFile (st, Bind.Root, out Severity result);
+                    Bind.Result = result;
+                    yield return fmtModel;
                 }
-
-                Bind.OnReportClose();
-                return result;
             }
 
-
-            private Severity CheckDirs()
+            private IEnumerable<FormatBase.ModelBase> CheckRootDir()
             {
-                Severity theWorst = Severity.NoIssue;
-
                 foreach (string dn in new DirTraverser (Bind.Root))
                 {
-                    if (! string.IsNullOrEmpty (Bind.Exclusion) && dn.Contains (Bind.Exclusion))
-                        continue;
-
                     var dInfo = new DirectoryInfo (dn);
-                    var fileInfos = Bind.Filter == null? dInfo.GetFiles() : dInfo.GetFiles(Bind.Filter);
-                    var access = Bind.Response == Interaction.PromptToRepair? FileAccess.ReadWrite : FileAccess.Read;
+                    var fileInfos = Bind.Filter == null ? dInfo.GetFiles() : dInfo.GetFiles (Bind.Filter);
 
                     foreach (FileInfo fInfo in fileInfos)
                     {
-                        Severity badness;
+                        FormatBase.ModelBase fmtModel;
                         try
                         {
-                            var fs0 = new FileStream (fInfo.FullName, FileMode.Open, access, FileShare.Read);
-                            badness = CheckFile (fs0, fInfo.FullName);
+                            // Many exceptions also caught by outer caller:
+                            var access = Bind.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
+                            Stream stream = new FileStream (fInfo.FullName, FileMode.Open, access, FileShare.Read);
+                            fmtModel = CheckFile (stream, fInfo.FullName, out Severity badness);
+                            if (badness > Bind.Result)
+                                Bind.Result = badness;
                         }
                         catch (FileNotFoundException ex)
                         {
-                            badness = Severity.Fatal;
-                            Bind.OnMessageSend (ex.Message.Trim(), badness);
+                            Bind.Result = Severity.Fatal;
+                            Bind.OnMessageSend (ex.Message.Trim(), Severity.Fatal);
                             Bind.OnMessageSend ("Ignored.", Severity.Advisory);
+                            continue;
                         }
-                        if (badness > theWorst)
-                            theWorst = badness;
+                        yield return fmtModel;
                     }
                 }
-
-                return theWorst;
             }
 
 
-            private Severity CheckFile (Stream stream, string path)
+            private FormatBase.ModelBase CheckFile (Stream stream, string path, out Severity resultCode)
             {
                 SetCurrentFile (Path.GetDirectoryName (path), Path.GetFileName (path));
 
-                FileIntent intent = Bind.Response == Interaction.PromptToRepair? FileIntent.Update : FileIntent.ReadOnly;
                 bool isKnownExtension;
                 FileFormat trueFormat;
-                FormatBase.ModelBase formatModel;
+                FormatBase.ModelBase fmtModel = null;
                 try
                 {
-                    formatModel = FormatBase.CreateModel (Bind.FileFormats.Items, stream, path, Bind.HashFlags, Bind.ValidationFlags,
-                                                          Bind.Filter, out isKnownExtension, out trueFormat);
+                    fmtModel = FormatBase.CreateModel (Bind.FileFormats.Items, stream, path, Bind.HashFlags, Bind.ValidationFlags,
+                                                       Bind.Filter, out isKnownExtension, out trueFormat);
                 }
 #pragma warning disable 0168
                 catch (Exception ex)
@@ -101,7 +92,8 @@ namespace NongMediaDiags
 #else
                     Bind.OnMessageSend ("Exception: " + ex.Message.TrimEnd (null), Severity.Fatal);
                     ++Bind.TotalErrors;
-                    return Severity.Fatal;
+                    resultCode = Severity.Fatal;
+                    return null;
 #endif
                 }
 
@@ -109,24 +101,28 @@ namespace NongMediaDiags
                 {
                     if (Bind.Scope <= Granularity.Verbose)
                         Bind.OnMessageSend ("Ignored.", Severity.Trivia);
-                    return Severity.NoIssue;
+                    resultCode = Severity.NoIssue;
+                    return fmtModel;
                 }
 
-                if (formatModel == null)
+                if (fmtModel == null)
                 {
                     if (trueFormat != null)
-                        return Severity.NoIssue;
-
-                    if (Bind.Scope <= Granularity.Quiet)
-                        Bind.OnMessageSend ("Unrecognized contents.", Severity.Error);
-                    ++Bind.TotalErrors;
-                    return Severity.Fatal;
+                        resultCode = Severity.NoIssue;
+                    else
+                    {
+                        if (Bind.Scope <= Granularity.Quiet)
+                            Bind.OnMessageSend ("Unrecognized contents.", Severity.Error);
+                        ++Bind.TotalErrors;
+                        resultCode = Severity.Fatal;
+                    }
+                    return null;
                 }
 
                 ++Bind.TotalFiles;
                 trueFormat.TrueTotal += 1;
 
-                FormatBase fmt = formatModel.BaseBind;
+                FormatBase fmt = fmtModel.BaseBind;
 
                 if (fmt.IsBadHeader)
                     ++trueFormat.TotalHeaderErrors;
@@ -134,7 +130,7 @@ namespace NongMediaDiags
                 if (fmt.IsBadData)
                     ++trueFormat.TotalDataErrors;
 
-                formatModel.IssueModel.Escalate (Bind.WarnEscalator, Bind.ErrEscalator);
+                fmtModel.IssueModel.Escalate (Bind.WarnEscalator, Bind.ErrEscalator);
 
                 ReportFormat (fmt);
 
@@ -144,7 +140,7 @@ namespace NongMediaDiags
                     if (startRepairableCount > 0)
                     {
                         ++Bind.TotalRepairable;
-                        var didRename = RepairFile (formatModel);
+                        var didRename = RepairFile (fmtModel);
                         if (didRename)
                             --trueFormat.TotalMisnamed;
                         if (fmt.Issues.RepairableCount == 0)
@@ -153,7 +149,8 @@ namespace NongMediaDiags
                     }
                 }
 
-                return fmt.Issues.MaxSeverity;
+                resultCode = fmt.Issues.MaxSeverity;
+                return fmtModel;
             }
         }
     }
