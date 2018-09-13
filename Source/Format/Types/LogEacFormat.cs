@@ -498,7 +498,7 @@ namespace NongFormat
                     }
 
                 if (Bind.Id3Tag == "Yes")
-                    IssueModel.Add ("Append ID3 tags preferred setting is 'No'.", Severity.Trivia, IssueTags.Fussy);
+                    IssueModel.Add ("Append ID3 tags preferred setting is 'No'.", Severity.NoIssue, IssueTags.Fussy);
 
                 if (Bind.ReadOffset == "0" && Bind.Drive.Contains ("not found in database"))
                     IssueModel.Add ("Unknown drive with offset '0'.", Severity.Advisory, IssueTags.Fussy);
