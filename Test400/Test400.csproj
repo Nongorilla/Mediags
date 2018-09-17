@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnitTest</RootNamespace>
-    <AssemblyName>UnitTest</AssemblyName>
+    <AssemblyName>Test400</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -48,6 +48,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -71,6 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestFlac.cs" />
     <Compile Include="TestModel.cs" />
+    <Compile Include="TestDiagsMvvm.cs" />
     <Compile Include="TestSha256.cs" />
     <Compile Include="TestWav.cs" />
     <Content Include="Targets\Hashes\4pixels.png">
@@ -200,9 +202,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FlacModel400\FlacModel400.csproj">
-      <Project>{7d3ee171-b9e4-4278-8c03-c29dcd310690}</Project>
-      <Name>FlacModel400</Name>
+    <ProjectReference Include="..\Harness400\Harness400.csproj">
+      <Project>{b677d3db-51d5-4997-8f24-0a0b7190a066}</Project>
+      <Name>Harness400</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
