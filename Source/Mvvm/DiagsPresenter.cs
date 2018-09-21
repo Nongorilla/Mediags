@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using NongFormat;
 using NongIssue;
@@ -11,23 +12,24 @@ namespace AppViewModel
 {
     public interface IUi
     {
-        string CurrentFormat();
         string BrowseFile();
         void FileProgress (string dirName, string fileName);
         void ShowLine (string message, Severity severity, Likeliness repairability);
         void SetText (string message);
         void ConsoleZoom (int delta);
+        IList<string> GetHeadings();
     }
 
     public class TabInfo
     {
         private List<FormatBase> parsings;
+        public int TabPosition { get; private set; }
         public int Index { get; private set; }
         public int Count => parsings.Count;
         public FormatBase Current => parsings[Index];
 
-        public TabInfo()
-        { this.Index = 0; this.parsings = new List<FormatBase>(); }
+        public TabInfo (int tabPosition)
+        { this.TabPosition = tabPosition; this.Index = 0; this.parsings = new List<FormatBase>(); }
 
         public void Add (FormatBase fmt)
         { Index = parsings.Count; parsings.Add (fmt); }
@@ -39,14 +41,21 @@ namespace AppViewModel
         }
     }
 
-    // The View of Model-View-ViewModel.
+    // The ViewModel data of Model-View-ViewModel.
     public class DiagsPresenter : Diags, INotifyPropertyChanged
     {
         private SortedList<string,TabInfo> tabInfo = new SortedList<string,TabInfo>();
 
+        public int CurrentTabNumber { get; set; }
         public M3uFormat M3u { get; private set; }
         public Mp3Format Mp3 { get; private set; }
         public OggFormat Ogg { get; private set; }
+
+        private TabInfo CurrentTabFormatInfo
+         => tabInfo.Values.FirstOrDefault (v => v.TabPosition == CurrentTabNumber);
+
+        private void AddTabInfo (string formatName, int tabPosition)
+         => tabInfo.Add (formatName, new TabInfo (tabPosition));
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChangedEvent (string propertyName)
@@ -92,7 +101,7 @@ namespace AppViewModel
         }
 
 
-        // The ViewModel of Model-View-ViewModel.
+        // The ViewModel API of Model-View-ViewModel.
         public new class Model : Diags.Model
         {
             public IUi Ui { get; private set; }
@@ -102,41 +111,36 @@ namespace AppViewModel
             {
                 this.Ui = ui;
                 Bind = this.View = new DiagsPresenter (this);
-                AddTabInfo ("m3u");
-                AddTabInfo ("mp3");
-                AddTabInfo ("ogg");
+
+                int ix = 0;
+                foreach (string tabHeader in Ui.GetHeadings())
+                {
+                    if (tabHeader.StartsWith ("."))
+                        View.AddTabInfo (tabHeader.Substring (1), ix);
+                    ++ix;
+                }
+
                 Bind.FileVisit += Ui.FileProgress;
                 Bind.MessageSend += Ui.ShowLine;
             }
 
-            public void AddTabInfo (string formatName)
-            => View.tabInfo.Add (formatName, new TabInfo());
-
             public void GetFirst()
             {
-                var fmtName = Ui.CurrentFormat();
-                if (fmtName != null)
+                TabInfo ti = View.CurrentTabFormatInfo;
+                if (ti != null && ti.Count > 0)
                 {
-                    var tabInfoItem = View.tabInfo[fmtName];
-                    if (tabInfoItem.Count > 0)
-                    {
-                        tabInfoItem.SetIndex (0);
-                        RefreshTab (tabInfoItem.Current);
-                    }
+                    ti.SetIndex (0);
+                    RefreshTab (ti.Current);
                 }
             }
 
             public void GetNext()
             {
-                var fmtName = Ui.CurrentFormat();
-                if (fmtName != null)
+                TabInfo ti = View.CurrentTabFormatInfo;
+                if (ti != null && ti.Count > 0)
                 {
-                    var tabInfoItem = View.tabInfo[fmtName];
-                    if (tabInfoItem.Count > 0)
-                    {
-                        tabInfoItem.SetIndex (tabInfoItem.Index + 1);
-                        RefreshTab (tabInfoItem.Current);
-                    }
+                    ti.SetIndex (ti.Index + 1);
+                    RefreshTab (ti.Current);
                 }
             }
 
@@ -149,19 +153,32 @@ namespace AppViewModel
                 else if (fmt is OggFormat ogg)
                     View.Ogg = ogg;
 
+                TabInfo ti = View.tabInfo[fmt.ValidNames[0]];
+                View.CurrentTabNumber = ti.TabPosition;
 
+                View.RaisePropertyChangedEvent (null);
                 View.RaisePropertyChangedEvent (fmt.ValidNames[0]);
             }
 
             public void Parse()
             {
-                foreach (var parsing in CheckRoot())
+                TabInfo firstTInfo = null;
+                int firstParsingIx = 0;
+                foreach (FormatBase.ModelBase parsing in CheckRoot())
                     if (parsing != null)
+                    {
                         if (View.tabInfo.TryGetValue (parsing.BaseBind.NamedFormat, out TabInfo tInfo))
                         {
+                            if (firstTInfo == null)
+                            { firstTInfo = tInfo; firstParsingIx = tInfo.TabPosition; }
                             tInfo.Add (parsing.BaseBind);
-                            RefreshTab (tInfo.Current);
                         }
+                    }
+                if (firstTInfo != null)
+                {
+                    firstTInfo.SetIndex (firstParsingIx);
+                    RefreshTab (firstTInfo.Current);
+                }
             }
         }
     }

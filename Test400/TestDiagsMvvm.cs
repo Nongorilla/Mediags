@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using NongFormat;
 using NongIssue;
@@ -28,9 +29,6 @@ namespace UnitTest
         public void ConsoleZoom (int delta)
          => throw new NotImplementedException();
 
-        public string CurrentFormat()
-         => null;
-
         public void FileProgress (string dirName, string fileName)
         {
         }
@@ -45,12 +43,38 @@ namespace UnitTest
         {
             console.AppendLine (message);
         }
+
+        public IList<string> GetHeadings()
+         => new List<string> { "Console", ".m3u", ".mp3", ".ogg" };
     }
 
 
     [TestClass]
     public class TestMvvm
     {
+        [TestMethod]
+        public void Test_MvvmM3u()
+        {
+            var mdc = new MockDiagsController (new string[] { @"Targets\Hashes\Bad02.m3u" });
+            mdc.ModelView.DoParse.Execute (null);
+            M3uFormat m3u = mdc.ModelView.M3u;
+            Assert.IsNotNull (m3u);
+            Assert.AreEqual (2, m3u.Files.FoundCount);
+            Assert.AreEqual (3, m3u.Files.Items.Count);
+
+            mdc.ModelView.Root = @"Targets\Hashes\OK02.m3u";
+            mdc.ModelView.DoParse.Execute (null);
+            m3u = mdc.ModelView.M3u;
+            Assert.IsNotNull (m3u);
+            Assert.AreEqual (3, m3u.Files.FoundCount);
+            Assert.AreEqual (3, m3u.Files.Items.Count);
+            Assert.AreEqual (m3u.Name, "OK02.m3u");
+
+            mdc.ModelView.CurrentTabNumber = 1;
+            mdc.ModelView.NavFirst.Execute (null);
+            Assert.AreEqual (mdc.ModelView.M3u.Name, "Bad02.m3u");
+        }
+
         [TestMethod]
         public void Test_MvvmMp3()
         {

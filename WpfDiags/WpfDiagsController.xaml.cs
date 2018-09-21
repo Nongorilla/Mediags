@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -64,10 +65,13 @@ namespace AppController
                 consoleBox.FontSize = newZoom;
         }
 
-        public string CurrentFormat()
+        public IList<string> GetHeadings()
         {
-            var tabHeaderText = (String) ((TabItem) ((TabControl) infoTabs).SelectedItem).Header;
-            return tabHeaderText.StartsWith (".") ? tabHeaderText.Substring(1) : null;
+            var result = new List<string>();
+            var items = (ItemCollection) ((TabControl) infoTabs).Items;
+            foreach (TabItem item in items)
+                result.Add ((String) item.Header);
+            return result;
         }
 
         public void FileProgress (string dirName, string fileName)
