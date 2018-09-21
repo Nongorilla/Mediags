@@ -26,7 +26,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <app:FileHeaderControl/>
-        <ListView Name="m3uList" Grid.Row="1" SelectionMode="Multiple" ItemsSource="{Binding Files.Items}" MouseMove="m3uList_MouseMove">
+        <ListView Name="m3uList" Grid.Row="1" SelectionMode="Multiple" ItemsSource="{Binding Files.Items}">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>

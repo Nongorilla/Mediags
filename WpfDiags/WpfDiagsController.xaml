@@ -101,7 +101,7 @@
             <Button Content=" First " Grid.Row="2" Grid.Column="2" Command="{Binding NavFirst}" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
             <Button Content=" Next " Grid.Row="3" Grid.Column="2" Command="{Binding NavNext}" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
         </Grid>
-        <TabControl x:Name="infoTabs" Grid.Row="1" VerticalContentAlignment="Stretch">
+        <TabControl x:Name="infoTabs" Grid.Row="1" VerticalContentAlignment="Stretch" SelectedIndex="{Binding CurrentTabNumber}">
             <TabItem x:Name="mainTab" Header="Console">
                 <DockPanel>
                     <StackPanel>
@@ -132,7 +132,6 @@
             <TabItem x:Name="m3uTab" Header=".m3u" HorizontalAlignment="Left" Margin="0" Width="57">
                 <TabItem.Style>
                     <Style TargetType="TabItem">
-                        <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding M3u}" Value="{x:Null}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -145,10 +144,9 @@
             <TabItem x:Name="mp3Tab" Header=".mp3" HorizontalAlignment="Left" Margin="0" Width="57">
                 <TabItem.Style>
                     <Style TargetType="TabItem">
-                        <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Mp3}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Visible"/>
+                                <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -158,10 +156,9 @@
             <TabItem x:Name="oggTab" Header=".ogg" HorizontalAlignment="Left">
                 <TabItem.Style>
                     <Style TargetType="TabItem">
-                        <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Ogg}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Visible"/>
+                                <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

@@ -7,8 +7,16 @@
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="475"
              DataContext="{Binding Path=Ogg}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ThemeDarkDiags.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="3"/>
@@ -16,13 +24,23 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="9"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Text="Total page count:"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=PageCount, Mode=OneWay}"/>
-        <TextBlock Grid.Row="1" Text="Verified page count:"/>
-        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=GoodPageCount, Mode=OneWay}"/>
+        <app:FileHeaderControl Grid.ColumnSpan="4"/>
+        <TextBlock Grid.Row="1" Text="Total page count:"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=PageCount, Mode=OneWay}"/>
+        <TextBlock Grid.Row="2" Text="Verified page count:"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=GoodPageCount, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsBadData}" Value="true">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
     </Grid>
 </UserControl>

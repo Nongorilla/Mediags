@@ -15,21 +15,88 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Name:">
+        <TextBlock Text="File name:"/>
+        <TextBox Grid.Column="1" Text="{Binding Path=Name, Mode=OneWay}"/>
+        <TextBlock Grid.Row="1" Text="File MD5:">
             <TextBlock.Style>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource darkTextBlock}"/>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource darkTextBlock}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasFileMD5}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Name, Mode=OneWay}">
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=FileMD5ToHex, Mode=OneWay}">
             <TextBox.Style>
-                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}"/>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasFileMD5}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <TextBlock Grid.Row="2" Text="File SHA1:">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource darkTextBlock}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasFileSHA1}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=FileSHA1ToHex, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasFileSHA1}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <TextBlock Grid.Row="3" Text="File SHA256:">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource darkTextBlock}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasFileSHA256}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding Path=FileSHA256ToHex, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasFileSHA256}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
             </TextBox.Style>
         </TextBox>
     </Grid>
