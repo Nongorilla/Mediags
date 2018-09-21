@@ -79,7 +79,7 @@ namespace AppViewModel
             this.HashFlags = Hashes.Intrinsic;
             this.ValidationFlags = Validations.Exists;
 
-            this.DoBrowse = new RelayCommand (() => model.View.Root = model.Ui.BrowseFile());
+            this.DoBrowse = new RelayCommand (() => model.Data.Root = model.Ui.BrowseFile());
             this.DoParse = new RelayCommand (() => model.Parse());
             this.NavFirst = new RelayCommand (() => model.GetFirst());
             this.NavNext = new RelayCommand (() => model.GetNext());
@@ -105,18 +105,18 @@ namespace AppViewModel
         public new class Model : Diags.Model
         {
             public IUi Ui { get; private set; }
-            public DiagsPresenter View { get; private set; }
+            public DiagsPresenter Data { get; private set; }
 
             public Model (IUi ui)
             {
                 this.Ui = ui;
-                Bind = this.View = new DiagsPresenter (this);
+                Bind = this.Data = new DiagsPresenter (this);
 
                 int ix = 0;
                 foreach (string tabHeader in Ui.GetHeadings())
                 {
                     if (tabHeader.StartsWith ("."))
-                        View.AddTabInfo (tabHeader.Substring (1), ix);
+                        Data.AddTabInfo (tabHeader.Substring (1), ix);
                     ++ix;
                 }
 
@@ -126,7 +126,7 @@ namespace AppViewModel
 
             public void GetFirst()
             {
-                TabInfo ti = View.CurrentTabFormatInfo;
+                TabInfo ti = Data.CurrentTabFormatInfo;
                 if (ti != null && ti.Count > 0)
                 {
                     ti.SetIndex (0);
@@ -136,7 +136,7 @@ namespace AppViewModel
 
             public void GetNext()
             {
-                TabInfo ti = View.CurrentTabFormatInfo;
+                TabInfo ti = Data.CurrentTabFormatInfo;
                 if (ti != null && ti.Count > 0)
                 {
                     ti.SetIndex (ti.Index + 1);
@@ -147,17 +147,17 @@ namespace AppViewModel
             public void RefreshTab (FormatBase fmt)
             {
                 if (fmt is M3uFormat m3u)
-                    View.M3u = m3u;
+                    Data.M3u = m3u;
                 else if (fmt is Mp3Format mp3)
-                    View.Mp3 = mp3;
+                    Data.Mp3 = mp3;
                 else if (fmt is OggFormat ogg)
-                    View.Ogg = ogg;
+                    Data.Ogg = ogg;
 
-                TabInfo ti = View.tabInfo[fmt.ValidNames[0]];
-                View.CurrentTabNumber = ti.TabPosition;
+                TabInfo ti = Data.tabInfo[fmt.ValidNames[0]];
+                Data.CurrentTabNumber = ti.TabPosition;
 
-                View.RaisePropertyChangedEvent (null);
-                View.RaisePropertyChangedEvent (fmt.ValidNames[0]);
+                Data.RaisePropertyChangedEvent (null);
+                Data.RaisePropertyChangedEvent (fmt.ValidNames[0]);
             }
 
             public void Parse()
@@ -167,7 +167,7 @@ namespace AppViewModel
                 foreach (FormatBase.ModelBase parsing in CheckRoot())
                     if (parsing != null)
                     {
-                        if (View.tabInfo.TryGetValue (parsing.BaseBind.NamedFormat, out TabInfo tInfo))
+                        if (Data.tabInfo.TryGetValue (parsing.BaseBind.NamedFormat, out TabInfo tInfo))
                         {
                             if (firstTInfo == null)
                             { firstTInfo = tInfo; firstParsingIx = tInfo.TabPosition; }

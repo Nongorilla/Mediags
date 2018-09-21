@@ -17,7 +17,7 @@ namespace UnitTest
         public MockDiagsController (string[] args)
         {
             model = new DiagsPresenter.Model (this);
-            ModelView = model.View;
+            ModelView = model.Data;
             ModelView.Scope = Granularity.Detail;
             ModelView.HashFlags = Hashes.Intrinsic;
             ModelView.Root = args != null && args.Length > 0 ? args[args.Length-1] : null;

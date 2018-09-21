@@ -37,7 +37,7 @@ namespace AppController
     }
 
 
-    public partial class WpfDiagsController : Window, IUi
+    public partial class WpfDiagsView : Window, IUi
     {
         private readonly string[] args;
         private DiagsPresenter.Model presenterModel;
@@ -45,7 +45,7 @@ namespace AppController
         private string curDir = null, curFile = null;
         private bool dirShown = false, fileShown = false;
 
-        public WpfDiagsController (string[] args)
+        public WpfDiagsView (string[] args)
         {
             this.args = args;
             InitializeComponent();
@@ -105,7 +105,7 @@ namespace AppController
                 fileShown = true;
 
                 if (totalLinesReported != 0)
-                    if (presenterModel.View.Scope < Granularity.Verbose)
+                    if (presenterModel.Data.Scope < Granularity.Verbose)
                         consoleBox.AppendText ("\n\n---- ---- ----\n");
                     else if (! dirShown)
                         consoleBox.AppendText ("\n");
@@ -114,16 +114,16 @@ namespace AppController
                 {
                     dirShown = true;
 
-                    if (! String.IsNullOrEmpty (presenterModel.View.CurrentDirectory))
+                    if (! String.IsNullOrEmpty (presenterModel.Data.CurrentDirectory))
                     {
-                        consoleBox.AppendText (presenterModel.View.CurrentDirectory);
-                        if (presenterModel.View.CurrentDirectory[presenterModel.View.CurrentDirectory.Length-1] != System.IO.Path.DirectorySeparatorChar)
+                        consoleBox.AppendText (presenterModel.Data.CurrentDirectory);
+                        if (presenterModel.Data.CurrentDirectory[presenterModel.Data.CurrentDirectory.Length-1] != System.IO.Path.DirectorySeparatorChar)
                             consoleBox.AppendText (System.IO.Path.DirectorySeparatorChar.ToString());
                     }
                     consoleBox.AppendText ("\n");
                 }
 
-                consoleBox.AppendText (presenterModel.View.CurrentFile);
+                consoleBox.AppendText (presenterModel.Data.CurrentFile);
             }
 
             consoleBox.AppendText ("\n");
@@ -134,13 +134,13 @@ namespace AppController
         public void Window_Loaded (object sender, RoutedEventArgs ea)
         {
             presenterModel = new DiagsPresenter.Model (this);
-            presenterModel.View.Scope = Granularity.Detail;
-            presenterModel.View.HashFlags = Hashes.Intrinsic;
+            presenterModel.Data.Scope = Granularity.Detail;
+            presenterModel.Data.HashFlags = Hashes.Intrinsic;
 
             //TODO parse command line
-            presenterModel.View.Root = args.Length > 0 ? args[args.Length-1] : null;
+            presenterModel.Data.Root = args.Length > 0 ? args[args.Length-1] : null;
 
-            DataContext = presenterModel.View;
+            DataContext = presenterModel.Data;
         }
     }
 }
