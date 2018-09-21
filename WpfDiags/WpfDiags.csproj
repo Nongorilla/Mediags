@@ -77,7 +77,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WpfDiagsController.xaml">
+    <Page Include="WpfDiagsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -94,8 +94,8 @@
     <Compile Include="Controls\OggControl.xaml.cs">
       <DependentUpon>OggControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WpfDiagsController.xaml.cs">
-      <DependentUpon>WpfDiagsController.xaml</DependentUpon>
+    <Compile Include="WpfDiagsView.xaml.cs">
+      <DependentUpon>WpfDiagsView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
