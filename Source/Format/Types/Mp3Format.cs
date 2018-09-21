@@ -454,9 +454,37 @@ namespace NongFormat
 
         public int DeadBytes { get; private set; }
 
+        private string layout = null;
+        public string Layout
+        {
+            get
+            {
+                if (layout == null)
+                {
+                    var sb = new StringBuilder ("|");
+                    if (HasId3v2)
+                    { sb.Append (" ID3v2."); sb.Append (Id3v2Major); sb.Append (" ("); sb.Append (Id3v2Size); sb.Append(") |"); }
+                    if (DeadBytes > 0)
+                    { sb.Append (" Dead ("); sb.Append (DeadBytes); sb.Append (") |"); }
+                    sb.Append (" Audio (");
+                    sb.Append (MediaCount.ToString());
+                    sb.Append (") |");
+                    if (HasApe)
+                    { sb.Append (" APE ("); sb.Append (ApeSize); sb.Append (") |"); }
+                    if (HasLyrics3)
+                    { sb.Append (" Lyrics3v2 ("); sb.Append (Lyrics3Size); sb.Append (") |"); }
+                    if (HasId3v1Phantom)
+                        sb.Append (" ID3v1 (128) |");
+                    if (HasId3v1)
+                    { sb.Append(" ID3v1."); sb.Append (GetMinorOfV1 (id3v1Block)); sb.Append (" (128) |"); }
+                    layout = sb.ToString();
+                }
+                return layout;
+            }
+        }
+
         private Mp3Format (Stream stream, byte[] hdr, string path) : base (stream, path)
         { }
-
 
         public override bool IsBadHeader
         { get { return Lame != null && Lame.ActualHeaderCrc != null && Lame.ActualHeaderCrc != Lame.StoredHeaderCrc; } }
@@ -508,16 +536,7 @@ namespace NongFormat
                 {
                     report.Add ("XING:");
                     report.Add ($"  String = {Xing.XingString}");
-                    var opts = "  Layout = |";
-                    if (Lame.HasFrameCount)
-                        opts += $" Frames ({Xing.FrameCount}) |";
-                    if (Lame.HasSize)
-                        opts += $" Size ({Xing.XingSize}) |";
-                    if (Lame.HasTableOfContents)
-                        opts += " ToC |";
-                    if (Lame.HasQualityIndicator)
-                        opts += $" Quality ({Xing.QualityIndicator}) |";
-                    report.Add (opts);
+                    report.Add ($"  Layout = {Xing.Layout}");
                 }
             }
 
@@ -527,16 +546,9 @@ namespace NongFormat
                     report.Add (String.Empty);
 
                 report.Add ("LAME:");
-                report.Add ($"  Version = {Lame.LameVersion}");
-                report.Add ($"  Profile = {Lame.Profile}");
-                if (Lame.IsVbr)
-                    report.Add ($"  VBR: minimum bit rate = {Lame.MinBitRate}, method = {Lame.BitrateMethod}");
-                else if (Lame.IsAbr)
-                    report.Add ($"  ABR: bit rate = {Lame.Preset}, method = {Lame.BitrateMethod}");
-                else if (Lame.IsCbr)
-                    report.Add ($"  CBR: bit rate = {Header.BitRate}, method = {Lame.BitrateMethod}");
-                else
-                    report.Add ($"  Unknown bitrate method = {Lame.BitrateMethod}");
+                report.Add ($"  Version string = {Lame.LameVersion}");
+                report.Add ($"  Profile string = {Lame.Profile}");
+                report.Add ($"  Profile detail = {Lame.Method}");
 
                 if (scope <= Granularity.Detail)
                 {
@@ -559,24 +571,7 @@ namespace NongFormat
             if (scope <= Granularity.Detail)
                 report.Add (String.Empty);
 
-            var sb = new StringBuilder();
-            sb.Append ("Layout = |");
-            if (HasId3v2)
-            { sb.Append (" ID3v2."); sb.Append (Id3v2Major); sb.Append (" ("); sb.Append (Id3v2Size); sb.Append (") |"); }
-            if (DeadBytes > 0)
-            { sb.Append (" Dead ("); sb.Append (DeadBytes); sb.Append (") |"); }
-            sb.Append (" Audio (");
-            sb.Append (MediaCount.ToString());
-            sb.Append (") |");
-            if (HasApe)
-            { sb.Append (" APE ("); sb.Append (ApeSize); sb.Append (") |"); }
-            if (HasLyrics3)
-            { sb.Append (" Lyrics3v2 ("); sb.Append (Lyrics3Size); sb.Append (") |"); }
-            if (HasId3v1Phantom)
-                sb.Append (" ID3v1 (128) |");
-            if (HasId3v1)
-            { sb.Append (" ID3v1."); sb.Append (GetMinorOfV1 (id3v1Block)); sb.Append (" (128) |"); }
-            report.Add (sb.ToString());
+            report.Add ($"Layout = {Layout}");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace NongFormat
 {
@@ -39,6 +40,28 @@ namespace NongFormat
         public string XingString { get; private set; }
         public int FrameCount { get; private set; }
         public int XingSize { get; private set; }
+
+        private string layout = null;
+        public string Layout
+        {
+            get
+            {
+                if (layout == null)
+                {
+                    var sb = new StringBuilder ("|");
+                    if (HasFrameCount)
+                    { sb.Append (" Frames ("); sb.Append (FrameCount); sb.Append (") |"); }
+                    if (HasSize)
+                    { sb.Append (" Size ("); sb.Append (XingSize); sb.Append (") |"); }
+                    if (HasTableOfContents)
+                      sb.Append (" ToC |");
+                    if (HasQualityIndicator)
+                    { sb.Append (" Quality ("); sb.Append (QualityIndicator); sb.Append (") |"); }
+                    layout = sb.ToString();
+                }
+                return layout;
+            }
+        }
 
         public Mp3XingBlock (byte[] frameBuf, int xix, Mp3Header header, string xingString)
         {
@@ -144,6 +167,24 @@ namespace NongFormat
         public string ActualDataCrcText => $"{ActualDataCrc:X4}";
         public string StoredHeaderCrcText => $"{StoredHeaderCrc:X4}";
         public string StoredDataCrcText => $"{StoredDataCrc:X4}";
+
+        private string method = null;
+        public string Method
+        {
+            get
+            {
+                if (method == null)
+                    if (IsVbr)
+                        method = $"VBR (minimum bit rate {MinBitRate}, method {BitrateMethod})";
+                    else if (IsAbr)
+                        method = $"ABR (bit rate {Preset}, method {BitrateMethod})";
+                    else if (IsCbr)
+                        method = $"CBR (bit rate {header.BitRate}, method {BitrateMethod})";
+                    else
+                        method = $"Unknown method {BitrateMethod}";
+                return method;
+            }
+        }
 
         private string profile = null;
         public string Profile

@@ -91,6 +91,7 @@ namespace NongFormat
         private ObservableCollection<int> badPage = new ObservableCollection<int>();
         public int PageCount { get; private set; }
         public int GoodPageCount => PageCount - badPage.Count;
+        public override bool IsBadData => badPage.Count != 0;
 
 
         private OggFormat (Stream stream, string path) : base (stream, path)
