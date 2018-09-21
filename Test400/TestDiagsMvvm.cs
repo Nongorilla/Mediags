@@ -7,23 +7,23 @@ using AppViewModel;
 
 namespace UnitTest
 {
-    public class MockDiagsUi : IUi
+    public class MockDiagsController : IUi
     {
-        private readonly MockDiagsController view;
-        private readonly DiagsPresenter.Model model;
-        private readonly StringBuilder console;
+        StringBuilder console = new StringBuilder();
+        DiagsPresenter.Model model;
+        public DiagsPresenter ModelView { get; private set; }
 
-        public MockDiagsUi (MockDiagsController view, DiagsPresenter.Model model)
+        public MockDiagsController (string[] args)
         {
-            this.model = model;
-            this.view = view;
-            console = new StringBuilder();
+            model = new DiagsPresenter.Model (this);
+            ModelView = model.View;
+            ModelView.Scope = Granularity.Detail;
+            ModelView.HashFlags = Hashes.Intrinsic;
+            ModelView.Root = args != null && args.Length > 0 ? args[args.Length-1] : null;
         }
 
         public string BrowseFile()
-        {
-            throw new NotImplementedException();
-        }
+         => throw new NotImplementedException();
 
         public void ConsoleZoom (int delta)
          => throw new NotImplementedException();
@@ -47,33 +47,6 @@ namespace UnitTest
         }
     }
 
-    public interface IMockDiagsIUiFactory
-    {
-        IUi Create (MockDiagsController controller, DiagsPresenter.Model model);
-    }
-
-
-    public class MockDiagsUiFactory : IMockDiagsIUiFactory
-    {
-        public IUi Create (MockDiagsController controller, DiagsPresenter.Model model)
-         => new MockDiagsUi (controller, model);
-    }
-
-    public class MockDiagsController
-    {
-        public DiagsPresenter ModelView { get; private set; }
-
-        public MockDiagsController (string rootName = null)
-        {
-            var factory = new MockDiagsUiFactory();
-            var model = new DiagsPresenter.Model ((m) => factory.Create (this, m));
-            ModelView = model.View;
-            ModelView.Scope = Granularity.Detail;
-            ModelView.HashFlags = Hashes.Intrinsic;
-            ModelView.Root = rootName;
-        }
-    }
-
 
     [TestClass]
     public class TestMvvm
@@ -81,8 +54,8 @@ namespace UnitTest
         [TestMethod]
         public void Test_MvvmMp3()
         {
-            var fn = @"Targets\Singles\01-Phantom.mp3";
-            var mdc = new MockDiagsController (fn);
+            var args = new string[] { @"Targets\Singles\02-WalkedOn.mp3" };
+            var mdc = new MockDiagsController (args);
 
             Assert.IsNotNull (mdc.ModelView);
 
@@ -90,7 +63,9 @@ namespace UnitTest
             Mp3Format mp3 = mdc.ModelView.Mp3;
 
             Assert.IsNotNull (mp3);
-            Assert.IsTrue (mp3.HasId3v1Phantom);
+            Assert.IsFalse (mp3.HasId3v1Phantom);
+            Assert.IsTrue (mp3.IsBadData);
+            Assert.AreEqual (Severity.Error, mp3.Issues.MaxSeverity);
         }
     }
 }

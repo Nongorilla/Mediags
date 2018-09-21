@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using AppViewModel;
 using NongFormat;
@@ -34,34 +35,108 @@ namespace AppController
         => value.Equals (true) ? (Validations) param : (Validations) ~(int) param;
     }
 
-    public interface IWpfDiagsIUiFactory
-    {
-        IUi Create (WpfDiagsController controller, DiagsPresenter.Model model);
-    }
 
-    public partial class WpfDiagsController : Window
+    public partial class WpfDiagsController : Window, IUi
     {
         private readonly string[] args;
-        private readonly IWpfDiagsIUiFactory iUiFactory;
-        private DiagsPresenter.Model model;
+        private DiagsPresenter.Model presenterModel;
+        private int totalLinesReported = 0;
+        private string curDir = null, curFile = null;
+        private bool dirShown = false, fileShown = false;
 
-        public WpfDiagsController (string[] args, IWpfDiagsIUiFactory factory)
+        public WpfDiagsController (string[] args)
         {
             this.args = args;
-            this.iUiFactory = factory;
             InitializeComponent();
+        }
+
+        public string BrowseFile()
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog() { Filter="Media files (*.*)|*.*" };
+            dlg.ShowDialog();
+            return dlg.FileName;
+        }
+
+        public void ConsoleZoom (int delta)
+        {
+            var newZoom = unchecked (consoleBox.FontSize + delta);
+            if (newZoom >= 4 && newZoom <= 60)
+                consoleBox.FontSize = newZoom;
+        }
+
+        public string CurrentFormat()
+        {
+            var tabHeaderText = (String) ((TabItem) ((TabControl) infoTabs).SelectedItem).Header;
+            return tabHeaderText.StartsWith (".") ? tabHeaderText.Substring(1) : null;
+        }
+
+        public void FileProgress (string dirName, string fileName)
+        {
+            if (curDir != dirName)
+            {
+                curDir = dirName;
+                dirShown = false;
+                curFile = fileName;
+                fileShown = false;
+            }
+            else if (curFile != fileName)
+            {
+                curFile = fileName;
+                fileShown = false;
+            }
+        }
+
+        public void SetText (string message)
+        {
+            consoleBox.Text = message;
+            curDir = null; curFile = null;
+            dirShown = false; fileShown = false;
+            totalLinesReported = 0;
+        }
+
+        public void ShowLine (string message, Severity severity, Likeliness repairability)
+        {
+            if (! fileShown)
+            {
+                fileShown = true;
+
+                if (totalLinesReported != 0)
+                    if (presenterModel.View.Scope < Granularity.Verbose)
+                        consoleBox.AppendText ("\n\n---- ---- ----\n");
+                    else if (! dirShown)
+                        consoleBox.AppendText ("\n");
+
+                if (! dirShown)
+                {
+                    dirShown = true;
+
+                    if (! String.IsNullOrEmpty (presenterModel.View.CurrentDirectory))
+                    {
+                        consoleBox.AppendText (presenterModel.View.CurrentDirectory);
+                        if (presenterModel.View.CurrentDirectory[presenterModel.View.CurrentDirectory.Length-1] != System.IO.Path.DirectorySeparatorChar)
+                            consoleBox.AppendText (System.IO.Path.DirectorySeparatorChar.ToString());
+                    }
+                    consoleBox.AppendText ("\n");
+                }
+
+                consoleBox.AppendText (presenterModel.View.CurrentFile);
+            }
+
+            consoleBox.AppendText ("\n");
+            consoleBox.AppendText (message);
+            ++totalLinesReported;
         }
 
         public void Window_Loaded (object sender, RoutedEventArgs ea)
         {
-            model = new DiagsPresenter.Model ((m) => iUiFactory.Create (this, m));
+            presenterModel = new DiagsPresenter.Model (this);
+            presenterModel.View.Scope = Granularity.Detail;
+            presenterModel.View.HashFlags = Hashes.Intrinsic;
 
-            if (args.Length > 0)
-                model.View.Root = args[0];
-            model.View.Scope = Granularity.Detail;
-            model.View.HashFlags = Hashes.Intrinsic;
+            //TODO parse command line
+            presenterModel.View.Root = args.Length > 0 ? args[args.Length-1] : null;
 
-            DataContext = model.View;
+            DataContext = presenterModel.View;
         }
     }
 }

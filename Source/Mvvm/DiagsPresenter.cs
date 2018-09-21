@@ -98,9 +98,9 @@ namespace AppViewModel
             public IUi Ui { get; private set; }
             public DiagsPresenter View { get; private set; }
 
-            public Model (Func<Model,IUi> ffUi) : base()
+            public Model (IUi ui)
             {
-                this.Ui = ffUi (this);
+                this.Ui = ui;
                 Bind = this.View = new DiagsPresenter (this);
                 AddTabInfo ("m3u");
                 AddTabInfo ("mp3");
