@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace AppController
+namespace AppView
 {
     public partial class M3uControl : UserControl
     {

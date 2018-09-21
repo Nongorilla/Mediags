@@ -7,7 +7,7 @@ using AppViewModel;
 using NongFormat;
 using NongIssue;
 
-namespace AppController
+namespace AppView
 {
     public class ComparisonConverter : IValueConverter
     {
