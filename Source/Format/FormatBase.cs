@@ -332,18 +332,22 @@ namespace NongFormat
         protected byte[] mediaSHA1 = null;
         public byte[] MediaSHA1 { get { var cp = new byte[mediaSHA1.Length]; mediaSHA1.CopyTo (cp, 0); return cp; } }
         public string MediaSHA1ToHex() { return mediaSHA1==null? null : ConvertTo.ToHexString (mediaSHA1); }
+        public bool HasMediaSHA1 => mediaSHA1 != null;
 
         private byte[] fileMD5 = null;
         public byte[] FileMD5 { get { var cp = new byte[fileMD5.Length]; fileMD5.CopyTo (cp, 0); return cp; } }
         public string FileMD5ToHex { get { return fileMD5==null? null : ConvertTo.ToHexString (fileMD5); } }
         public bool FileMD5Equals (byte[] a2) { return fileMD5.SequenceEqual (a2); }
+        public bool HasFileMD5 => fileMD5 != null;
 
         protected byte[] fileSHA1 = null;
         public byte[] FileSHA1 { get { var cp = new byte[fileSHA1.Length]; fileSHA1.CopyTo (cp, 0); return cp; } }
         public string FileSHA1ToHex { get { return fileSHA1==null? null : ConvertTo.ToHexString (fileSHA1); } }
+        public bool HasFileSHA1 => fileSHA1 != null;
 
         protected byte[] fileSHA256 = null;
         public string FileSHA256ToHex { get { return fileSHA256==null? null : ConvertTo.ToHexString (fileSHA256); } }
+        public bool HasFileSHA256 => fileSHA256 != null;
 
         protected static bool StartsWith (byte[] target, byte[] other)
         {
