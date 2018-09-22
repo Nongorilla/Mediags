@@ -4,7 +4,7 @@ using NongIssue;
 
 namespace AppViewModel
 {
-    public interface IUi
+    public interface IDiagsUi
     {
         string BrowseFile();
         void FileProgress (string dirName, string fileName);

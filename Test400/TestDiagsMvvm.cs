@@ -8,7 +8,7 @@ using AppViewModel;
 
 namespace UnitTest
 {
-    public class MockDiagsController : IUi
+    public class MockDiagsController : IDiagsUi
     {
         StringBuilder console = new StringBuilder();
         DiagsPresenter.Model model;

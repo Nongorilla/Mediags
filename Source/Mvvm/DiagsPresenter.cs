@@ -93,10 +93,10 @@ namespace AppViewModel
         // The ViewModel API of Model-View-ViewModel.
         public new class Model : Diags.Model
         {
-            public IUi Ui { get; private set; }
+            public IDiagsUi Ui { get; private set; }
             public DiagsPresenter Data { get; private set; }
 
-            public Model (IUi ui)
+            public Model (IDiagsUi ui)
             {
                 this.Ui = ui;
                 Bind = this.Data = new DiagsPresenter (this);

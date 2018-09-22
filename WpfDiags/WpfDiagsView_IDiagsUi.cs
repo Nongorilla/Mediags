@@ -66,7 +66,7 @@ namespace AppView
                 fileShown = true;
 
                 if (totalLinesReported != 0)
-                    if (presenterModel.Data.Scope < Granularity.Verbose)
+                    if (viewModel.Data.Scope < Granularity.Verbose)
                         consoleBox.AppendText ("\n\n---- ---- ----\n");
                     else if (! dirShown)
                         consoleBox.AppendText ("\n");
@@ -75,16 +75,16 @@ namespace AppView
                 {
                     dirShown = true;
 
-                    if (! string.IsNullOrEmpty (presenterModel.Data.CurrentDirectory))
+                    if (! string.IsNullOrEmpty (viewModel.Data.CurrentDirectory))
                     {
-                        consoleBox.AppendText (presenterModel.Data.CurrentDirectory);
-                        if (presenterModel.Data.CurrentDirectory[presenterModel.Data.CurrentDirectory.Length-1] != System.IO.Path.DirectorySeparatorChar)
+                        consoleBox.AppendText (viewModel.Data.CurrentDirectory);
+                        if (viewModel.Data.CurrentDirectory[viewModel.Data.CurrentDirectory.Length-1] != System.IO.Path.DirectorySeparatorChar)
                             consoleBox.AppendText (System.IO.Path.DirectorySeparatorChar.ToString());
                     }
                     consoleBox.AppendText ("\n");
                 }
 
-                consoleBox.AppendText (presenterModel.Data.CurrentFile);
+                consoleBox.AppendText (viewModel.Data.CurrentFile);
             }
 
             consoleBox.AppendText ("\n");

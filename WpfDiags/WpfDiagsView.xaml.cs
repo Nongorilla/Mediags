@@ -5,10 +5,10 @@ using NongIssue;
 
 namespace AppView
 {
-    public partial class WpfDiagsView : Window, IUi
+    public partial class WpfDiagsView : Window, IDiagsUi
     {
         private readonly string[] args;
-        private DiagsPresenter.Model presenterModel;
+        private DiagsPresenter.Model viewModel;
 
         public WpfDiagsView (string[] args)
         {
@@ -18,14 +18,13 @@ namespace AppView
 
         public void Window_Loaded (object sender, RoutedEventArgs ea)
         {
-            presenterModel = new DiagsPresenter.Model (this);
-            presenterModel.Data.Scope = Granularity.Detail;
-            presenterModel.Data.HashFlags = Hashes.Intrinsic;
+            viewModel = new DiagsPresenter.Model (this);
+            viewModel.Data.Scope = Granularity.Detail;
+            viewModel.Data.HashFlags = Hashes.Intrinsic;
 
             //TODO parse command line
-            presenterModel.Data.Root = args.Length > 0 ? args[args.Length-1] : null;
-
-            DataContext = presenterModel.Data;
+            viewModel.Data.Root = args.Length > 0 ? args[args.Length-1] : null;
+            DataContext = viewModel.Data;
         }
     }
 }
