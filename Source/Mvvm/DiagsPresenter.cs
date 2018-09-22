@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -10,16 +9,6 @@ using Nong.Mvvm;
 
 namespace AppViewModel
 {
-    public interface IUi
-    {
-        string BrowseFile();
-        void FileProgress (string dirName, string fileName);
-        void ShowLine (string message, Severity severity, Likeliness repairability);
-        void SetText (string message);
-        void ConsoleZoom (int delta);
-        IList<string> GetHeadings();
-    }
-
     public class TabInfo
     {
         private List<FormatBase> parsings;
@@ -157,7 +146,6 @@ namespace AppViewModel
                 Data.CurrentTabNumber = ti.TabPosition;
 
                 Data.RaisePropertyChangedEvent (null);
-                Data.RaisePropertyChangedEvent (fmt.ValidNames[0]);
             }
 
             public void Parse()

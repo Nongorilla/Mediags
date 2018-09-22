@@ -94,6 +94,8 @@
     <Compile Include="Controls\OggControl.xaml.cs">
       <DependentUpon>OggControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValueConverters.cs" />
+    <Compile Include="WpfDiagsView_IDiagsUi.cs" />
     <Compile Include="WpfDiagsView.xaml.cs">
       <DependentUpon>WpfDiagsView.xaml</DependentUpon>
       <SubType>Code</SubType>
