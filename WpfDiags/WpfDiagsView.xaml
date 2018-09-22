@@ -23,14 +23,14 @@
     <Grid>
         <Grid.Resources>
             <Style TargetType="TabControl" BasedOn="{StaticResource darkTabControl}"/>
+            <Style TargetType="ListBox" BasedOn="{StaticResource darkListBox}"/>
+            <Style TargetType="ListBoxItem" BasedOn="{StaticResource darkListBoxItem}"/>
             <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}"/>
             <Style TargetType="TextBlock" BasedOn="{StaticResource darkTextBlock}"/>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="2"/>
-            <RowDefinition Height="18"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.RowDefinitions>

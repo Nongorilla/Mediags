@@ -7,6 +7,15 @@
     <Style x:Key="darkHeader" TargetType="GridViewColumnHeader">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
     </Style>
+    <Style x:Key="darkListBox" TargetType="ListBox">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+    </Style>
+    <Style x:Key="darkListBoxItem" TargetType="ListBoxItem">
+        <Setter Property="Focusable" Value="False"/>
+    </Style>
     <Style x:Key="darkListView" TargetType="ListView">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>

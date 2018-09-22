@@ -19,15 +19,16 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="18"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <app:FileHeaderControl Grid.ColumnSpan="4"/>
+        <app:FileHeaderControl Grid.ColumnSpan="3"/>
         <TextBlock Grid.Row="1" Text="Total page count:"/>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=PageCount, Mode=OneWay}"/>
         <TextBlock Grid.Row="2" Text="Verified page count:"/>
@@ -45,5 +46,21 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
+        <GridSplitter Grid.Row="4" Grid.ColumnSpan="3" Height="3" HorizontalAlignment="Stretch"/>
+        <ListBox Grid.Row="5" Grid.ColumnSpan="3" ItemsSource="{Binding Issues.Items, Mode=OneWay}" DisplayMemberPath="FixedMessage">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="Margin" Value="3,0,0,0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
 </UserControl>

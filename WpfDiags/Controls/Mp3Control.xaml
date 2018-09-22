@@ -6,7 +6,7 @@
              xmlns:app="clr-namespace:AppController"
              xmlns:issue="clr-namespace:NongIssue"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="475"
+             d:DesignHeight="500" d:DesignWidth="475"
              DataContext="{Binding Path=Mp3}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -30,10 +30,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto" MinHeight="18"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -62,7 +61,7 @@
         <TextBox Grid.Row="6" Grid.Column="3" Text="{Binding Path=Header.OriginalBit, Mode=OneWay}"/>
         <TextBlock Grid.Row="7" Grid.Column="2" Text="  Emphasis:"/>
         <TextBox Grid.Row="7" Grid.Column="3" Text="{Binding Path=Header.EmphasisText, Mode=OneWay}"/>
-        <GroupBox Grid.Row="11" Grid.ColumnSpan="4" Header="Xing" HorizontalAlignment="Left" Margin="3,3,3,3">
+        <GroupBox Grid.Row="10" Grid.ColumnSpan="4" Header="Xing" HorizontalAlignment="Left" Margin="3,3,3,3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -80,7 +79,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="12" Grid.ColumnSpan="4" Name="lameBox" Header="LAME" HorizontalAlignment="Left" Margin="3,3,3,3">
+        <GroupBox Grid.Row="11" Grid.ColumnSpan="4" Name="lameBox" Header="LAME" HorizontalAlignment="Left" Margin="3,3,3,3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -175,7 +174,23 @@
                 </TextBox>
             </Grid>
         </GroupBox>
-        <TextBlock Grid.Row="13" Text="File layout:"/>
-        <TextBox Grid.Row="13" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Path=Layout, Mode=OneWay}"/>
+        <TextBlock Grid.Row="12" Text="File layout:"/>
+        <TextBox Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Path=Layout, Mode=OneWay}"/>
+        <GridSplitter Grid.Row="14" Grid.ColumnSpan="4" HorizontalAlignment="Stretch"/>
+        <ListBox Grid.Row="15" Grid.ColumnSpan="4" ItemsSource="{Binding Issues.Items, Mode=OneWay}" DisplayMemberPath="FixedMessage">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="Margin" Value="3,0,0,0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
 </UserControl>
