@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:app="clr-namespace:AppController"
+             xmlns:issue="clr-namespace:NongIssue"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="475"
              DataContext="{Binding Path=Mp3}">
@@ -145,7 +146,10 @@
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsBadData}" Value="true">
+                                <DataTrigger Binding="{Binding CdIssue.Success}" Value="true">
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CdIssue.Failure}" Value="true">
                                     <Setter Property="Background" Value="Red"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -159,7 +163,10 @@
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsBadHeader}" Value="true">
+                                <DataTrigger Binding="{Binding ChIssue.Success}" Value="true">
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ChIssue.Failure}" Value="true">
                                     <Setter Property="Background" Value="Red"/>
                                 </DataTrigger>
                             </Style.Triggers>

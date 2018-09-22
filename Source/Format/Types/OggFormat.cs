@@ -81,14 +81,14 @@ namespace NongFormat
                 }
 
                 if (Bind.badPage.Count > 0)
-                    IssueModel.Add ("CRC-32 mismatch.");
+                    Bind.CdIssue = IssueModel.Add ("Page CRC-32 mismatch(es).", Severity.Error, IssueTags.Failure);
                 else
-                    IssueModel.Add (Bind.PageCount + " CRC-32 page validations successful.", Severity.Advisory);
+                    Bind.CdIssue = IssueModel.Add ($"{Bind.PageCount} CRC-32 page validations successful.", Severity.Advisory, IssueTags.Success);
             }
         }
 
-
         private ObservableCollection<int> badPage = new ObservableCollection<int>();
+        public Issue CdIssue { get; private set; }
         public int PageCount { get; private set; }
         public int GoodPageCount => PageCount - badPage.Count;
         public override bool IsBadData => badPage.Count != 0;

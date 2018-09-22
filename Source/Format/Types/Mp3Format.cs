@@ -362,12 +362,14 @@ namespace NongFormat
                     LameModel.SetActualDataCrc (BitConverter.ToUInt16 (hash, 0));
 
                     if (Bind.IsBadHeader)
-                        IssueModel.Add ("CRC-16 check failed on audio header.");
+                        Bind.ChIssue = IssueModel.Add ("CRC-16 check failed on audio header.", Severity.Error, IssueTags.Failure);
 
                     if (Bind.IsBadData)
-                        IssueModel.Add ("CRC-16 check failed on audio data.");
-                    else if (! Bind.IsBadHeader)
-                        IssueModel.Add ("CRC-16 checks successful.", Severity.Noise);
+                        Bind.CdIssue = IssueModel.Add ("CRC-16 check failed on audio data.", Severity.Error, IssueTags.Failure);
+                    else if (Bind.IsBadHeader)
+                        Bind.CdIssue = IssueModel.Add ("CRC-16 check successful on audio data.", Severity.Noise, IssueTags.Success);
+                    else
+                        Bind.ChIssue = Bind.CdIssue = IssueModel.Add ("CRC-16 checks successful.", Severity.Noise, IssueTags.Success);
                 }
 
                 base.CalcHashes (hashFlags, validationFlags);
@@ -482,6 +484,9 @@ namespace NongFormat
                 return layout;
             }
         }
+
+        public Issue ChIssue { get; private set; }
+        public Issue CdIssue { get; private set; }
 
         private Mp3Format (Stream stream, byte[] hdr, string path) : base (stream, path)
         { }

@@ -35,7 +35,10 @@
             <TextBox.Style>
                 <Style TargetType="TextBox" BasedOn="{StaticResource darkTextBox}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsBadData}" Value="true">
+                        <DataTrigger Binding="{Binding CdIssue.Success}" Value="true">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CdIssue.Failure}" Value="true">
                             <Setter Property="Background" Value="Red"/>
                         </DataTrigger>
                     </Style.Triggers>
