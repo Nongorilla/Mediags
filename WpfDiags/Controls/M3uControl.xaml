@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:app="clr-namespace:AppController"
+             xmlns:app="clr-namespace:AppView"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="475"
              DataContext="{Binding Path=M3u}">
