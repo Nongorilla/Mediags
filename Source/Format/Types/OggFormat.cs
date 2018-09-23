@@ -11,11 +11,8 @@ namespace NongFormat
     // www.ietf.org/rfc/rfc3533.txt
     public class OggFormat : FormatBase
     {
-        public static string[] Names
-        { get { return new string[] { "ogg" }; } }
-
-        public override string[] ValidNames
-        { get { return Names; } }
+        public static string[] Names => new string[] { "ogg" };
+        public override string[] ValidNames => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -23,7 +20,6 @@ namespace NongFormat
                 return new Model (stream, hdr, path);
             return null;
         }
-
 
         public class Model : FormatBase.ModelBase
         {

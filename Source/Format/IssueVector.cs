@@ -21,9 +21,8 @@ namespace NongIssue
         None=0, HasId3v1=1, HasId3v24=2, HasApe=4, Substandard=8, Overstandard=0x10,
         ProveErr=0x100, ProveWarn=0x200, Fussy=0x400,
         Success=0x01000000, Failure=0x02000000, BadTag=0x04000000, MissingHash=0x08000000,
-        MetaChange =0x10000000, NameChange=0x20000000, AlbumChange=0x40000000
+        MetaChange=0x10000000, NameChange=0x20000000, AlbumChange=0x40000000
     }
-
 
     public class Issue : INotifyPropertyChanged
     {
@@ -47,11 +46,10 @@ namespace NongIssue
                     Bind = new Issue.Vector (warnEscalator, errEscalator);
                 }
 
-
                 public Issue Add (string message, Severity severity=Severity.Error, IssueTags tag=IssueTags.None,
                                   string prompt=null, Func<string> repairer=null)
                 {
-                    System.Diagnostics.Debug.Assert ((prompt == null) == (repairer == null));
+                    System.Diagnostics.Debug.Assert ((prompt==null) == (repairer==null));
 
                     if (repairer != null)
                     {
@@ -71,10 +69,9 @@ namespace NongIssue
                         Bind.Severest = issue;
                     }
 
-                    Bind.NotifyPropertyChanged ("FixedMessage");
+                    Bind.NotifyPropertyChanged (nameof (FixedMessage));
                     return issue;
                 }
-
 
                 public void Escalate (IssueTags warnEscalator, IssueTags errEscalator)
                 {
@@ -93,17 +90,14 @@ namespace NongIssue
                     }
                 }
 
-
                 public void Clear()
                 {
                     Bind.items = new ObservableCollection<Issue>();
                     Bind.Items = new ReadOnlyObservableCollection<Issue> (Bind.items);
                 }
 
-
                 public bool RepairerEquals (int index, Func<string> other)
-                { return Bind.items[index].Repairer == other; }
-
+                 => Bind.items[index].Repairer == other;
 
                 public string Repair (int index)
                 {
@@ -116,11 +110,10 @@ namespace NongIssue
                     if (issue.IsRepairSuccessful.Value == true)
                         --Bind.RepairableCount;
 
-                    Bind.NotifyPropertyChanged ("FixedMessage");
+                    Bind.NotifyPropertyChanged (nameof (FixedMessage));
                     return issue.RepairError;
                 }
             }
-
 
             private ObservableCollection<Issue> items;
             public ReadOnlyObservableCollection<Issue> Items { get; private set; }
@@ -138,13 +131,12 @@ namespace NongIssue
             public int RepairableCount
             {
                 get { return repairableCount; }
-                set { repairableCount = value; NotifyPropertyChanged ("RepairableCount"); }
+                set { repairableCount = value; NotifyPropertyChanged (nameof (RepairableCount)); }
             }
 
-            public bool HasError { get { return MaxSeverity >= Severity.Error; } }
-            public bool HasFatal { get { return MaxSeverity >= Severity.Fatal; } }
+            public bool HasError => MaxSeverity >= Severity.Error;
+            public bool HasFatal => MaxSeverity >= Severity.Fatal;
         }
-
 
         private readonly Vector owner;
 
@@ -160,9 +152,8 @@ namespace NongIssue
         public void NotifyPropertyChanged (string propName)
         { if (PropertyChanged != null) PropertyChanged (this, new PropertyChangedEventArgs (propName)); }
 
-
         public Issue (Vector owner, string message, Severity level=Severity.Advisory, IssueTags tag=IssueTags.None,
-                          string prompt=null, Func<string> repairer=null)
+                      string prompt=null, Func<string> repairer=null)
         {
             this.owner = owner;
             this.Message = message;
@@ -171,7 +162,6 @@ namespace NongIssue
             this.RepairPrompt = prompt;
             this.Repairer = repairer;
         }
-
 
         public Severity Level
         {
@@ -187,33 +177,25 @@ namespace NongIssue
             }
         }
 
-
         public string FixedMessage
         {
             get
             {
                 string result = Message;
                 if (Level >= Severity.Warning)
-                    result = Level.ToString() + ": " + result;
+                    result = $"{Level}: {result}";
                 if (IsRepairSuccessful == true)
                     result += " (repair successful)";
                 else if (RepairError != null)
-                    result += " (repair failed: " + RepairError + ")";
+                    result += $" (repair failed: {RepairError})";
                 return result;
             }
         }
 
-
-        public bool Failure { get { return (Tag & IssueTags.Failure) != 0; } }
-        public bool Success { get { return (Tag & IssueTags.Success) != 0; } }
-
-        public bool IsRepairable
-        { get { return Repairer != null && IsRepairSuccessful != true; } }
-
-        public bool IsReportable (Granularity granularity)
-        { return (int) Level >= (int) granularity; }
-
-        public override string ToString()
-        { return FixedMessage; }
+        public bool Failure => (Tag & IssueTags.Failure) != 0;
+        public bool Success => (Tag & IssueTags.Success) != 0;
+        public bool IsRepairable => Repairer != null && IsRepairSuccessful != true;
+        public bool IsReportable (Granularity granularity) => (int) Level >= (int) granularity;
+        public override string ToString() => FixedMessage;
     }
 }

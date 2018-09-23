@@ -14,11 +14,8 @@ namespace NongFormat
 
     public partial class Mp3Format : FormatBase
     {
-        public static string[] Names
-        { get { return new string[] { "mp3" }; } }
-
-        public override string[] ValidNames
-        { get { return Names; } }
+        public static string[] Names => new string[] { "mp3" };
+        public override string[] ValidNames => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -378,7 +375,7 @@ namespace NongFormat
 
             public string RepairPhantomTag()
             {
-                System.Diagnostics.Debug.Assert (Bind.fbs != null);
+                Debug.Assert (Bind.fbs != null);
                 if (Bind.fbs == null || Bind.Issues.MaxSeverity >= Severity.Error || ! Bind.HasId3v1Phantom)
                     return "Invalid attempt";
 
@@ -402,7 +399,7 @@ namespace NongFormat
 
             public string RepairId3v2OffBy1()
             {
-                System.Diagnostics.Debug.Assert (Bind.fbs != null);
+                Debug.Assert (Bind.fbs != null);
                 if (Bind.fbs == null || Bind.Issues.MaxSeverity >= Severity.Error || Bind.storedId3v2DataSize == Bind.actualId3v2DataSize)
                     return "Invalid attempt";
 
@@ -438,21 +435,21 @@ namespace NongFormat
 
         private int id3v2Pos = -1;
         private int storedId3v2DataSize, actualId3v2DataSize;
-        public bool HasId3v2 { get { return id3v2Pos >= 0; } }
-        public int Id3v1Minor { get { return GetMinorOfV1 (id3v1Block); } }
+        public bool HasId3v2 => id3v2Pos >= 0;
+        public int Id3v1Minor => GetMinorOfV1 (id3v1Block);
         public byte Id3v2Major { get; private set; }
         public byte Id3v2Revision { get; private set; }
         public string Id3v2TagRepair { get; private set; }
-        public int Id3v2Size { get { return actualId3v2DataSize+10; } }
+        public int Id3v2Size => actualId3v2DataSize+10;
 
         private byte[] id3v1Block = null;
-        public bool HasId3v1 { get { return id3v1Block != null; } }
-        public bool HasId3v1Phantom { get { return excess != null; } }
+        public bool HasId3v1 => id3v1Block != null;
+        public bool HasId3v1Phantom => excess != null;
 
         public int ApeSize { get; private set; }
-        public bool HasApe { get { return ApeSize > 0; } }
+        public bool HasApe => ApeSize > 0;
         public int Lyrics3Size { get; private set; }
-        public bool HasLyrics3 { get { return Lyrics3Size > 0; } }
+        public bool HasLyrics3 => Lyrics3Size > 0;
 
         public int DeadBytes { get; private set; }
 
@@ -492,10 +489,10 @@ namespace NongFormat
         { }
 
         public override bool IsBadHeader
-        { get { return Lame != null && Lame.ActualHeaderCrc != null && Lame.ActualHeaderCrc != Lame.StoredHeaderCrc; } }
+         => Lame != null && Lame.ActualHeaderCrc != null && Lame.ActualHeaderCrc != Lame.StoredHeaderCrc;
 
         public override bool IsBadData
-        { get { return Lame != null && Lame.ActualDataCrc != null && Lame.ActualDataCrc != Lame.StoredDataCrc; } }
+         => Lame != null && Lame.ActualDataCrc != null && Lame.ActualDataCrc != Lame.StoredDataCrc;
 
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
