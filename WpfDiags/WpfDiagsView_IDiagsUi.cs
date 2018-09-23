@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using NongFormat;
 using NongIssue;
 
 namespace AppView
 {
-    // Implement IDiagsIUi here
+    // Implement IDiagsUi here
     public partial class WpfDiagsView
     {
         private int totalLinesReported = 0;
@@ -67,7 +68,7 @@ namespace AppView
 
                 if (totalLinesReported != 0)
                     if (viewModel.Data.Scope < Granularity.Verbose)
-                        consoleBox.AppendText ("\n\n---- ---- ----\n");
+                        consoleBox.AppendText ("\n\n---- ---- ---- ---- ----\n");
                     else if (! dirShown)
                         consoleBox.AppendText ("\n");
 
@@ -88,6 +89,7 @@ namespace AppView
             }
 
             consoleBox.AppendText ("\n");
+            consoleBox.AppendText (Issue.GetPrefix (severity));
             consoleBox.AppendText (message);
             ++totalLinesReported;
         }

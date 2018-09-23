@@ -26,6 +26,16 @@ namespace NongIssue
 
     public class Issue : INotifyPropertyChanged
     {
+        public static string GetPrefix (Severity severity)
+        {
+            if (severity == Severity.NoIssue)
+                return String.Empty;
+            else if (severity <= Severity.Advisory)
+                return "  ";
+            else
+                return severity <= Severity.Warning ? "- " : "* ";
+        }
+
         public class Vector : INotifyPropertyChanged
         {
             private Vector (IssueTags warnEscalator=IssueTags.None, IssueTags errEscalator=IssueTags.None)
