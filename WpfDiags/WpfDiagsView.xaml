@@ -38,7 +38,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="3"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -48,7 +47,7 @@
             <DockPanel Margin="3,3,3,0" Grid.ColumnSpan="2" VerticalAlignment="Top">
                 <Label Content="&#x2388;" Margin="-3,-10,-9,-10" VerticalAlignment="Top" AllowDrop="True" FontSize="25" />
                 <Label Content="File _name:" Margin="0,-1,0,0" VerticalAlignment="Center" Target="{Binding ElementName=filePath}" AllowDrop="True" />
-                <TextBox x:Name="filePath" Text="{Binding Path=Root, UpdateSourceTrigger=LostFocus}" Width="Auto" HorizontalAlignment="Stretch" DockPanel.Dock="Right" TabIndex="0">
+                <TextBox Text="{Binding Path=Root, UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Stretch" DockPanel.Dock="Right" TabIndex="0">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource darkTextInputBox}"/>
                     </TextBox.Style>
@@ -97,12 +96,12 @@
                     </GroupBox>
                 </WrapPanel>
             </WrapPanel>
-            <Button Content=" Parse " Grid.Row="1" Grid.Column="2" Command="{Binding DoParse}" IsDefault="True" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
-            <Button Content=" First " Grid.Row="2" Grid.Column="2" Command="{Binding NavFirst}" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
-            <Button Content=" Next " Grid.Row="3" Grid.Column="2" Command="{Binding NavNext}" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
+            <Button Content=" Parse " Grid.Row="1" Grid.Column="2" Command="{Binding DoParse}" IsDefault="True" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <Button Content=" First " Grid.Row="2" Grid.Column="2" Command="{Binding NavFirst}" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <Button Content=" Next " Grid.Row="3" Grid.Column="2" Command="{Binding NavNext}" Margin="6,3" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         </Grid>
         <TabControl x:Name="infoTabs" Grid.Row="1" VerticalContentAlignment="Stretch" SelectedIndex="{Binding CurrentTabNumber}">
-            <TabItem x:Name="mainTab" Header="Console">
+            <TabItem Header="Console">
                 <DockPanel>
                     <StackPanel>
                         <Button Content=" Clear " Margin="6,12,6,6" Command="{Binding DoConsoleClear}"/>
