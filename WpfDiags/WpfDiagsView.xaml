@@ -47,7 +47,7 @@
             <DockPanel Margin="3,3,3,0" Grid.ColumnSpan="2" VerticalAlignment="Top">
                 <Label Content="&#x2388;" Margin="-3,-10,-9,-10" VerticalAlignment="Top" AllowDrop="True" FontSize="25" />
                 <Label Content="File _name:" Margin="0,-1,0,0" VerticalAlignment="Center" Target="{Binding ElementName=filePath}" AllowDrop="True" />
-                <TextBox Text="{Binding Path=Root, UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Stretch" DockPanel.Dock="Right" TabIndex="0">
+                <TextBox x:Name="filePath" Text="{Binding Path=Root, UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Stretch" DockPanel.Dock="Right" TabIndex="0">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource darkTextInputBox}"/>
                     </TextBox.Style>
@@ -163,6 +163,18 @@
                     </Style>
                 </TabItem.Style>
                 <app:OggControl x:Name="oggCtrl"/>
+            </TabItem>
+            <TabItem Header=".sha1" HorizontalAlignment="Left">
+                <TabItem.Style>
+                    <Style TargetType="TabItem">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Sha1}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabItem.Style>
+                <app:Sha1Control/>
             </TabItem>
         </TabControl>
     </Grid>

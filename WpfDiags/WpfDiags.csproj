@@ -57,6 +57,14 @@
     <Compile Include="Controls\FileHeaderControl.xaml.cs">
       <DependentUpon>FileHeaderControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\HashFileControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Sha1Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ThemeDarkDiags.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -85,6 +93,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\HashFileControl.xaml.cs">
+      <DependentUpon>HashFileControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\M3uControl.xaml.cs">
       <DependentUpon>M3uControl.xaml</DependentUpon>
     </Compile>
@@ -93,6 +104,9 @@
     </Compile>
     <Compile Include="Controls\OggControl.xaml.cs">
       <DependentUpon>OggControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Sha1Control.xaml.cs">
+      <DependentUpon>Sha1Control.xaml</DependentUpon>
     </Compile>
     <Compile Include="ValueConverters.cs" />
     <Compile Include="WpfDiagsView_IDiagsUi.cs" />
