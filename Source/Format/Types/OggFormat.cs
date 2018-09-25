@@ -29,70 +29,83 @@ namespace NongFormat
             {
                 BaseBind = Bind = new OggFormat (stream, path);
                 Bind.Issues = IssueModel.Bind;
+            }
 
-                var buf1 = new byte[27+256];
-                byte[] buf2 = null;
+            public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
+            {
+                if (Bind.Issues.HasFatal)
+                    return;
 
-                while (Bind.ValidSize < Bind.FileSize)
+                if ((hashFlags & Hashes.Intrinsic) != 0)
                 {
-                    Bind.fbs.Position = Bind.ValidSize;
-                    ++Bind.PageCount;
-                    var got = Bind.fbs.Read (buf1, 0, buf1.Length);
-                    if (got < buf1.Length)
+                    var buf1 = new byte[27+256];
+                    byte[] buf2 = null;
+                    Bind.PageCount = 0;
+
+                    while (Bind.ValidSize < Bind.FileSize)
                     {
-                        IssueModel.Add ("Read failed near header", Severity.Fatal);
-                        return;
+                        Bind.fbs.Position = Bind.ValidSize;
+                        ++Bind.PageCount;
+                        var got = Bind.fbs.Read (buf1, 0, buf1.Length);
+                        if (got < buf1.Length)
+                        {
+                            IssueModel.Add ("Read failed near header", Severity.Fatal);
+                            return;
+                        }
+
+                        int segmentCount = buf1[26];
+                        UInt32 storedHeaderCRC32 = ConvertTo.FromLit32ToUInt32 (buf1, 22);
+
+                        int pageSize = 27 + segmentCount;
+                        for (int ix = 27; ix < 27 + segmentCount; ++ix)
+                            pageSize += buf1[ix];
+
+                        Bind.fbs.Position = Bind.ValidSize;
+
+                        if (buf2 == null || buf2.Length < pageSize)
+                            buf2 = new byte[pageSize];
+                        got = Bind.fbs.Read (buf2, 0, pageSize);
+                        if (got < pageSize)
+                        {
+                            IssueModel.Add ("Read failed near page " + Bind.PageCount, Severity.Fatal);
+                            return;
+                        }
+
+                        buf2[22] = 0; buf2[23] = 0; buf2[24] = 0; buf2[25] = 0;
+
+                        UInt32 actualHeaderCRC32;
+                        var hasher = new Crc32n0Hasher();
+                        hasher.Append (buf2, 0, pageSize);
+                        var hash = hasher.GetHashAndReset();
+                        actualHeaderCRC32 = BitConverter.ToUInt32 (hash, 0);
+
+                        if (actualHeaderCRC32 != storedHeaderCRC32)
+                            Bind.badPage.Add (Bind.PageCount.Value);
+
+                        Bind.ValidSize += pageSize;
                     }
 
-                    int segmentCount = buf1[26];
-                    UInt32 storedHeaderCRC32 = ConvertTo.FromLit32ToUInt32 (buf1, 22);
-
-                    int pageSize = 27 + segmentCount;
-                    for (int ix = 27; ix < 27 + segmentCount; ++ix)
-                        pageSize += buf1[ix];
-
-                    Bind.fbs.Position = Bind.ValidSize;
-
-                    if (buf2 == null || buf2.Length < pageSize)
-                        buf2 = new byte[pageSize];
-                    got = Bind.fbs.Read (buf2, 0, pageSize);
-                    if (got < pageSize)
+                    if (Bind.badPage.Count == 0)
+                        Bind.CdIssue = IssueModel.Add ($"CRC-32 checks successful on {Bind.PageCount} pages.", Severity.Advisory, IssueTags.Success);
+                    else
                     {
-                        IssueModel.Add ("Read failed near page " + Bind.PageCount, Severity.Fatal);
-                        return;
+                        var err = $"CRC-32 checks failed on {Bind.badPage.Count} of {Bind.PageCount} pages.";
+                        Bind.CdIssue = IssueModel.Add (err, Severity.Error, IssueTags.Failure);
                     }
-
-                    buf2[22] = 0; buf2[23] = 0; buf2[24] = 0; buf2[25] = 0;
-
-                    UInt32 actualHeaderCRC32;
-                    var hasher = new Crc32n0Hasher();
-                    hasher.Append (buf2, 0, pageSize);
-                    var hash = hasher.GetHashAndReset();
-                    actualHeaderCRC32 = BitConverter.ToUInt32 (hash, 0);
-
-                    if (actualHeaderCRC32 != storedHeaderCRC32)
-                        Bind.badPage.Add (Bind.PageCount);
-
-                    Bind.ValidSize += pageSize;
                 }
 
-                if (Bind.badPage.Count > 0)
-                    Bind.CdIssue = IssueModel.Add ("Page CRC-32 mismatch(es).", Severity.Error, IssueTags.Failure);
-                else
-                    Bind.CdIssue = IssueModel.Add ($"{Bind.PageCount} CRC-32 page validations successful.", Severity.Advisory, IssueTags.Success);
+                base.CalcHashes (hashFlags, validationFlags);
             }
         }
 
         private ObservableCollection<int> badPage = new ObservableCollection<int>();
         public Issue CdIssue { get; private set; }
-        public int PageCount { get; private set; }
-        public int GoodPageCount => PageCount - badPage.Count;
+        public int? PageCount { get; private set; } = null;
+        public int? GoodPageCount => PageCount == null ? null : PageCount - badPage.Count;
         public override bool IsBadData => badPage.Count != 0;
-
 
         private OggFormat (Stream stream, string path) : base (stream, path)
         { }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {
