@@ -54,10 +54,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Extender.cs" />
     <Compile Include="Controls\FileHeaderControl.xaml.cs">
       <DependentUpon>FileHeaderControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\HashFileControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\IssueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -95,6 +100,9 @@
     </Compile>
     <Compile Include="Controls\HashFileControl.xaml.cs">
       <DependentUpon>HashFileControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IssueControl.xaml.cs">
+      <DependentUpon>IssueControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\M3uControl.xaml.cs">
       <DependentUpon>M3uControl.xaml</DependentUpon>

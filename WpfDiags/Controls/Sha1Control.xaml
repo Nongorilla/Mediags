@@ -7,18 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="475"
              DataContext="{Binding Path=Sha1}">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ThemeDarkDiags.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource darkHeader}"/>
-            <Style TargetType="ListView" BasedOn="{StaticResource darkListView}"/>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -27,21 +16,7 @@
         </Grid.RowDefinitions>
         <app:FileHeaderControl/>
         <app:HashFileControl Grid.Row="1"/>
-        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <ListBox Grid.Row="3" ItemsSource="{Binding Issues.Items, Mode=OneWay}" DisplayMemberPath="FixedMessage">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="FontSize" Value="12"/>
-                    <Setter Property="Margin" Value="3,0,0,0"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <ContentPresenter/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"/>
+        <app:IssueControl Grid.Row="3"/>
     </Grid>
 </UserControl>

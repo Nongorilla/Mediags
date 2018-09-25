@@ -31,7 +31,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="3"/>
-            <RowDefinition Height="Auto" MinHeight="18"/>
+            <RowDefinition Height="20" MinHeight="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -176,20 +176,6 @@
         <TextBlock Grid.Row="12" Text="File layout:"/>
         <TextBox Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Path=Layout, Mode=OneWay}"/>
         <GridSplitter Grid.Row="14" Grid.ColumnSpan="4" HorizontalAlignment="Stretch"/>
-        <ListBox Grid.Row="15" Grid.ColumnSpan="4" ItemsSource="{Binding Issues.Items, Mode=OneWay}" DisplayMemberPath="FixedMessage">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="FontSize" Value="12"/>
-                    <Setter Property="Margin" Value="3,0,0,0"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <ContentPresenter/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+        <app:IssueControl Grid.Row="15" Grid.ColumnSpan="4"/>
     </Grid>
 </UserControl>

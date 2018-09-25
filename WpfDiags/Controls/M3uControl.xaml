@@ -22,8 +22,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MinHeight="18"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="20" MinHeight="20"/>
         </Grid.RowDefinitions>
         <app:FileHeaderControl Grid.ColumnSpan="4"/>
         <ListView Grid.Row="1" SelectionMode="Multiple" ItemsSource="{Binding Files.Items}">
@@ -52,21 +52,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch"/>
-        <ListBox Grid.Row="3" ItemsSource="{Binding Issues.Items, Mode=OneWay}" DisplayMemberPath="FixedMessage">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="FontSize" Value="12"/>
-                    <Setter Property="Margin" Value="3,0,0,0"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <ContentPresenter/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"/>
+        <app:IssueControl Grid.Row="3"/>
     </Grid>
 </UserControl>
