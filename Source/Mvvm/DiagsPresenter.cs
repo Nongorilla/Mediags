@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using NongFormat;
@@ -153,18 +155,29 @@ namespace AppViewModel
 
             public void Parse()
             {
+                string err = null;
                 TabInfo firstTInfo = null;
                 int firstParsingIx = 0;
-                foreach (FormatBase.ModelBase parsing in CheckRoot())
-                    if (parsing != null)
-                    {
-                        if (Data.tabInfo.TryGetValue (parsing.BaseBind.NamedFormat, out TabInfo tInfo))
-                        {
-                            if (firstTInfo == null)
-                            { firstTInfo = tInfo; firstParsingIx = tInfo.TabPosition; }
-                            tInfo.Add (parsing.BaseBind);
-                        }
-                    }
+
+                try
+                {
+                    foreach (FormatBase.ModelBase parsing in CheckRoot())
+                        if (parsing != null)
+                            if (Data.tabInfo.TryGetValue (parsing.BaseBind.NamedFormat, out TabInfo tInfo))
+                            {
+                                if (firstTInfo == null)
+                                { firstTInfo = tInfo; firstParsingIx = tInfo.TabPosition; }
+                                tInfo.Add (parsing.BaseBind);
+                            }
+                }
+                catch (IOException ex)
+                { err = ex.Message; }
+                catch (ArgumentException ex)
+                { err = ex.Message; }
+
+                if (err != null)
+                    Ui.ShowLine (err, Severity.Error, Likeliness.None);
+
                 if (firstTInfo != null)
                 {
                     firstTInfo.SetIndex (firstParsingIx);
