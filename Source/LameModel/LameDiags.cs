@@ -33,7 +33,7 @@ namespace NongMediaDiags
         public new class Model : Diags.Model
         {
             private int consecutiveInvalidations = 0;
-            public new LameDiags Bind { get; private set; }
+            public new LameDiags Bind => (LameDiags) base._data;
             public readonly Issue.Vector.Model IssueModel;
 
             private LameRip.Model ripModel;
@@ -51,7 +51,7 @@ namespace NongMediaDiags
             public Model (string root, Granularity report) : base()
             {
                 IssueModel = new Issue.Vector.Model();
-                base.Bind = Bind = new LameDiags (root, report, FormatModel.Bind, IssueModel.Bind);
+                base._data = new LameDiags (root, report, FormatModel.Bind, IssueModel.Bind);
             }
 
 

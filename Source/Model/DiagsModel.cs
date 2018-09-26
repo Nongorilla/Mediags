@@ -11,7 +11,8 @@ namespace NongMediaDiags
     {
         public partial class Model
         {
-            public Diags Bind { get; protected set; }
+            protected virtual Diags _data { get; set; }
+            public Diags Bind => _data;
             public FileFormat.Vector.Model FormatModel;
 
             public Model (string root, string filter=null, string exclusion=null,
@@ -19,7 +20,7 @@ namespace NongMediaDiags
                 IssueTags warnEscalator=IssueTags.None, IssueTags errEscalator=IssueTags.None)
                 : this()
             {
-                this.Bind = new Diags (this);
+                _data = new Diags (this);
                 Bind.Root = root;
                 Bind.Filter = filter;
                 Bind.Exclusion = exclusion;

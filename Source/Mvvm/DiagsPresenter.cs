@@ -97,12 +97,12 @@ namespace AppViewModel
         public new class Model : Diags.Model
         {
             public IDiagsUi Ui { get; private set; }
-            public DiagsPresenter Data { get; private set; }
+            public DiagsPresenter Data => (DiagsPresenter) _data;
 
             public Model (IDiagsUi ui)
             {
                 this.Ui = ui;
-                Bind = this.Data = new DiagsPresenter (this);
+                base._data = new DiagsPresenter (this);
 
                 int ix = 0;
                 foreach (string tabHeader in Ui.GetHeadings())

@@ -13,7 +13,7 @@ namespace NongMediaDiags
         public new class Model : Diags.Model, IDisposable
         {
             private int consecutiveInvalidations = 0;
-            public new FlacDiags Bind { get; private set; }
+            public new FlacDiags Bind => (FlacDiags) base._data;
             public readonly Issue.Vector.Model IssueModel;
 
             private FlacRip.Model ripModel;
@@ -31,7 +31,8 @@ namespace NongMediaDiags
             public Model (string root, Granularity report) : base()
             {
                 IssueModel = new Issue.Vector.Model();
-                base.Bind = Bind = new FlacDiags (root, report, FormatModel.Bind, IssueModel.Bind);
+                base._data = new FlacDiags (root, report, FormatModel.Bind, IssueModel.Bind);
+
             }
 
 
