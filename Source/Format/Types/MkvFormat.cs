@@ -318,7 +318,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Bind = new MkvFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 var bb = new byte[5];
 
@@ -391,7 +391,7 @@ namespace NongFormat
                             else
                             {
                                 var newNode = ParseTree (mstr);
-                                if (IssueModel.Bind.HasFatal)
+                                if (IssueModel.Data.HasFatal)
                                 {
                                     if (newNode != null) Bind.segment.AddNode (newNode);
                                     return;
@@ -450,7 +450,7 @@ namespace NongFormat
                         {
                             Bind.fbs.Position = Bind.ValidSize = Bind.ValidSize + item.Signature.Count;
                             newNode = ParseTree (item);
-                            if (IssueModel.Bind.HasFatal)
+                            if (IssueModel.Data.HasFatal)
                             {
                                 if (newNode != null) newMaster.AddNode (newNode);
                                 return newMaster;

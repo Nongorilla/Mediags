@@ -30,7 +30,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Bind = new AsfFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
             }
         }
 

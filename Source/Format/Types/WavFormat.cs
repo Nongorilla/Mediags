@@ -35,7 +35,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] hdr, string path)
             {
                 BaseBind = RiffBind = Bind = new WavFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseRiff (hdr);
 
@@ -117,7 +117,7 @@ namespace NongFormat
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (IssueModel.Bind.HasFatal)
+                if (IssueModel.Data.HasFatal)
                     return;
 
                 if ((hashFlags & Hashes.PcmMD5) != 0 && Bind.actualMediaMD5 == null)

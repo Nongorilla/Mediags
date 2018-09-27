@@ -31,7 +31,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = RiffBind = Bind = new AviFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseRiff (header);
 

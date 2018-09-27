@@ -93,7 +93,7 @@ namespace NongMediaDiags
                     if (Bind.Signature == null)
                         Sha1xModel.IssueModel.Escalate (IssueTags.None, IssueTags.AlbumChange|IssueTags.NameChange);
 
-                    if (Sha1xModel.IssueModel.Bind.MaxSeverity > Bind.Status)
+                    if (Sha1xModel.IssueModel.Data.MaxSeverity > Bind.Status)
                         Bind.Status = Bind.Sha1x.Issues.MaxSeverity;
 
                     Owner.SetCurrentFile (Bind.Sha1x.Name);
@@ -376,8 +376,8 @@ namespace NongMediaDiags
                         ++Owner.Data.M3uFormat.TrueTotal;
                         ++Owner.Data.TotalFiles;
                         Owner.ReportFormat (m3uModel.Bind, Bind.Signature != null);
-                        if (maxSeverity < m3uModel.IssueModel.Bind.MaxSeverity)
-                            maxSeverity = m3uModel.IssueModel.Bind.MaxSeverity;
+                        if (maxSeverity < m3uModel.IssueModel.Data.MaxSeverity)
+                            maxSeverity = m3uModel.IssueModel.Data.MaxSeverity;
                     }
 
                 foreach (var info in Bind.m3u8Infos)
@@ -393,8 +393,8 @@ namespace NongMediaDiags
                         ++Owner.Data.M3u8Format.TrueTotal;
                         ++Owner.Data.TotalFiles;
                         Owner.ReportFormat (m3u8Model.Bind, Bind.Signature != null);
-                        if (maxSeverity < m3u8Model.IssueModel.Bind.MaxSeverity)
-                            maxSeverity = m3u8Model.IssueModel.Bind.MaxSeverity;
+                        if (maxSeverity < m3u8Model.IssueModel.Data.MaxSeverity)
+                            maxSeverity = m3u8Model.IssueModel.Data.MaxSeverity;
                     }
 
                 return maxSeverity;
@@ -506,7 +506,7 @@ namespace NongMediaDiags
                 Bind.AlbumRenameCount = Bind.Sha1x.Issues.Items.Count (x => (x.Tag & IssueTags.AlbumChange) != 0);
                 Bind.TrackRenameCount = Bind.Sha1x.Issues.Items.Count (x => (x.Tag & IssueTags.NameChange) != 0);
 
-                if (! Sha1xModel.IssueModel.Bind.HasError)
+                if (! Sha1xModel.IssueModel.Data.HasError)
                 {
                     var msg = "SHA-1 checks of log, " + Bind.mp3Infos.Length + " MP3 audio";
                     if (Bind.mp3Infos.Length != 1) msg += 's';

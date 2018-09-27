@@ -35,7 +35,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Bind = new JpegFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 // Arbitrary choice of 50MB cutoff.
                 if (Bind.FileSize > 50000000)

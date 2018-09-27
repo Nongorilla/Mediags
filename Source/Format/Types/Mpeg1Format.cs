@@ -16,7 +16,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = RiffBind = Bind = new Mpeg1Format (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseRiff (header);
                 GetDiagsForMarkable();

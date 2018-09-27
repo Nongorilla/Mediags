@@ -54,7 +54,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Bind = new IcoFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 // Arbitrary sanity limit.
                 if (Bind.FileSize > 50000000)

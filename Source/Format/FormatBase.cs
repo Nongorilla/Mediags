@@ -41,7 +41,7 @@ namespace NongFormat
 
             public virtual void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (IssueModel.Bind.HasFatal)
+                if (IssueModel.Data.HasFatal)
                     return;
 
                 bool hitCache = bind.fBuf != null && bind.FileSize < Int32.MaxValue;

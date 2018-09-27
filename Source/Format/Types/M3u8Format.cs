@@ -27,7 +27,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path) : base (path)
             {
                 BaseBind = BindFiles = Bind = new M3u8Format (stream, path, FilesModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 stream.Position = 0;
                 TextReader tr = new StreamReader (stream, Encoding.UTF8);

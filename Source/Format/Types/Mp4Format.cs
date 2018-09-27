@@ -29,7 +29,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Mpeg4Bind = Bind = new Mp4Format (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseMpeg4 (stream, header, path);
                 CalcMark();

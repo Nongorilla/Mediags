@@ -29,7 +29,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path) : base (path)
             {
                 BaseBind = BindFiles = Bind = new M3uFormat (stream, path, FilesModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 stream.Position = 0;
                 TextReader tr = new StreamReader (stream, LogBuffer.cp1252);
@@ -48,7 +48,7 @@ namespace NongFormat
             public Model (Stream stream, string m3uPath, LogEacFormat log) : base (m3uPath)
             {
                 BaseBind = BindFiles = Bind = new M3uFormat (stream, m3uPath, log, FilesModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 foreach (var track in log.Tracks.Items)
                     FilesModel.Add (track.Match.Name);

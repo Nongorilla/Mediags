@@ -30,7 +30,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path) : base (path)
             {
                 BaseBind = BindFiles = Bind = new CueFormat (stream, path, FilesModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 SetIgnoredName ("Range.wav");
                 Bind.fbs.Position = 0;

@@ -29,7 +29,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] hdr, string path) : base (path, 16)
             {
                 BaseBind = BindHashed = Bind = new Md5Format (stream, path, HashedModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseHeaderAndHistory();
                 ParseHashes();
@@ -39,7 +39,7 @@ namespace NongFormat
             public Model (Stream stream, string md5Path, LogEacFormat log, string logName, M3uFormat m3u, string signature) : base (md5Path, 16)
             {
                 BaseBind = BindHashed = Bind = new Md5Format (stream, md5Path, log, logName, m3u, signature, HashedModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
                 Bind.fbs = stream;
 
                 CreateHistory();

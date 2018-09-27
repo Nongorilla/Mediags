@@ -36,7 +36,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] hdr, string path)
             {
                 BaseBind = Bind = new Mpeg2Format (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 if (Bind.FileSize < 12)
                 {

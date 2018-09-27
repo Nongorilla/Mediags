@@ -37,7 +37,7 @@ namespace NongFormat
             {
                 ChunksModel = new PngChunk.Vector.Model();
                 BaseBind = Bind = new PngFormat (stream, path, ChunksModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 // Arbitrary sanity limit.
                 if (Bind.FileSize > 100000000)

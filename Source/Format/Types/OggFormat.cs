@@ -28,7 +28,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Bind = new OggFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
             }
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)

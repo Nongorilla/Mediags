@@ -28,7 +28,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Mpeg4Bind = Bind = new M4aFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseMpeg4 (stream, header, path);
                 GetDiagnostics();

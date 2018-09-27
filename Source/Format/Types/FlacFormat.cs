@@ -34,7 +34,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] hdr, string path)
             {
                 BaseBind = Bind = new FlacFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 Bind.MetadataBlockStreamInfoSize = ConvertTo.FromBig24ToInt32 (hdr, 5);
                 if (Bind.MetadataBlockStreamInfoSize < 34)

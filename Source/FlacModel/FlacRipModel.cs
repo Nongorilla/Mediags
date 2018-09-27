@@ -103,7 +103,7 @@ namespace NongMediaDiags
                     string md5WorkName;
                     string firstSig;
 
-                    if (Md5Model.IssueModel.Bind.MaxSeverity > Bind.Status)
+                    if (Md5Model.IssueModel.Data.MaxSeverity > Bind.Status)
                         Bind.Status = Bind.Md5.Issues.MaxSeverity;
 
                     if (Bind.LogRipper != null)

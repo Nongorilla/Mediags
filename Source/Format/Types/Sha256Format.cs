@@ -26,7 +26,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path) : base (path, 32)
             {
                 BaseBind = BindHashed = Bind = new Sha256Format (stream, path, HashedModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseHashes();
             }

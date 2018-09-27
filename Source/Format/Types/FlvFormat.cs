@@ -30,7 +30,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] hdr, string path)
             {
                 BaseBind = Bind = new FlvFormat (stream, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 var bb = new byte[15];
 

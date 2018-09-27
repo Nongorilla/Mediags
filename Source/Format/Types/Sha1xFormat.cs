@@ -29,7 +29,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path) : base (path, 20)
             {
                 BaseBind = BindHashed = Bind = new Sha1xFormat (stream, path, HashedModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 ParseHeaderAndHistory();
                 ParseHashes();
@@ -38,7 +38,7 @@ namespace NongFormat
             public Model (Stream stream, string digPath, LogEacFormat log, IList<Mp3Format.Model> mp3s, string signature) : base (digPath, 16)
             {
                 BaseBind = BindHashed = Bind = new Sha1xFormat (stream, digPath, HashedModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
                 Bind.fbs = stream;
 
                 CreateHistory();

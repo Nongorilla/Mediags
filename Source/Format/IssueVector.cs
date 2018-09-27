@@ -49,12 +49,10 @@ namespace NongIssue
 
             public class Model
             {
-                public readonly Vector Bind;
+                public readonly Vector Data;
 
                 public Model (IssueTags warnEscalator=IssueTags.None, IssueTags errEscalator=IssueTags.None)
-                {
-                    Bind = new Issue.Vector (warnEscalator, errEscalator);
-                }
+                 => Data = new Issue.Vector (warnEscalator, errEscalator);
 
                 public Issue Add (string message, Severity severity=Severity.Error, IssueTags tag=IssueTags.None,
                                   string prompt=null, Func<string> repairer=null)
@@ -66,61 +64,61 @@ namespace NongIssue
                         // Force Warning as minimum for repairables.
                         if (severity < Severity.Warning)
                             severity = Severity.Warning;
-                        ++Bind.RepairableCount;
+                        ++Data.RepairableCount;
                     }
 
-                    var issue = new Issue (Bind, message, severity, tag, prompt, repairer);
-                    Bind.items.Add (issue);
+                    var issue = new Issue (Data, message, severity, tag, prompt, repairer);
+                    Data.items.Add (issue);
 
                     Severity level = issue.Level;
-                    if (Bind.MaxSeverity < level)
+                    if (Data.MaxSeverity < level)
                     {
-                        Bind.MaxSeverity = level;
-                        Bind.Severest = issue;
+                        Data.MaxSeverity = level;
+                        Data.Severest = issue;
                     }
 
-                    Bind.NotifyPropertyChanged (nameof (FixedMessage));
+                    Data.NotifyPropertyChanged (nameof (FixedMessage));
                     return issue;
                 }
 
                 public void Escalate (IssueTags warnEscalator, IssueTags errEscalator)
                 {
                     // Accumulate escalations.
-                    Bind.WarnEscalator |= warnEscalator;
-                    Bind.ErrEscalator |= errEscalator;
+                    Data.WarnEscalator |= warnEscalator;
+                    Data.ErrEscalator |= errEscalator;
 
-                    foreach (var issue in Bind.items)
+                    foreach (var issue in Data.items)
                     {
                         Severity level = issue.Level;
-                        if (Bind.MaxSeverity < level)
+                        if (Data.MaxSeverity < level)
                         {
-                            Bind.MaxSeverity = level;
-                            Bind.Severest = issue;
+                            Data.MaxSeverity = level;
+                            Data.Severest = issue;
                         }
                     }
                 }
 
                 public void Clear()
                 {
-                    Bind.items = new ObservableCollection<Issue>();
-                    Bind.Items = new ReadOnlyObservableCollection<Issue> (Bind.items);
+                    Data.items = new ObservableCollection<Issue>();
+                    Data.Items = new ReadOnlyObservableCollection<Issue> (Data.items);
                 }
 
                 public bool RepairerEquals (int index, Func<string> other)
-                 => Bind.items[index].Repairer == other;
+                 => Data.items[index].Repairer == other;
 
                 public string Repair (int index)
                 {
-                    var issue = Bind.items[index];
+                    var issue = Data.items[index];
                     if (! issue.IsRepairable)
                         return null;
 
                     issue.RepairError = issue.Repairer();
                     issue.IsRepairSuccessful = issue.RepairError == null;
                     if (issue.IsRepairSuccessful.Value == true)
-                        --Bind.RepairableCount;
+                        --Data.RepairableCount;
 
-                    Bind.NotifyPropertyChanged (nameof (FixedMessage));
+                    Data.NotifyPropertyChanged (nameof (FixedMessage));
                     return issue.RepairError;
                 }
             }

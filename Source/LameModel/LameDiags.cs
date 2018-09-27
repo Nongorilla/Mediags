@@ -51,7 +51,7 @@ namespace NongMediaDiags
             public Model (string root, Granularity report) : base()
             {
                 IssueModel = new Issue.Vector.Model();
-                this._data = new LameDiags (root, report, FormatModel.Bind, IssueModel.Bind);
+                this._data = new LameDiags (root, report, FormatModel.Bind, IssueModel.Data);
             }
 
 

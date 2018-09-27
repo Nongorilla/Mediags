@@ -35,7 +35,7 @@ namespace NongFormat
             {
                 TracksModel = new LogEacTrack.Vector.Model();
                 BaseBind = this.Bind = new LogXldFormat (stream, path, TracksModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 // Arbitrary limit.
                 if (Bind.FileSize > 250000)

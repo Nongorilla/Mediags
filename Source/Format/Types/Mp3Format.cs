@@ -34,7 +34,7 @@ namespace NongFormat
             public Model (Stream stream, byte[] header, string path)
             {
                 BaseBind = Bind = new Mp3Format (stream, header, path);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 if (Bind.FileSize > Int32.MaxValue)
                 {

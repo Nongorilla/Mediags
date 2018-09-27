@@ -38,7 +38,7 @@ namespace NongFormat
             {
                 TracksModel = new LogEacTrack.Vector.Model();
                 BaseBind = this.Bind = new LogEacFormat (stream, path, TracksModel.Bind);
-                Bind.Issues = IssueModel.Bind;
+                Bind.Issues = IssueModel.Data;
 
                 Bind.AccurateRip = null;
                 Bind.RipDate = String.Empty;
