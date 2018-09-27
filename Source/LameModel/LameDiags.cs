@@ -33,7 +33,7 @@ namespace NongMediaDiags
         public new class Model : Diags.Model
         {
             private int consecutiveInvalidations = 0;
-            public new LameDiags Bind => (LameDiags) base._data;
+            public new LameDiags Data => (LameDiags) _data;
             public readonly Issue.Vector.Model IssueModel;
 
             private LameRip.Model ripModel;
@@ -43,7 +43,7 @@ namespace NongMediaDiags
                 private set
                 {
                     ripModel = value;
-                    Bind.Rip = ripModel?.Bind;
+                    Data.Rip = ripModel?.Bind;
                 }
             }
 
@@ -51,7 +51,7 @@ namespace NongMediaDiags
             public Model (string root, Granularity report) : base()
             {
                 IssueModel = new Issue.Vector.Model();
-                base._data = new LameDiags (root, report, FormatModel.Bind, IssueModel.Bind);
+                this._data = new LameDiags (root, report, FormatModel.Bind, IssueModel.Bind);
             }
 
 
@@ -60,15 +60,15 @@ namespace NongMediaDiags
                 string err = null;
                 var exitCode = Severity.NoIssue;
 
-                SetCurrentDirectory (Bind.Root);
+                SetCurrentDirectory (Data.Root);
 
                 try
                 {
-                    foreach (var curDir in new DirTraverser (Bind.Root))
+                    foreach (var curDir in new DirTraverser (Data.Root))
                     {
-                        if (Bind.StopAfter > 0 && consecutiveInvalidations >= Bind.StopAfter)
+                        if (Data.StopAfter > 0 && consecutiveInvalidations >= Data.StopAfter)
                         {
-                            char response = Bind.InputChar ($"\n{Bind.StopAfter} consecutive rips invalidated. Stop (S) / Resume (R) / Don't ask again (D)? ", "srd");
+                            char response = Data.InputChar ($"\n{Data.StopAfter} consecutive rips invalidated. Stop (S) / Resume (R) / Don't ask again (D)? ", "srd");
                             if (response == 's')
                             {
                                 err = "Stopped by user.";
@@ -76,7 +76,7 @@ namespace NongMediaDiags
                             }
                             consecutiveInvalidations = 0;
                             if (response == 'd')
-                                Bind.StopAfter = 0;
+                                Data.StopAfter = 0;
                         }
 
                         var ripStatus = ValidateLameRip (curDir, signature, doLogTag);
@@ -93,7 +93,7 @@ namespace NongMediaDiags
                     exitCode = Severity.Fatal;
                 }
 
-                Bind.OnReportClose();
+                Data.OnReportClose();
                 return exitCode;
             }
 
@@ -161,7 +161,7 @@ namespace NongMediaDiags
                     if (RipModel.Bind.Signature != null)
                         try
                         {
-                            var errPath = newPath + Path.DirectorySeparatorChar + Bind.NoncompliantName;
+                            var errPath = newPath + Path.DirectorySeparatorChar + Data.NoncompliantName;
                             if (File.Exists (errPath))
                                 File.Delete (errPath);
                         }
@@ -183,7 +183,7 @@ namespace NongMediaDiags
                         var errPath = Directory.GetParent(newPath).FullName;
                         if (errPath.Length > 0 && errPath[errPath.Length-1] != Path.DirectorySeparatorChar)
                             errPath += Path.DirectorySeparatorChar;
-                        errPath += Bind.FailPrefix + baseName;
+                        errPath += Data.FailPrefix + baseName;
                         try
                         { Directory.Move (newPath, errPath); }
                         catch (Exception)
@@ -206,12 +206,12 @@ namespace NongMediaDiags
                 if (logErrorsToFile && fb.Issues.HasError)
                     try
                     {
-                        using (var sw = new StreamWriter (Bind.CurrentDirectory + Path.DirectorySeparatorChar
-                                                        + Bind.NoncompliantName, false, new UTF8Encoding (true)))
+                        using (var sw = new StreamWriter (Data.CurrentDirectory + Path.DirectorySeparatorChar
+                                                        + Data.NoncompliantName, false, new UTF8Encoding (true)))
                         {
                             var dn = Path.GetDirectoryName (fb.Path);
 
-                            sw.WriteLine ("Diagnostics by the vitriolic " + Bind.Product + " v" + Bind.ProductVersion + ":");
+                            sw.WriteLine ("Diagnostics by the vitriolic " + Data.Product + " v" + Data.ProductVersion + ":");
                             sw.WriteLine ();
                             sw.Write     (dn);
                             sw.WriteLine (Path.DirectorySeparatorChar);
@@ -240,7 +240,7 @@ namespace NongMediaDiags
 
             public override void ReportLine (string message, Severity severity, bool logErrToFile)
             {
-                if (Bind.CurrentFile == null)
+                if (Data.CurrentFile == null)
                     IssueModel.Add (message, Severity.NoIssue);
 
                 base.ReportLine (message, severity, logErrToFile);
@@ -248,14 +248,14 @@ namespace NongMediaDiags
                 if (logErrToFile && severity >= Severity.Error)
                     try
                     {
-                        using (var sw = new StreamWriter (Bind.CurrentDirectory + Path.DirectorySeparatorChar
-                                                        + Bind.NoncompliantName, false, new UTF8Encoding (true)))
+                        using (var sw = new StreamWriter (Data.CurrentDirectory + Path.DirectorySeparatorChar
+                                                        + Data.NoncompliantName, false, new UTF8Encoding (true)))
                         {
-                            sw.WriteLine ("Error found by the vitriolic " + Bind.Product + " v" + Bind.ProductVersion + ":");
+                            sw.WriteLine ("Error found by the vitriolic " + Data.Product + " v" + Data.ProductVersion + ":");
                             sw.WriteLine ();
-                            sw.Write (Bind.CurrentDirectory);
+                            sw.Write (Data.CurrentDirectory);
                             sw.WriteLine (Path.DirectorySeparatorChar);
-                            sw.WriteLine (Bind.CurrentFile);
+                            sw.WriteLine (Data.CurrentFile);
                             string prefix = severity < Severity.Warning? "  " : (severity == Severity.Warning? "* Warning: " : "* Error: ");
                             sw.Write (prefix);
                             sw.WriteLine (message);

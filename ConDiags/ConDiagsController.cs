@@ -77,10 +77,10 @@ namespace AppController
                 { Trace.WriteLine (ProductText + " v" + VersionText); Trace.WriteLine (String.Empty); }
 
                 model = new Diags.Model (args[args.Length-1], filter, exclusion, action, scope, warnEscalator, errEscalator);
-                viewFactory.Create (this, model.Bind);
+                viewFactory.Create (this, model.Data);
 
-                model.Bind.HashFlags = hashes;
-                model.Bind.ValidationFlags = validations;
+                model.Data.HashFlags = hashes;
+                model.Data.ValidationFlags = validations;
 
                 exitCode = (int) Severity.NoIssue;
                 string err = null;
@@ -90,7 +90,7 @@ namespace AppController
 #endif
                     foreach (FormatBase.ModelBase fmtModel in model.CheckRoot())
                     { }
-                    exitCode = (int) model.Bind.Result;
+                    exitCode = (int) model.Data.Result;
 #if ! DEBUG
                 }
                 catch (IOException ex)
@@ -318,7 +318,7 @@ namespace AppController
 
             Console.WriteLine ();
             Console.WriteLine ("The following file extensions are supported:");
-            Console.WriteLine (model.Bind.FormatListText);
+            Console.WriteLine (model.Data.FormatListText);
         }
 
 

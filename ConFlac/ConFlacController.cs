@@ -50,12 +50,12 @@ namespace AppController
         public int Run()
         {
             model = new FlacDiags.Model (args.Length == 0? null : args[args.Length-1], Granularity.Advisory);
-            viewFactory.Create (this, model.Bind);
+            viewFactory.Create (this, model.Data);
 
             int exitCode = ParseArgs();
             if (exitCode == 0)
             {
-                NotifyEvery = notifyEvery?? (model.Bind.Scope <= Granularity.Verbose? 0 : 1);
+                NotifyEvery = notifyEvery?? (model.Data.Scope <= Granularity.Verbose? 0 : 1);
 
                 if (mirrorName != null)
                     try
@@ -71,15 +71,15 @@ namespace AppController
                         Console.Error.WriteLine ("Ignoring malformed <mirror>");
                     }
 
-                if (model.Bind.Scope <= Granularity.Verbose)
+                if (model.Data.Scope <= Granularity.Verbose)
                 { Trace.WriteLine (ProductText + " v" + VersionText); Trace.WriteLine (String.Empty); }
 
                 Severity worstDiagnosis = model.ValidateFlacsDeep (signature);
                 exitCode = worstDiagnosis < Severity.Warning? 0 : (int) worstDiagnosis;
 
-                if (model.Bind.TotalSignable > 0)
+                if (model.Data.TotalSignable > 0)
                 {
-                    var prefix = model.Bind.TotalSignable == 1? "+ Rip is" : "+ " + model.Bind.TotalSignable + " rips are";
+                    var prefix = model.Data.TotalSignable == 1? "+ Rip is" : "+ " + model.Data.TotalSignable + " rips are";
                     Trace.WriteLine (String.Empty);
                     Trace.Write (prefix);
                     Trace.WriteLine (" uber but cannot sign without /sig:<signature>");
@@ -121,7 +121,7 @@ namespace AppController
                 }
                 else if (args[an] == "/autoname")
                 {
-                    model.Bind.Autoname = NamingStrategy.ArtistTitle;
+                    model.Data.Autoname = NamingStrategy.ArtistTitle;
                     argOK = true;
                 }
                 else if (args[an].StartsWith ("/autoname:"))
@@ -129,19 +129,19 @@ namespace AppController
                     argOK = Enum.TryParse<NamingStrategy> (args[an].Substring (10), true, out NamingStrategy arg);
                     argOK = argOK && Enum.IsDefined (typeof (NamingStrategy), arg);
                     if (argOK)
-                        model.Bind.Autoname = arg;
+                        model.Data.Autoname = arg;
                 }
                 else if (args[an].StartsWith ("/g:"))
                 {
                     argOK = Enum.TryParse<Granularity> (args[an].Substring (3), true, out Granularity arg);
                     argOK = argOK && Enum.IsDefined (typeof (Granularity), arg) && arg <= maxGranularity;
                     if (argOK)
-                        model.Bind.Scope = arg;
+                        model.Data.Scope = arg;
                 }
                 else if (args[an] == "/md5")
                 {
                     argOK = true;
-                    model.Bind.IsParanoid = true;
+                    model.Data.IsParanoid = true;
                 }
                 else if (args[an].StartsWith ("/out:"))
                 {
@@ -162,34 +162,34 @@ namespace AppController
                 else if (args[an] == "/rg")
                 {
                     argOK = true;
-                    model.Bind.ApplyRG = true;
+                    model.Data.ApplyRG = true;
                 }
                 else if (args[an] == "/prove")
                 {
                     argOK = true;
-                    model.Bind.WillProve = true;
+                    model.Data.WillProve = true;
                 }
                 else if (args[an] == "/prove:web")
                 {
                     argOK = true;
-                    model.Bind.WillProve = true;
-                    model.Bind.IsWebCheckEnabled = true;
+                    model.Data.WillProve = true;
+                    model.Data.IsWebCheckEnabled = true;
                 }
                 else if (args[an].StartsWith ("/safety:"))
                 {
                     argOK = int.TryParse (args[an].Substring (8), out int arg);
                     if (argOK)
-                        model.Bind.StopAfter = arg;
+                        model.Data.StopAfter = arg;
                 }
                 else if (args[an] == "/ubertags")
                 {
                     argOK = true;
-                    model.Bind.IsBestTags = true;
+                    model.Data.IsBestTags = true;
                 }
                 else if (args[an] == "/fussy")
                 {
                     argOK = true;
-                    model.Bind.IsFussy = true;
+                    model.Data.IsFussy = true;
                 }
 
                 if (! argOK)
@@ -207,13 +207,13 @@ namespace AppController
 
             if (signature == null)
             {
-                if (model.Bind.Autoname != NamingStrategy.Manual)
+                if (model.Data.Autoname != NamingStrategy.Manual)
                     Console.Error.WriteLine ("/autoname without /sig ignored.");
             }
-            else if (model.Bind.Scope > Granularity.Advisory)
+            else if (model.Data.Scope > Granularity.Advisory)
             {
-                Console.Error.WriteLine ("/g:" + model.Bind.Scope + " with /sig ignored.");
-                model.Bind.Scope = Granularity.Advisory;
+                Console.Error.WriteLine ("/g:" + model.Data.Scope + " with /sig ignored.");
+                model.Data.Scope = Granularity.Advisory;
             }
 
             return 0;

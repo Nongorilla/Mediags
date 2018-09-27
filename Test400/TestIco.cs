@@ -58,7 +58,7 @@ namespace UnitTest
             bool isKnown;
             FileFormat actual;
             var fs = new FileStream (fn, FileMode.Open);
-            var fmt = FormatBase.CreateModel (model.Bind.FileFormats.Items, fs, fn, 0, 0, null, out isKnown, out actual);
+            var fmt = FormatBase.CreateModel (model.Data.FileFormats.Items, fs, fn, 0, 0, null, out isKnown, out actual);
             var fb = fmt.BaseBind;
 
             Assert.IsNotNull (fmt);

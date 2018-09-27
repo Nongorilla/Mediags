@@ -26,7 +26,7 @@ namespace NongMediaDiags
                     throw new NullReferenceException ("FlacRip constructor missing model.");
 
                 this.Owner = model;
-                this.Bind = new FlacRip (model.Bind, path, autoname, signature);
+                this.Bind = new FlacRip (model.Data, path, autoname, signature);
             }
 
 
@@ -56,7 +56,7 @@ namespace NongMediaDiags
                     return;
                 }
 
-                if (Bind.Signature != null && Bind.LogRipper == null && Owner.Bind.ApplyRG)
+                if (Bind.Signature != null && Bind.LogRipper == null && Owner.Data.ApplyRG)
                     LogModel.IssueModel.Add ("ReplayGain added.", Severity.Advisory);
 
                 LogModel.SetWorkName (Bind.WorkName);
@@ -72,7 +72,7 @@ namespace NongMediaDiags
                     {
                         Owner.ReportFormat (Bind.M3u, false);
                         if (! Bind.M3u.Issues.HasError)
-                            ++Owner.Bind.TotalSignable;
+                            ++Owner.Data.TotalSignable;
                     }
                     Bind.IsWip = false;
                     Bind.Status = Bind.Log.Issues.MaxSeverity;
@@ -85,8 +85,8 @@ namespace NongMediaDiags
                     return;
 
                 ValidateMd5();
-                ++Owner.Bind.Md5Format.TrueTotal;
-                ++Owner.Bind.TotalFiles;
+                ++Owner.Data.Md5Format.TrueTotal;
+                ++Owner.Data.TotalFiles;
 
                 if (Bind.M3u != null)
                 {
@@ -151,10 +151,10 @@ namespace NongMediaDiags
                 {
                     if (Bind.flacInfos.Length > 0)
                     {
-                        ++Owner.Bind.FlacFormat.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
-                        ++Owner.Bind.LogFormat.TotalMissing;
-                        ++Owner.Bind.TotalErrors;
+                        ++Owner.Data.FlacFormat.TrueTotal;
+                        ++Owner.Data.TotalFiles;
+                        ++Owner.Data.LogFormat.TotalMissing;
+                        ++Owner.Data.TotalErrors;
                         Owner.ReportLine ("Found .flac file(s) without a .log file in same directory.", Severity.Error, Bind.Signature != null);
                         Bind.Status = Severity.Error;
                     }
@@ -164,9 +164,9 @@ namespace NongMediaDiags
 
                 if (Bind.logInfos.Length > 1)
                 {
-                    Owner.Bind.LogFormat.TrueTotal += Bind.logInfos.Length;
-                    Owner.Bind.TotalFiles += Bind.logInfos.Length;
-                    Owner.Bind.TotalErrors += Bind.logInfos.Length - 1;
+                    Owner.Data.LogFormat.TrueTotal += Bind.logInfos.Length;
+                    Owner.Data.TotalFiles += Bind.logInfos.Length;
+                    Owner.Data.TotalErrors += Bind.logInfos.Length - 1;
                     Owner.ReportLine ("Directory has more than 1 .log file.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
@@ -174,10 +174,10 @@ namespace NongMediaDiags
 
                 if (Bind.flacInfos.Length == 0)
                 {
-                    ++Owner.Bind.LogFormat.TrueTotal;
-                    ++Owner.Bind.TotalFiles;
-                    ++Owner.Bind.TotalErrors;
-                    ++Owner.Bind.FlacFormat.TotalMissing;
+                    ++Owner.Data.LogFormat.TrueTotal;
+                    ++Owner.Data.TotalFiles;
+                    ++Owner.Data.TotalErrors;
+                    ++Owner.Data.FlacFormat.TotalMissing;
                     Owner.ReportLine ("Directory has .log file yet has no .flac files.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
@@ -197,8 +197,8 @@ namespace NongMediaDiags
                     Match m1 = logMat[0];
                     if (m1.Groups.Count != 3)
                     {
-                        ++Owner.Bind.LogFormat.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.LogFormat.TrueTotal;
+                        ++Owner.Data.TotalFiles;
                         Owner.ReportLine ("Too confused by .log name, bailing out.", Severity.Error, Bind.Signature != null);
                         Bind.Status = Severity.Error;
                         return;
@@ -210,9 +210,9 @@ namespace NongMediaDiags
                     }
                 }
 
-                Owner.Bind.ExpectedFiles = 1 + Bind.flacInfos.Length;
+                Owner.Data.ExpectedFiles = 1 + Bind.flacInfos.Length;
                 if (Bind.Signature != null || Bind.LogRipper != null)
-                    Owner.Bind.ExpectedFiles += 2;
+                    Owner.Data.ExpectedFiles += 2;
 
                 using (var logfs = new FileStream (Bind.logInfos[0].FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
@@ -224,8 +224,8 @@ namespace NongMediaDiags
                 Owner.SetCurrentFile (Bind.LogName);  // just for rebinding
                 if (LogModel == null)
                 {
-                    ++Owner.Bind.LogFormat.TrueTotal;
-                    ++Owner.Bind.TotalFiles;
+                    ++Owner.Data.LogFormat.TrueTotal;
+                    ++Owner.Data.TotalFiles;
                     Owner.ReportLine ("Invalid log file or unknown layout.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
@@ -234,7 +234,7 @@ namespace NongMediaDiags
                 LogModel.ClearFile();
                 Bind.Log = LogModel.Bind;
 
-                if (Bind.LogRipper == null && Owner.Bind.IsWebCheckEnabled)
+                if (Bind.LogRipper == null && Owner.Data.IsWebCheckEnabled)
                     LogModel.CalcHashWebCheck();
 
                 if (Bind.flacInfos.Length != Bind.Log.Tracks.Items.Count)
@@ -251,15 +251,15 @@ namespace NongMediaDiags
                     LogModel.TkIssue = LogModel.IssueModel.Add (sb.ToString(), Severity.Error, IssueTags.Failure);
                 }
 
-                IssueTags errEscalator = Owner.Bind.ErrEscalator;
-                if (Owner.Bind.WillProve && Bind.LogRipper == null)
+                IssueTags errEscalator = Owner.Data.ErrEscalator;
+                if (Owner.Data.WillProve && Bind.LogRipper == null)
                     errEscalator |= IssueTags.MissingHash;
-                LogModel.IssueModel.Escalate (Owner.Bind.WarnEscalator, errEscalator);
+                LogModel.IssueModel.Escalate (Owner.Data.WarnEscalator, errEscalator);
 
                 if (Bind.Log.Issues.HasError)
                 {
-                    ++Owner.Bind.LogFormat.TrueTotal;
-                    ++Owner.Bind.TotalFiles;
+                    ++Owner.Data.LogFormat.TrueTotal;
+                    ++Owner.Data.TotalFiles;
                     CloseFiles();
                     Owner.ReportFormat (Bind.Log, Bind.Signature != null);
                     if (Bind.Status < Bind.Log.Issues.MaxSeverity)
@@ -267,14 +267,14 @@ namespace NongMediaDiags
                     return;
                 }
 
-                if (Bind.Signature != null && Bind.LogRipper == null && Owner.Bind.ApplyRG)
+                if (Bind.Signature != null && Bind.LogRipper == null && Owner.Data.ApplyRG)
                 {
                     try
                     { FlacFormat.Model.ApplyReplayGain (Bind.flacInfos); }
                     catch (Exception ex)
                     {
-                        ++Owner.Bind.LogFormat.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.LogFormat.TrueTotal;
+                        ++Owner.Data.TotalFiles;
                         CloseFiles();
                         Owner.ReportLine ("ReplayGain add failed: " + ex.Message.Trim (null), Severity.Error);
                         Bind.Status = Severity.Error;
@@ -306,7 +306,7 @@ namespace NongMediaDiags
                 if (! Bind.Log.Issues.HasError)
                 {
                     var sb2 = new StringBuilder ("CRC-32, CRC-16");
-                    if ((Owner.Bind.HashFlags & Hashes.PcmMD5) != 0)
+                    if ((Owner.Data.HashFlags & Hashes.PcmMD5) != 0)
                         sb2.Append (", MD5");
                     sb2.Append (" & tag checks of " + Bind.flacModels.Count + " FLAC");
                         if (Bind.flacModels.Count != 1)
@@ -316,8 +316,8 @@ namespace NongMediaDiags
                     LogModel.Bind.NotifyPropertyChanged (null);
                 }
 
-                ++Owner.Bind.LogFormat.TrueTotal;
-                ++Owner.Bind.TotalFiles;
+                ++Owner.Data.LogFormat.TrueTotal;
+                ++Owner.Data.TotalFiles;
             }
 
 
@@ -342,11 +342,11 @@ namespace NongMediaDiags
                         else
                         {
                             FlacFormat flac = flacModel.Bind;
-                            flacModel.CalcHashes (Hashes.Intrinsic|Hashes.PcmCRC32|Owner.Bind.HashFlags|fileHash, Owner.Bind.ValidationFlags);
+                            flacModel.CalcHashes (Hashes.Intrinsic|Hashes.PcmCRC32|Owner.Data.HashFlags|fileHash, Owner.Data.ValidationFlags);
                             if (flac.IsBadHeader)
-                                ++Owner.Bind.FlacFormat.TotalHeaderErrors;
+                                ++Owner.Data.FlacFormat.TotalHeaderErrors;
                             if (flac.IsBadData)
-                                ++Owner.Bind.FlacFormat.TotalDataErrors;
+                                ++Owner.Data.FlacFormat.TotalDataErrors;
 
                             if (Bind.MaxFlacSeverity < flac.Issues.MaxSeverity)
                                 Bind.MaxFlacSeverity = flac.Issues.MaxSeverity;
@@ -355,8 +355,8 @@ namespace NongMediaDiags
                             Owner.ReportFormat (flac, Bind.Signature != null);
                         }
 
-                        ++Owner.Bind.FlacFormat.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.FlacFormat.TrueTotal;
+                        ++Owner.Data.TotalFiles;
 
                         if (flacModel != null)
                             flacModel.ClearFile();
@@ -385,8 +385,8 @@ namespace NongMediaDiags
                 {
                     if (File.Exists (newMd5Path))
                     {
-                        ++Owner.Bind.Md5Format.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.Md5Format.TrueTotal;
+                        ++Owner.Data.TotalFiles;
                         Owner.SetCurrentFile (newMd5Name);
                         Owner.ReportLine ("Digest already exists.", Severity.Error, Bind.Signature != null);
                         Bind.Status = Severity.Error;
@@ -399,7 +399,7 @@ namespace NongMediaDiags
                         for (int logIx = 0; logIx < LogModel.TracksModel.Bind.Items.Count; ++logIx)
                         {
                             var flacModel = LogModel.TracksModel.GetMatch (logIx);
-                            var newName = flacModel.Bind.GetCleanFileName (Owner.Bind.Autoname, Bind.Log.CalcedAlbumArtist, trackWidth);
+                            var newName = flacModel.Bind.GetCleanFileName (Owner.Data.Autoname, Bind.Log.CalcedAlbumArtist, trackWidth);
                             if (newName != flacModel.Bind.Name)
                             {
                                 var err = flacModel.Rename (newName);
@@ -414,7 +414,7 @@ namespace NongMediaDiags
                         }
                     }
                 }
-                LogModel.IssueModel.Escalate (Owner.Bind.WarnEscalator, IssueTags.None);
+                LogModel.IssueModel.Escalate (Owner.Data.WarnEscalator, IssueTags.None);
 
                 Owner.ReportFormat (Bind.Log, Bind.Signature != null);
                 if (Bind.Status < Bind.Log.Issues.MaxSeverity)
@@ -457,8 +457,8 @@ namespace NongMediaDiags
                                 }
                             }
 
-                        ++Owner.Bind.M3uFormat.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.M3uFormat.TrueTotal;
+                        ++Owner.Data.TotalFiles;
                         if (Bind.M3u.Issues.HasError)
                             return;
 
@@ -477,9 +477,9 @@ namespace NongMediaDiags
 
                     M3uModel.IssueModel.Add (m3uExists? "Playlist rewritten." : "Playlist created.", Severity.Advisory);
                     if (! m3uExists)
-                        ++Owner.Bind.M3uFormat.TotalCreated;
-                    ++Owner.Bind.M3uFormat.TrueTotal;
-                    ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.M3uFormat.TotalCreated;
+                    ++Owner.Data.M3uFormat.TrueTotal;
+                    ++Owner.Data.TotalFiles;
                 }
 
                 return;
@@ -493,11 +493,11 @@ namespace NongMediaDiags
                 var firstSig = Bind.LogRipper ?? Bind.Signature;
                 var newLogName = Bind.Log.WorkName + ".FLAC." + firstSig + ".log";
                 var newMd5Name = Bind.Log.WorkName + ".FLAC." + firstSig + ".md5";
-                var newMd5Path = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + newMd5Name;
+                var newMd5Path = Owner.Data.CurrentDirectory + Path.DirectorySeparatorChar + newMd5Name;
                 var oldM3uName = Bind.WorkName + ".m3u";
                 var newM3uName = Bind.Log.WorkName + ".m3u";
-                var oldM3uPath = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + oldM3uName;
-                var newM3uPath = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + Bind.Log.WorkName + ".m3u";
+                var oldM3uPath = Owner.Data.CurrentDirectory + Path.DirectorySeparatorChar + oldM3uName;
+                var newM3uPath = Owner.Data.CurrentDirectory + Path.DirectorySeparatorChar + Bind.Log.WorkName + ".m3u";
 
                 if (Bind.LogRipper == null)
                 {
@@ -525,13 +525,13 @@ namespace NongMediaDiags
                             Md5Model = new Md5Format.Model (fs0, newMd5Path, Bind.Log, newLogName, Bind.M3u, Bind.Signature);
                             Bind.Md5 = Md5Model.Bind;
 
-                            if (Owner.Bind.WillProve && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
+                            if (Owner.Data.WillProve && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
                             {
                                 Md5Model.HistoryModel.Add ("proved", Bind.Signature);
                                 Bind.IsProven = true;
                             }
 
-                            Md5Model.WriteFile (Owner.Bind.Product + " v" + Owner.Bind.ProductVersion, LogBuffer.cp1252);
+                            Md5Model.WriteFile (Owner.Data.Product + " v" + Owner.Data.ProductVersion, LogBuffer.cp1252);
                             Md5Model.ClearFile();
                         }
                     }
@@ -546,14 +546,14 @@ namespace NongMediaDiags
                             File.Delete (newMd5Path);
                     }
 
-                    ++Owner.Bind.Md5Format.TotalCreated;
+                    ++Owner.Data.Md5Format.TotalCreated;
                     Md5Model.IssueModel.Add ("Digest created.", Severity.Advisory);
 
                     return;
                 }
 
                 var oldMd5Name = Bind.WorkName + ".FLAC." + Bind.LogRipper + ".md5";
-                var oldMd5Path = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + oldMd5Name;
+                var oldMd5Path = Owner.Data.CurrentDirectory + Path.DirectorySeparatorChar + oldMd5Name;
 
                 try
                 {
@@ -571,7 +571,7 @@ namespace NongMediaDiags
                         Md5Model.IssueModel.Add ("Highest quality previously proven.", Severity.Trivia);
                         Bind.IsProven = true;
                     }
-                    else if (Owner.Bind.IsWebCheckEnabled && LogModel.Bind.ShIssue == null)
+                    else if (Owner.Data.IsWebCheckEnabled && LogModel.Bind.ShIssue == null)
                     {
                         LogModel.CalcHashWebCheck();
                         if (LogModel.Bind.ShIssue.Failure)
@@ -582,7 +582,7 @@ namespace NongMediaDiags
                     else
                     {
                         Severity sev = Severity.Noise;
-                        if (Owner.Bind.WillProve && (LogModel.Bind.ShIssue == null || !LogModel.Bind.ShIssue.Success
+                        if (Owner.Data.WillProve && (LogModel.Bind.ShIssue == null || !LogModel.Bind.ShIssue.Success
                                                     || LogModel.Bind.TpIssue == null || LogModel.Bind.TpIssue.Failure))
                             sev = Severity.Error;
                         Md5Model.IssueModel.Add ("Highest quality not previously proven.", sev);
@@ -661,7 +661,7 @@ namespace NongMediaDiags
                             if (Bind.Autoname != NamingStrategy.Manual)
                             {
                                 var isRename = false;
-                                var newName = flac.GetCleanFileName (Owner.Bind.Autoname, Bind.Log.CalcedAlbumArtist, trackWidth);
+                                var newName = flac.GetCleanFileName (Owner.Data.Autoname, Bind.Log.CalcedAlbumArtist, trackWidth);
                                 if (newName != flac.Name)
                                 {
                                     var err = flacMod.Rename (newName);
@@ -744,8 +744,8 @@ namespace NongMediaDiags
                         fs2.Read (buf, 0, buf.Length);
                         M3uModel = M3uFormat.CreateModel (fs2, buf, oldM3uPath);
                         Bind.M3u = M3uModel.Bind;
-                        ++Owner.Bind.M3uFormat.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.M3uFormat.TrueTotal;
+                        ++Owner.Data.TotalFiles;
 
                         M3uModel.CalcHashes (Hashes.FileMD5, 0);
                         Md5Model.HashedModel.SetActualHash (m3uIndex, Bind.M3u.FileMD5);
@@ -761,7 +761,7 @@ namespace NongMediaDiags
                     }
                     catch (FileNotFoundException)
                     {
-                        ++Owner.Bind.M3uFormat.TotalMissing;
+                        ++Owner.Data.M3uFormat.TotalMissing;
                         Md5Model.IssueModel.Add ("Playlist missing.");
                         Md5Model.HashedModel.SetIsFound (m3uIndex, false);
                         return;
@@ -792,12 +792,12 @@ namespace NongMediaDiags
                         Md5Model.HistoryModel.Add ("converted", Bind.Signature);
                         Md5Model.IssueModel.Add ("Will convert to include change log & self-hash.", Severity.Advisory);
                         Bind.IsCheck = true;
-                        ++Owner.Bind.Md5Format.TotalConverted;
+                        ++Owner.Data.Md5Format.TotalConverted;
                     }
                     else if (Bind.TrackEditCount == 0)
                     {
                         bool addProver = false;
-                        if (Owner.Bind.WillProve && Bind.Md5.History.Prover == null)
+                        if (Owner.Data.WillProve && Bind.Md5.History.Prover == null)
                             if (LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
                                 if (LogModel.Bind.TpIssue != null && ! LogModel.Bind.TpIssue.Failure)
                                     addProver = true;
@@ -820,7 +820,7 @@ namespace NongMediaDiags
                 catch (FileNotFoundException)
                 {
                     Owner.SetCurrentFile (oldMd5Name);
-                    ++Owner.Bind.Md5Format.TotalMissing;
+                    ++Owner.Data.Md5Format.TotalMissing;
                     Owner.ReportLine ("File missing.", Severity.Error, Bind.Signature != null);
                 }
                 catch (UnauthorizedAccessException ex)
@@ -863,7 +863,7 @@ namespace NongMediaDiags
 
                     var reallyPrompt = "Are you sure this should be applied to all rips signed in this batch (Y/N)? ";
 
-                    newComment = Owner.Bind.InputLine (sb.ToString(), "Comment", reallyPrompt);
+                    newComment = Owner.Data.InputLine (sb.ToString(), "Comment", reallyPrompt);
                 }
                 return newComment;
             }
@@ -891,7 +891,7 @@ namespace NongMediaDiags
                         Md5Model.IssueModel.Escalate (IssueTags.None, IssueTags.MetaChange);
                         Md5Model.IssueModel.Add ("Changes made after last signed but empty response cannot be logged.");
                         Owner.ReportFormat (Bind.Md5, true);
-                        ++Owner.Bind.TotalErrors;
+                        ++Owner.Data.TotalErrors;
                         Bind.Status = Severity.Error;
                         CloseFiles();
                         return;
@@ -900,7 +900,7 @@ namespace NongMediaDiags
                     Bind.NewComment = comment;
                     Md5Model.HistoryModel.Add ("changed: " + comment, Bind.Signature);
 
-                    if (Owner.Bind.WillProve && Bind.Md5.History.Prover == null)
+                    if (Owner.Data.WillProve && Bind.Md5.History.Prover == null)
                         if (LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
                             if (LogModel.Bind.TpIssue != null && ! LogModel.Bind.TpIssue.Failure)
                                 Md5Model.HistoryModel.Add ("proved", Bind.Signature);
@@ -918,7 +918,7 @@ namespace NongMediaDiags
                     M3uModel.CalcHashes (Hashes.FileMD5, 0);
                     var m3uHashedIndex = Bind.Md5.HashedFiles.LookupIndexByExtension (".m3u");
                     Md5Model.HashedModel.SetActualHash (m3uHashedIndex, Bind.M3u.FileMD5);
-                    Md5Model.WriteFile (Owner.Bind.Product + " v" + Owner.Bind.ProductVersion, LogBuffer.cp1252);
+                    Md5Model.WriteFile (Owner.Data.Product + " v" + Owner.Data.ProductVersion, LogBuffer.cp1252);
 
                     if (Bind.TrackEditCount > 0 || Bind.TrackRenameCount > 0)
                         for (var ix = 0; ix < Bind.Md5.HashedFiles.Items.Count; ++ix)
@@ -959,7 +959,7 @@ namespace NongMediaDiags
                     return;
                 }
 
-                var errInfo = new FileInfo (Bind.DirPath + Path.DirectorySeparatorChar + Owner.Bind.NoncompliantName);
+                var errInfo = new FileInfo (Bind.DirPath + Path.DirectorySeparatorChar + Owner.Data.NoncompliantName);
                 if (File.Exists (errInfo.FullName))
                     try
                     { File.Delete (errInfo.FullName); }
@@ -969,7 +969,7 @@ namespace NongMediaDiags
                 if (Bind.LogRipper == null)
                 {
                     try
-                    { File.Move (Bind.Log.Path, Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + newLogName); }
+                    { File.Move (Bind.Log.Path, Owner.Data.CurrentDirectory + Path.DirectorySeparatorChar + newLogName); }
                     catch (Exception ex)
                     {
                         Owner.SetCurrentFile (null);
@@ -980,16 +980,16 @@ namespace NongMediaDiags
                         return;
                     }
 
-                    ++Owner.Bind.LogFormat.TotalSigned;
+                    ++Owner.Data.LogFormat.TotalSigned;
                 }
 
                 if (Bind.Autoname == NamingStrategy.Manual)
                 {
-                    if (Bind.Dir.Name.StartsWith (Owner.Bind.FailPrefix))
+                    if (Bind.Dir.Name.StartsWith (Owner.Data.FailPrefix))
                     {
                         try
                         {
-                            var newName = Bind.Dir.Parent.FullName + Path.DirectorySeparatorChar + Bind.Dir.Name.Substring (Owner.Bind.FailPrefix.Length);
+                            var newName = Bind.Dir.Parent.FullName + Path.DirectorySeparatorChar + Bind.Dir.Name.Substring (Owner.Data.FailPrefix.Length);
                             Bind.Dir.MoveTo (newName);
                         }
                         catch (Exception)

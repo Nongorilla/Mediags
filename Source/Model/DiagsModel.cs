@@ -12,7 +12,7 @@ namespace NongMediaDiags
         public partial class Model
         {
             protected virtual Diags _data { get; set; }
-            public Diags Bind => _data;
+            public Diags Data => _data;
             public FileFormat.Vector.Model FormatModel;
 
             public Model (string root, string filter=null, string exclusion=null,
@@ -20,14 +20,14 @@ namespace NongMediaDiags
                 IssueTags warnEscalator=IssueTags.None, IssueTags errEscalator=IssueTags.None)
                 : this()
             {
-                _data = new Diags (this);
-                Bind.Root = root;
-                Bind.Filter = filter;
-                Bind.Exclusion = exclusion;
-                Bind.Response = action;
-                Bind.Scope = scope;
-                Bind.WarnEscalator = warnEscalator;
-                Bind.ErrEscalator = errEscalator;
+                this._data = new Diags (this);
+                Data.Root = root;
+                Data.Filter = filter;
+                Data.Exclusion = exclusion;
+                Data.Response = action;
+                Data.Scope = scope;
+                Data.WarnEscalator = warnEscalator;
+                Data.ErrEscalator = errEscalator;
             }
 
 
@@ -139,11 +139,11 @@ namespace NongMediaDiags
 
             public void ResetTotals()
             {
-                Bind.TotalFiles = 0;
-                Bind.TotalRepairable = 0;
-                Bind.TotalErrors = 0;
-                Bind.TotalWarnings = 0;
-                Bind.TotalSignable = 0;
+                Data.TotalFiles = 0;
+                Data.TotalRepairable = 0;
+                Data.TotalErrors = 0;
+                Data.TotalWarnings = 0;
+                Data.TotalSignable = 0;
 
                 FormatModel.ResetTotals();
             }
@@ -151,65 +151,65 @@ namespace NongMediaDiags
 
             public void SetCurrentFile (string baseName, Granularity stickyScope)
             {
-                Bind.CurrentFile = baseName;
-                Bind.OnFileVisit (Bind.CurrentDirectory, baseName);
+                Data.CurrentFile = baseName;
+                Data.OnFileVisit (Data.CurrentDirectory, baseName);
 
-                if (stickyScope >= Bind.Scope)
-                    Bind.OnMessageSend (null);
+                if (stickyScope >= Data.Scope)
+                    Data.OnMessageSend (null);
             }
 
 
             public void SetCurrentFile (string baseName)
             {
-                Bind.CurrentFile = baseName;
-                Bind.OnFileVisit (Bind.CurrentDirectory, baseName);
+                Data.CurrentFile = baseName;
+                Data.OnFileVisit (Data.CurrentDirectory, baseName);
             }
 
 
             public void SetCurrentFile (string directoryName, string fileName)
             {
-                Bind.CurrentFile = fileName;
-                Bind.CurrentDirectory = directoryName;
-                Bind.OnFileVisit (directoryName, fileName);
+                Data.CurrentFile = fileName;
+                Data.CurrentDirectory = directoryName;
+                Data.OnFileVisit (directoryName, fileName);
             }
 
 
             public void SetCurrentDirectory (string directoryName)
             {
-                Bind.CurrentFile = null;
-                Bind.CurrentDirectory = directoryName;
-                Bind.OnFileVisit (directoryName, null);
+                Data.CurrentFile = null;
+                Data.CurrentDirectory = directoryName;
+                Data.OnFileVisit (directoryName, null);
             }
 
 
             public virtual void ReportLine (string message, Severity severity = Severity.Error, bool logErrToFile = false)
             {
-                if (Bind.CurrentFile != null)
+                if (Data.CurrentFile != null)
                     if (severity >= Severity.Error)
-                        ++Bind.TotalErrors;
+                        ++Data.TotalErrors;
                     else if (severity == Severity.Warning)
-                        ++Bind.TotalWarnings;
+                        ++Data.TotalWarnings;
 
-                if ((int) severity >= (int) Bind.Scope)
-                    Bind.OnMessageSend (message, severity);
+                if ((int) severity >= (int) Data.Scope)
+                    Data.OnMessageSend (message, severity);
             }
 
 
             public virtual void ReportFormat (FormatBase fb, bool logErrorsToFile = false)
             {
-                Granularity scope = Bind.Scope;
+                Granularity scope = Data.Scope;
                 if (scope <= Granularity.Long)
                 {
                     IList<string> report = fb.GetDetailsHeader (scope);
                     fb.GetDetailsBody (report, scope);
 
-                    Bind.OnMessageSend (String.Empty, Severity.NoIssue);
+                    Data.OnMessageSend (String.Empty, Severity.NoIssue);
 
                     foreach (var lx in report)
-                        Bind.OnMessageSend (lx);
+                        Data.OnMessageSend (lx);
                 }
                 else if (scope > Granularity.Terse)
-                    if (Bind.Response == Interaction.PromptToRepair && fb.Issues.RepairableCount > 0)
+                    if (Data.Response == Interaction.PromptToRepair && fb.Issues.RepairableCount > 0)
                         scope = Granularity.Terse;
 
                 bool hasWarn = false, hasErr = false;
@@ -223,7 +223,7 @@ namespace NongMediaDiags
                         if (! hasWarn)
                         {
                             hasWarn = true;
-                            ++Bind.TotalWarnings;
+                            ++Data.TotalWarnings;
                         }
                     }
                     else if (severity >= Severity.Error)
@@ -231,7 +231,7 @@ namespace NongMediaDiags
                         if (! hasErr)
                         {
                             hasErr = true;
-                            ++Bind.TotalErrors;
+                            ++Data.TotalErrors;
                         }
                     }
 
@@ -240,12 +240,12 @@ namespace NongMediaDiags
                         if (shownIssuesCount == 0)
                             if (scope <= Granularity.Long)
                                 if (scope == Granularity.Long)
-                                    Bind.OnMessageSend ("Diagnostics:", Severity.NoIssue);
+                                    Data.OnMessageSend ("Diagnostics:", Severity.NoIssue);
                                 else
-                                { Bind.OnMessageSend (String.Empty); Bind.OnMessageSend ("Diagnostics:"); }
+                                { Data.OnMessageSend (String.Empty); Data.OnMessageSend ("Diagnostics:"); }
                         ++shownIssuesCount;
 
-                        Bind.OnMessageSend (item.Message, severity, item.IsRepairable? Likeliness.Probable : Likeliness.None);
+                        Data.OnMessageSend (item.Message, severity, item.IsRepairable? Likeliness.Probable : Likeliness.None);
                     }
                 }
             }
@@ -255,7 +255,7 @@ namespace NongMediaDiags
             {
                 bool result = false;
 
-                if (Bind.Response == Interaction.PromptToRepair)
+                if (Data.Response == Interaction.PromptToRepair)
                 {
                     for (int ix = 0; ix < formatModel.BaseBind.Issues.Items.Count; ++ix)
                     {
@@ -263,25 +263,25 @@ namespace NongMediaDiags
                         if (issue.IsRepairable)
                             for (;;)
                             {
-                                Bind.OnMessageSend (String.Empty, Severity.NoIssue);
-                                bool? isYes = Bind.QuestionAsk (issue.RepairPrompt + "? ");
+                                Data.OnMessageSend (String.Empty, Severity.NoIssue);
+                                bool? isYes = Data.QuestionAsk (issue.RepairPrompt + "? ");
                                 if (isYes != true)
                                     break;
 
                                 string errorMessage = formatModel.IssueModel.Repair (ix);
                                 if (errorMessage == null)
                                 {
-                                    Bind.OnMessageSend ("Repair successful!", Severity.Advisory);
+                                    Data.OnMessageSend ("Repair successful!", Severity.Advisory);
                                     if (formatModel.IssueModel.RepairerEquals (ix, formatModel.RepairWrongExtension))
                                         result = true;
                                     break;
                                 }
 
-                                Bind.OnMessageSend ("Repair attempt failed: " + errorMessage, Severity.Warning);
+                                Data.OnMessageSend ("Repair attempt failed: " + errorMessage, Severity.Warning);
                             }
                     }
 
-                    Bind.OnMessageSend (String.Empty, Severity.NoIssue);
+                    Data.OnMessageSend (String.Empty, Severity.NoIssue);
                     formatModel.CloseFile();
                 }
 

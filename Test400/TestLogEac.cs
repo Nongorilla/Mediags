@@ -142,7 +142,7 @@ namespace UnitTest
             var dn = @"Targets\Rips\Tester - 2000 - FLAC Not Super";
 
             var model = new FlacDiags.Model (dn, Granularity.Verbose);
-            model.Bind.WillProve = true;
+            model.Data.WillProve = true;
             var result = model.ValidateFlacsDeep (null);
 
             Assert.AreEqual (Severity.Error, result);
@@ -175,9 +175,9 @@ namespace UnitTest
             var newLogName = workName + ".FLAC." + ripper + ".log";
 
             var model = new FlacDiags.Model (dn, Granularity.Verbose);
-            model.Bind.WillProve = false;
-            model.Bind.Product = "UberFLAC";
-            model.Bind.ProductVersion = "0.8.3.1";
+            model.Data.WillProve = false;
+            model.Data.Product = "UberFLAC";
+            model.Data.ProductVersion = "0.8.3.1";
             Severity status = model.ValidateFlacRip (dn, ripper, false, false);
 
             Assert.IsNotNull (model.RipModel.Bind.M3u);
@@ -212,13 +212,13 @@ namespace UnitTest
             var h1 = new byte[0x2C];
             s1.Read (h1, 0, h1.Length);
             var log1Model = LogEacFormat.CreateModel (s1, h1, dn);
-            log1Model.CalcHashes (model.Bind.HashFlags, 0);
-            model.Bind.ErrEscalator = IssueTags.ProveErr;
-            log1Model.IssueModel.Escalate (model.Bind.WarnEscalator, model.Bind.ErrEscalator);
+            log1Model.CalcHashes (model.Data.HashFlags, 0);
+            model.Data.ErrEscalator = IssueTags.ProveErr;
+            log1Model.IssueModel.Escalate (model.Data.WarnEscalator, model.Data.ErrEscalator);
             var b1 = log1Model.Bind;
 
             Assert.IsFalse (b1.Issues.HasError);
-            if ((model.Bind.HashFlags & Hashes.WebCheck) != 0)
+            if ((model.Data.HashFlags & Hashes.WebCheck) != 0)
                 Assert.IsTrue (b1.ShIssue.Success == true);
             else
                 Assert.IsNull (b1.ShIssue);
@@ -228,13 +228,13 @@ namespace UnitTest
             var h2 = new byte[0x2C];
             s2.Read (h2, 0, h1.Length);
             var log2Model = LogEacFormat.CreateModel (s2, h2, dn);
-            log2Model.CalcHashes (model.Bind.HashFlags, 0);
-            model.Bind.ErrEscalator = IssueTags.ProveErr | IssueTags.Fussy;
-            log2Model.IssueModel.Escalate (model.Bind.WarnEscalator, model.Bind.ErrEscalator);
+            log2Model.CalcHashes (model.Data.HashFlags, 0);
+            model.Data.ErrEscalator = IssueTags.ProveErr | IssueTags.Fussy;
+            log2Model.IssueModel.Escalate (model.Data.WarnEscalator, model.Data.ErrEscalator);
             var b2 = log2Model.Bind;
 
             Assert.IsTrue (b2.Issues.HasError);
-            if ((model.Bind.HashFlags & Hashes.WebCheck) != 0)
+            if ((model.Data.HashFlags & Hashes.WebCheck) != 0)
                 Assert.IsTrue (b2.ShIssue.Success == false);
             else
                 Assert.IsNull (b2.ShIssue);

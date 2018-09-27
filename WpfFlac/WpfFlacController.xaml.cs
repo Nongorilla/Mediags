@@ -137,12 +137,12 @@ Optional.  If present, must be consistent for all tracks.";
             Directory.SetCurrentDirectory (exeDir);
 
             model = new FlacDiags.Model (null, Granularity.Verbose);
-            viewFactory.Create (this, model.Bind);
+            viewFactory.Create (this, model.Data);
 
-            model.SetGuiIssues (model.Bind.Issues);
+            model.SetGuiIssues (model.Data.Issues);
             ParseArgs();
             pathBox.Text = userPath;
-            DataContext = model.Bind;
+            DataContext = model.Data;
             pathBox.Focus();
         }
 
@@ -157,12 +157,12 @@ Optional.  If present, must be consistent for all tracks.";
 
                 if (arg.StartsWith ("/sig:"))
                 {
-                    model.Bind.UserSig = arg.Substring (5);
+                    model.Data.UserSig = arg.Substring (5);
                     argOK = true;
                 }
                 else if (arg == "/autoname")
                 {
-                    model.Bind.Autoname = NamingStrategy.ArtistTitle;
+                    model.Data.Autoname = NamingStrategy.ArtistTitle;
                     argOK = true;
                 }
                 else if (arg.StartsWith ("/autoname:"))
@@ -170,39 +170,39 @@ Optional.  If present, must be consistent for all tracks.";
                     argOK = Enum.TryParse<NamingStrategy> (arg.Substring (10), true, out NamingStrategy ns);
                     argOK = argOK && Enum.IsDefined (typeof (NamingStrategy), ns);
                     if (argOK)
-                        model.Bind.Autoname = ns;
+                        model.Data.Autoname = ns;
                 }
                 else if (arg.StartsWith ("/g:"))
                 {
                     argOK = Enum.TryParse<Granularity> (arg.Substring (3), true, out Granularity gran);
                     argOK = argOK && Enum.IsDefined (typeof (Granularity), gran) && gran <= Granularity.Advisory;
                     if (argOK)
-                        model.Bind.Scope = gran;
+                        model.Data.Scope = gran;
                 }
                 else if (arg == "/md5")
                 {
-                    model.Bind.IsParanoid = true;
+                    model.Data.IsParanoid = true;
                     argOK = true;
                 }
                 else if (arg == "/rg")
                 {
-                    model.Bind.ApplyRG = true;
+                    model.Data.ApplyRG = true;
                     argOK = true;
                 }
                 else if (arg == "/prove")
                 {
-                    model.Bind.WillProve = true;
+                    model.Data.WillProve = true;
                     argOK = true;
                 }
                 else if (arg == "/prove:web")
                 {
-                    model.Bind.WillProve = true;
-                    model.Bind.IsWebCheckEnabled = true;
+                    model.Data.WillProve = true;
+                    model.Data.IsWebCheckEnabled = true;
                     argOK = true;
                 }
                 else if (arg == "/ubertags")
                 {
-                    model.Bind.IsBestTags = true;
+                    model.Data.IsBestTags = true;
                     argOK = true;
                 }
                 else if (ai == args.Length-1)
@@ -265,9 +265,9 @@ Optional.  If present, must be consistent for all tracks.";
             model.ClearRip();
 
             string userFile = pathBox.Text.Trim (null);
-            model.Bind.Autoname = GetUserStrategy();
+            model.Data.Autoname = GetUserStrategy();
 
-            var jobArgs = new FlacJobArgs (userFile, model.Bind.UserSig.Trim(null));
+            var jobArgs = new FlacJobArgs (userFile, model.Data.UserSig.Trim(null));
             var bg = new BackgroundWorker();
             bg.DoWork += Job;
             bg.RunWorkerCompleted += JobCompleted;
@@ -280,7 +280,7 @@ Optional.  If present, must be consistent for all tracks.";
             if (model.RipModel != null && model.RipModel.Bind.IsWip)
             {
                 model.RipModel.Commit (commentBox.Text);
-                model.Bind.OnMessageSend (model.RipModel.Bind.Trailer, model.RipModel.Bind.Status);
+                model.Data.OnMessageSend (model.RipModel.Bind.Trailer, model.RipModel.Bind.Status);
                 model.SetCurrentDirectory (null);
                 md5Ctrl.history.ScrollToEnd();
                 var tab = infoTabs.SelectedItem as TabItem;
@@ -314,9 +314,9 @@ Optional.  If present, must be consistent for all tracks.";
             if (fmt != null)
                 model.SetGuiIssues (fmt.Issues);
             else
-                model.SetGuiIssues (model.Bind.Issues);
+                model.SetGuiIssues (model.Data.Issues);
 
-            model.Bind.NotifyPropertyChanged ("GuiIssues");
+            model.Data.NotifyPropertyChanged ("GuiIssues");
 
             if (diagsList.Items.Count > 1)
                 diagsList.ScrollIntoView (diagsList.Items[diagsList.Items.Count-1]);
@@ -358,7 +358,7 @@ Optional.  If present, must be consistent for all tracks.";
                     Content = stratNames[ix],
                     Margin = new Thickness (3, 0, 6, 0),
                     GroupName = "NamingStrategy",
-                    IsChecked = model != null && ix == (int) model.Bind.Autoname
+                    IsChecked = model != null && ix == (int) model.Data.Autoname
                 });
         }
 

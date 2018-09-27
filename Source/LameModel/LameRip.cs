@@ -45,8 +45,8 @@ namespace NongMediaDiags
                     return;
 
                 ValidateLog();
-                ++Owner.Bind.LogFormat.TrueTotal;
-                ++Owner.Bind.TotalFiles;
+                ++Owner.Data.LogFormat.TrueTotal;
+                ++Owner.Data.TotalFiles;
                 Owner.SetCurrentFile (Bind.LogName);
 
                 if (Bind.Status < Bind.Log.Issues.MaxSeverity)
@@ -79,8 +79,8 @@ namespace NongMediaDiags
                     return;
 
                 ValidateDigest();
-                ++Owner.Bind.Sha1xFormat.TrueTotal;
-                ++Owner.Bind.TotalFiles;
+                ++Owner.Data.Sha1xFormat.TrueTotal;
+                ++Owner.Data.TotalFiles;
 
                 var playlistStatus = ValidatePlaylists();
                 if (Bind.Status < playlistStatus)
@@ -133,10 +133,10 @@ namespace NongMediaDiags
                 {
                     if (Bind.mp3Infos.Length > 0)
                     {
-                        ++Owner.Bind.Mp3Format.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
-                        ++Owner.Bind.TotalErrors;
-                        ++Owner.Bind.LogFormat.TotalMissing;
+                        ++Owner.Data.Mp3Format.TrueTotal;
+                        ++Owner.Data.TotalFiles;
+                        ++Owner.Data.TotalErrors;
+                        ++Owner.Data.LogFormat.TotalMissing;
                         Owner.ReportLine ("Found .mp3 file(s) without a .log file in same directory.", Severity.Error, Bind.Signature != null);
                         Bind.Status = Severity.Error;
                     }
@@ -146,9 +146,9 @@ namespace NongMediaDiags
 
                 if (Bind.logInfos.Length > 1)
                 {
-                    Owner.Bind.LogFormat.TrueTotal += Bind.logInfos.Length;
-                    Owner.Bind.TotalFiles += Bind.logInfos.Length;
-                    Owner.Bind.TotalErrors += Bind.logInfos.Length - 1;
+                    Owner.Data.LogFormat.TrueTotal += Bind.logInfos.Length;
+                    Owner.Data.TotalFiles += Bind.logInfos.Length;
+                    Owner.Data.TotalErrors += Bind.logInfos.Length - 1;
                     Owner.ReportLine ("Directory has more than 1 .log file.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
@@ -156,17 +156,17 @@ namespace NongMediaDiags
 
                 if (Bind.mp3Infos.Length == 0)
                 {
-                    ++Owner.Bind.LogFormat.TrueTotal;
-                    ++Owner.Bind.TotalFiles;
-                    ++Owner.Bind.TotalErrors;
-                    ++Owner.Bind.Mp3Format.TotalMissing;
+                    ++Owner.Data.LogFormat.TrueTotal;
+                    ++Owner.Data.TotalFiles;
+                    ++Owner.Data.TotalErrors;
+                    ++Owner.Data.Mp3Format.TotalMissing;
                     Owner.ReportLine ("Directory has .log file yet has no .mp3 files.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
                 }
 
                 Array.Sort (Bind.mp3Infos, (f1, f2) => f1.Name.CompareTo (f2.Name));
-                Owner.Bind.ExpectedFiles = 1 + Bind.mp3Infos.Length;
+                Owner.Data.ExpectedFiles = 1 + Bind.mp3Infos.Length;
                 Bind.LogName = Bind.logInfos[0].Name;
 
                 if (Bind.digInfos.Length == 0)
@@ -183,7 +183,7 @@ namespace NongMediaDiags
                 }
                 else
                 {
-                    ++Owner.Bind.ExpectedFiles;
+                    ++Owner.Data.ExpectedFiles;
                     var digRE = new Regex (@"(.+)\.LAME\.(.+)\.sha1x");
                     Bind.DigName = Bind.digInfos[0].Name;
                     Bind.DigPath = Bind.digInfos[0].FullName;
@@ -197,8 +197,8 @@ namespace NongMediaDiags
                         Match m1 = digMat[0];
                         if (m1.Groups.Count != 3)
                         {
-                            ++Owner.Bind.LogFormat.TrueTotal;
-                            ++Owner.Bind.TotalFiles;
+                            ++Owner.Data.LogFormat.TrueTotal;
+                            ++Owner.Data.TotalFiles;
                             Owner.ReportLine ("Too confused by digest name, bailing out.", Severity.Error, Bind.Signature != null);
                             Bind.Status = Severity.Error;
                             return;
@@ -220,8 +220,8 @@ namespace NongMediaDiags
 
                 if (LogModel == null)
                 {
-                    ++Owner.Bind.LogFormat.TrueTotal;
-                    ++Owner.Bind.TotalFiles;
+                    ++Owner.Data.LogFormat.TrueTotal;
+                    ++Owner.Data.TotalFiles;
                     Owner.ReportLine ("Invalid EAC log file or unknown layout.", Severity.Error, Bind.Signature != null);
                     Bind.Status = Severity.Error;
                     return;
@@ -230,7 +230,7 @@ namespace NongMediaDiags
                 LogModel.ClearFile();
                 Bind.Log = LogModel.Bind;
 
-                if (Bind.Ripper == null && (Owner.Bind.HashFlags & Hashes.WebCheck) != 0)
+                if (Bind.Ripper == null && (Owner.Data.HashFlags & Hashes.WebCheck) != 0)
                     LogModel.CalcHashWebCheck();
 
                 if (Bind.mp3Infos.Length != Bind.Log.Tracks.Items.Count)
@@ -247,10 +247,10 @@ namespace NongMediaDiags
                     LogModel.TkIssue = LogModel.IssueModel.Add (sb.ToString(), Severity.Error, IssueTags.Failure);
                 }
 
-                IssueTags errEscalator = Owner.Bind.ErrEscalator;
-                if (Owner.Bind.WillProve && Bind.Ripper == null)
+                IssueTags errEscalator = Owner.Data.ErrEscalator;
+                if (Owner.Data.WillProve && Bind.Ripper == null)
                     errEscalator |= IssueTags.MissingHash;
-                LogModel.IssueModel.Escalate (Owner.Bind.WarnEscalator, errEscalator);
+                LogModel.IssueModel.Escalate (Owner.Data.WarnEscalator, errEscalator);
             }
 
 
@@ -296,11 +296,11 @@ namespace NongMediaDiags
                         else
                         {
                             Mp3Format mp3 = mp3Model.Bind;
-                            mp3Model.CalcHashes (Hashes.Intrinsic|Owner.Bind.HashFlags|fileHash, Owner.Bind.ValidationFlags);
+                            mp3Model.CalcHashes (Hashes.Intrinsic|Owner.Data.HashFlags|fileHash, Owner.Data.ValidationFlags);
                             if (mp3.IsBadHeader)
-                                ++Owner.Bind.Mp3Format.TotalHeaderErrors;
+                                ++Owner.Data.Mp3Format.TotalHeaderErrors;
                             if (mp3.IsBadData)
-                                ++Owner.Bind.Mp3Format.TotalDataErrors;
+                                ++Owner.Data.Mp3Format.TotalDataErrors;
 
                             if (mp3.Lame != null)
                                 if (Bind.RipProfile == null)
@@ -316,7 +316,7 @@ namespace NongMediaDiags
                                 else if (mp3.Id3v2Major == 4)
                                     ++id3v24Count;
 
-                            IssueTags tags = Owner.Bind.IsFussy? IssueTags.Fussy : IssueTags.None;
+                            IssueTags tags = Owner.Data.IsFussy? IssueTags.Fussy : IssueTags.None;
                             mp3Model.IssueModel.Escalate (IssueTags.HasApe, tags|IssueTags.Substandard|IssueTags.Overstandard);
 
                             if (Bind.MaxTrackSeverity < mp3.Issues.MaxSeverity)
@@ -326,8 +326,8 @@ namespace NongMediaDiags
                             Owner.ReportFormat (mp3, Bind.Signature != null);
                         }
 
-                        ++Owner.Bind.Mp3Format.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.Mp3Format.TrueTotal;
+                        ++Owner.Data.TotalFiles;
 
                         if (mp3Model != null)
                             mp3Model.ClearFile();
@@ -351,7 +351,7 @@ namespace NongMediaDiags
 
             private void ValidateAlbum()
             {
-                LogModel.IssueModel.Escalate (Owner.Bind.WarnEscalator, IssueTags.None);
+                LogModel.IssueModel.Escalate (Owner.Data.WarnEscalator, IssueTags.None);
 
                 Owner.ReportFormat (Bind.Log, Bind.Signature != null);
                 if (Bind.Status < Bind.Log.Issues.MaxSeverity)
@@ -373,8 +373,8 @@ namespace NongMediaDiags
                         m3uModel.CalcHashes (Hashes.None, Validations.Exists);
 
                         Owner.SetCurrentFile (info.Name);
-                        ++Owner.Bind.M3uFormat.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.M3uFormat.TrueTotal;
+                        ++Owner.Data.TotalFiles;
                         Owner.ReportFormat (m3uModel.Bind, Bind.Signature != null);
                         if (maxSeverity < m3uModel.IssueModel.Bind.MaxSeverity)
                             maxSeverity = m3uModel.IssueModel.Bind.MaxSeverity;
@@ -390,8 +390,8 @@ namespace NongMediaDiags
                         m3u8Model.CalcHashes (Hashes.None, Validations.Exists);
 
                         Owner.SetCurrentFile (info.Name);
-                        ++Owner.Bind.M3u8Format.TrueTotal;
-                        ++Owner.Bind.TotalFiles;
+                        ++Owner.Data.M3u8Format.TrueTotal;
+                        ++Owner.Data.TotalFiles;
                         Owner.ReportFormat (m3u8Model.Bind, Bind.Signature != null);
                         if (maxSeverity < m3u8Model.IssueModel.Bind.MaxSeverity)
                             maxSeverity = m3u8Model.IssueModel.Bind.MaxSeverity;
@@ -408,7 +408,7 @@ namespace NongMediaDiags
                 if (Bind.LogTagEnabled)
                     newDigName += "." + Bind.RipProfile;
                 newDigName += ".LAME." + firstSig + ".sha1x";
-                string newDigPath = Owner.Bind.CurrentDirectory + Path.DirectorySeparatorChar + newDigName;
+                string newDigPath = Owner.Data.CurrentDirectory + Path.DirectorySeparatorChar + newDigName;
 
                 if (Bind.Ripper == null)
                 {
@@ -422,10 +422,10 @@ namespace NongMediaDiags
                             Sha1xModel = new Sha1xFormat.Model (fs0, newDigPath, Bind.Log, Bind.mp3Models, Bind.Signature);
                             Bind.Sha1x = Sha1xModel.Bind;
 
-                            if (Owner.Bind.WillProve && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
+                            if (Owner.Data.WillProve && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
                                 Sha1xModel.HistoryModel.Add ("verified", Bind.Signature);
 
-                            Sha1xModel.WriteFile (Owner.Bind.Product + " v" + Owner.Bind.ProductVersion, Encoding.UTF8);
+                            Sha1xModel.WriteFile (Owner.Data.Product + " v" + Owner.Data.ProductVersion, Encoding.UTF8);
                             Sha1xModel.ClearFile();
                         }
                     }
@@ -435,7 +435,7 @@ namespace NongMediaDiags
                         return;
                     }
 
-                    ++Owner.Bind.Sha1xFormat.TotalCreated;
+                    ++Owner.Data.Sha1xFormat.TotalCreated;
                     Sha1xModel.IssueModel.Add ("Digest created.", Severity.Advisory);
 
                     return;
@@ -454,7 +454,7 @@ namespace NongMediaDiags
 
                     if (Sha1xModel.HistoryModel != null && Sha1xModel.HistoryModel.Bind.Prover != null)
                         Sha1xModel.IssueModel.Add ("EAC log self-hash previously verified.", Severity.Trivia);
-                    else if (Owner.Bind.WillProve && LogModel.Bind.ShIssue == null)
+                    else if (Owner.Data.WillProve && LogModel.Bind.ShIssue == null)
                     {
                         LogModel.CalcHashWebCheck();
                         if (LogModel.Bind.ShIssue.Failure)
@@ -465,7 +465,7 @@ namespace NongMediaDiags
                     else
                     {
                         Severity sev = Severity.Noise;
-                        if (Owner.Bind.WillProve && (LogModel.Bind.ShIssue == null || ! LogModel.Bind.ShIssue.Success))
+                        if (Owner.Data.WillProve && (LogModel.Bind.ShIssue == null || ! LogModel.Bind.ShIssue.Success))
                             sev = Severity.Error;
                         Sha1xModel.IssueModel.Add ("EAC log self-hash not previously verified.", sev);
                     }
@@ -494,7 +494,7 @@ namespace NongMediaDiags
                 catch (FileNotFoundException)
                 {
                     Owner.SetCurrentFile (Bind.DigName);
-                    ++Owner.Bind.Sha1xFormat.TotalMissing;
+                    ++Owner.Data.Sha1xFormat.TotalMissing;
                     Owner.ReportLine ("File missing.", Severity.Error, Bind.Signature != null);
                 }
                 catch (UnauthorizedAccessException ex)
@@ -514,7 +514,7 @@ namespace NongMediaDiags
 
                     if (Bind.Signature != null)
                     {
-                        if (Owner.Bind.WillProve && Sha1xModel.Bind.History.Prover == null
+                        if (Owner.Data.WillProve && Sha1xModel.Bind.History.Prover == null
                                 && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
                         {
                             Sha1xModel.HistoryModel.Add ("verified", Bind.Signature);
@@ -554,24 +554,24 @@ namespace NongMediaDiags
                         Sha1xModel.HashedModel.SetFileName (ix+1, Bind.mp3Models[ix].Bind.Name);
 
                 if (Sha1xModel.HistoryModel != null && Sha1xModel.HistoryModel.Bind.IsDirty)
-                    Sha1xModel.WriteFile (Owner.Bind.Product + " v" + Owner.Bind.ProductVersion, Encoding.UTF8);
+                    Sha1xModel.WriteFile (Owner.Data.Product + " v" + Owner.Data.ProductVersion, Encoding.UTF8);
                 CloseFiles();
 
-                var errInfo = new FileInfo (Bind.DirPath + Path.DirectorySeparatorChar + Owner.Bind.NoncompliantName);
+                var errInfo = new FileInfo (Bind.DirPath + Path.DirectorySeparatorChar + Owner.Data.NoncompliantName);
                 if (File.Exists (errInfo.FullName))
                     try
                     { File.Delete (errInfo.FullName); }
                     catch (Exception)
                     { /* and why not */ }
 
-                if (Bind.Dir.Name.StartsWith (Owner.Bind.FailPrefix))
+                if (Bind.Dir.Name.StartsWith (Owner.Data.FailPrefix))
                 {
                     try
                     {
                         var dirName = Bind.Dir.Parent.FullName;
                         if (dirName.Length > 0 && dirName[dirName.Length-1] != Path.DirectorySeparatorChar)
                             dirName += Path.DirectorySeparatorChar;
-                        dirName += Bind.Dir.Name.Substring (Owner.Bind.FailPrefix.Length);
+                        dirName += Bind.Dir.Name.Substring (Owner.Data.FailPrefix.Length);
                         Bind.Dir.MoveTo (dirName);
                     }
                     catch (Exception)

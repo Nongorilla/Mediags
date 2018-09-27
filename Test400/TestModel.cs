@@ -24,7 +24,7 @@ namespace UnitTest
         {
             var model = new Diags.Model (null);
 
-            var formatsListText = model.Bind.FormatListText;
+            var formatsListText = model.Data.FormatListText;
             Assert.AreEqual ("ape, asf/wmv/wma, avi/divx, cue, db (Thumbs), flac, flv, gif, ico, jpg/jpeg, log (EAC), log (XLD), m3u, m3u8, m4a, md5, mkv/mka, mov/qt, mp3, mp4, mpg/mpeg/vob, ogg, png, sha1, sha1x, sha256, wav", formatsListText);
         }
     }

@@ -16,35 +16,35 @@ namespace NongMediaDiags
                 FileAttributes atts;
 
                 try
-                { atts = File.GetAttributes (Bind.Root); }
+                { atts = File.GetAttributes (Data.Root); }
                 catch (NotSupportedException)
                 {
-                    Bind.Result = Severity.Fatal;
+                    Data.Result = Severity.Fatal;
                     throw new ArgumentException ("Directory name is invalid.");
                 }
 
                 if ((atts & FileAttributes.Directory) == FileAttributes.Directory)
                 {
-                    Bind.Result = Severity.NoIssue;
+                    Data.Result = Severity.NoIssue;
                     foreach (FormatBase.ModelBase fmtModel in CheckRootDir())
                         yield return fmtModel;
                 }
                 else
                 {
-                    var access = Bind.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
-                    Stream st = new FileStream (Bind.Root, FileMode.Open, access, FileShare.Read);
-                    var fmtModel = CheckFile (st, Bind.Root, out Severity result);
-                    Bind.Result = result;
+                    var access = Data.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
+                    Stream st = new FileStream (Data.Root, FileMode.Open, access, FileShare.Read);
+                    var fmtModel = CheckFile (st, Data.Root, out Severity result);
+                    Data.Result = result;
                     yield return fmtModel;
                 }
             }
 
             private IEnumerable<FormatBase.ModelBase> CheckRootDir()
             {
-                foreach (string dn in new DirTraverser (Bind.Root))
+                foreach (string dn in new DirTraverser (Data.Root))
                 {
                     var dInfo = new DirectoryInfo (dn);
-                    var fileInfos = Bind.Filter == null ? dInfo.GetFiles() : dInfo.GetFiles (Bind.Filter);
+                    var fileInfos = Data.Filter == null ? dInfo.GetFiles() : dInfo.GetFiles (Data.Filter);
 
                     foreach (FileInfo fInfo in fileInfos)
                     {
@@ -52,17 +52,17 @@ namespace NongMediaDiags
                         try
                         {
                             // Many exceptions also caught by outer caller:
-                            var access = Bind.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
+                            var access = Data.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
                             Stream stream = new FileStream (fInfo.FullName, FileMode.Open, access, FileShare.Read);
                             fmtModel = CheckFile (stream, fInfo.FullName, out Severity badness);
-                            if (badness > Bind.Result)
-                                Bind.Result = badness;
+                            if (badness > Data.Result)
+                                Data.Result = badness;
                         }
                         catch (FileNotFoundException ex)
                         {
-                            Bind.Result = Severity.Fatal;
-                            Bind.OnMessageSend (ex.Message.Trim(), Severity.Fatal);
-                            Bind.OnMessageSend ("Ignored.", Severity.Advisory);
+                            Data.Result = Severity.Fatal;
+                            Data.OnMessageSend (ex.Message.Trim(), Severity.Fatal);
+                            Data.OnMessageSend ("Ignored.", Severity.Advisory);
                             continue;
                         }
                         yield return fmtModel;
@@ -80,8 +80,8 @@ namespace NongMediaDiags
                 FormatBase.ModelBase fmtModel = null;
                 try
                 {
-                    fmtModel = FormatBase.CreateModel (Bind.FileFormats.Items, stream, path, Bind.HashFlags, Bind.ValidationFlags,
-                                                       Bind.Filter, out isKnownExtension, out trueFormat);
+                    fmtModel = FormatBase.CreateModel (Data.FileFormats.Items, stream, path, Data.HashFlags, Data.ValidationFlags,
+                                                       Data.Filter, out isKnownExtension, out trueFormat);
                 }
 #pragma warning disable 0168
                 catch (Exception ex)
@@ -90,8 +90,8 @@ namespace NongMediaDiags
 #if DEBUG
                     throw;
 #else
-                    Bind.OnMessageSend ("Exception: " + ex.Message.TrimEnd (null), Severity.Fatal);
-                    ++Bind.TotalErrors;
+                    Data.OnMessageSend ("Exception: " + ex.Message.TrimEnd (null), Severity.Fatal);
+                    ++Data.TotalErrors;
                     resultCode = Severity.Fatal;
                     return null;
 #endif
@@ -99,8 +99,8 @@ namespace NongMediaDiags
 
                 if (! isKnownExtension)
                 {
-                    if (Bind.Scope <= Granularity.Verbose)
-                        Bind.OnMessageSend ("Ignored.", Severity.Trivia);
+                    if (Data.Scope <= Granularity.Verbose)
+                        Data.OnMessageSend ("Ignored.", Severity.Trivia);
                     resultCode = Severity.NoIssue;
                     return fmtModel;
                 }
@@ -111,15 +111,15 @@ namespace NongMediaDiags
                         resultCode = Severity.NoIssue;
                     else
                     {
-                        if (Bind.Scope <= Granularity.Quiet)
-                            Bind.OnMessageSend ("Unrecognized contents.", Severity.Error);
-                        ++Bind.TotalErrors;
+                        if (Data.Scope <= Granularity.Quiet)
+                            Data.OnMessageSend ("Unrecognized contents.", Severity.Error);
+                        ++Data.TotalErrors;
                         resultCode = Severity.Fatal;
                     }
                     return null;
                 }
 
-                ++Bind.TotalFiles;
+                ++Data.TotalFiles;
                 trueFormat.TrueTotal += 1;
 
                 FormatBase fmt = fmtModel.BaseBind;
@@ -130,7 +130,7 @@ namespace NongMediaDiags
                 if (fmt.IsBadData)
                     ++trueFormat.TotalDataErrors;
 
-                fmtModel.IssueModel.Escalate (Bind.WarnEscalator, Bind.ErrEscalator);
+                fmtModel.IssueModel.Escalate (Data.WarnEscalator, Data.ErrEscalator);
 
                 ReportFormat (fmt);
 
@@ -139,13 +139,13 @@ namespace NongMediaDiags
                     int startRepairableCount = fmt.Issues.RepairableCount;
                     if (startRepairableCount > 0)
                     {
-                        ++Bind.TotalRepairable;
+                        ++Data.TotalRepairable;
                         var didRename = RepairFile (fmtModel);
                         if (didRename)
                             --trueFormat.TotalMisnamed;
                         if (fmt.Issues.RepairableCount == 0)
-                            --Bind.TotalRepairable;
-                        Bind.TotalRepairs += startRepairableCount - fmt.Issues.RepairableCount;
+                            --Data.TotalRepairable;
+                        Data.TotalRepairs += startRepairableCount - fmt.Issues.RepairableCount;
                     }
                 }
 

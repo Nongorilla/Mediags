@@ -13,7 +13,7 @@ namespace NongMediaDiags
         public new class Model : Diags.Model, IDisposable
         {
             private int consecutiveInvalidations = 0;
-            public new FlacDiags Bind => (FlacDiags) base._data;
+            public new FlacDiags Data => (FlacDiags) _data;
             public readonly Issue.Vector.Model IssueModel;
 
             private FlacRip.Model ripModel;
@@ -23,7 +23,7 @@ namespace NongMediaDiags
                 private set
                 {
                     ripModel = value;
-                    Bind.Rip = ripModel?.Bind;
+                    Data.Rip = ripModel?.Bind;
                 }
             }
 
@@ -31,8 +31,7 @@ namespace NongMediaDiags
             public Model (string root, Granularity report) : base()
             {
                 IssueModel = new Issue.Vector.Model();
-                base._data = new FlacDiags (root, report, FormatModel.Bind, IssueModel.Bind);
-
+                this._data = new FlacDiags (root, report, FormatModel.Bind, IssueModel.Bind);
             }
 
 
@@ -41,15 +40,15 @@ namespace NongMediaDiags
                 string err = null;
                 var exitCode = Severity.NoIssue;
 
-                SetCurrentDirectory (Bind.Root);
+                SetCurrentDirectory (Data.Root);
 
                 try
                 {
-                    foreach (var curDir in new DirTraverser (Bind.Root))
+                    foreach (var curDir in new DirTraverser (Data.Root))
                     {
-                        if (Bind.StopAfter > 0 && consecutiveInvalidations >= Bind.StopAfter)
+                        if (Data.StopAfter > 0 && consecutiveInvalidations >= Data.StopAfter)
                         {
-                            char response = Bind.InputChar ($"\n{Bind.StopAfter} consecutive rips invalidated. Stop (S) / Resume (R) / Don't ask again (D)? ", "srd");
+                            char response = Data.InputChar ($"\n{Data.StopAfter} consecutive rips invalidated. Stop (S) / Resume (R) / Don't ask again (D)? ", "srd");
                             if (response == 's')
                             {
                                 err = "Stopped by user.";
@@ -57,7 +56,7 @@ namespace NongMediaDiags
                             }
                             consecutiveInvalidations = 0;
                             if (response == 'd')
-                                Bind.StopAfter = 0;
+                                Data.StopAfter = 0;
                         }
 
                         var ripStatus = ValidateFlacRip (curDir, signature, false, true);
@@ -74,7 +73,7 @@ namespace NongMediaDiags
                     exitCode = Severity.Fatal;
                 }
 
-                Bind.OnReportClose();
+                Data.OnReportClose();
                 return exitCode;
             }
 
@@ -86,13 +85,13 @@ namespace NongMediaDiags
                     RipModel.Dispose();
                     RipModel = null;
                 }
-                Bind.GuiIssues = null;
+                Data.GuiIssues = null;
                 IssueModel.Clear();
             }
 
 
             public void SetGuiIssues (Issue.Vector issues)
-            { Bind.GuiIssues = issues; }
+            { Data.GuiIssues = issues; }
 
 
             public Severity ValidateFlacRip (string arg, string signature, bool allowFileArg, bool prefixDirOnErr)
@@ -128,7 +127,7 @@ namespace NongMediaDiags
                 catch (NotSupportedException)
                 { err = "Path is not valid."; }
 
-                RipModel = new FlacRip.Model (this, newPath, Bind.Autoname, signature);
+                RipModel = new FlacRip.Model (this, newPath, Data.Autoname, signature);
 
                 if (err != null)
                 {
@@ -160,7 +159,7 @@ namespace NongMediaDiags
                     if (RipModel.Bind.Signature != null)
                         try
                         {
-                            var errPath = newPath + Path.DirectorySeparatorChar + Bind.NoncompliantName;
+                            var errPath = newPath + Path.DirectorySeparatorChar + Data.NoncompliantName;
                             if (File.Exists (errPath))
                                 File.Delete (errPath);
                         }
@@ -181,7 +180,7 @@ namespace NongMediaDiags
                         if (RipModel.Bind.Signature != null && ! baseName.StartsWith ("!!") && newPath.Length < 235)
                         {
                             var parentPath = Directory.GetParent(newPath).FullName;
-                            var errPath = parentPath + Path.DirectorySeparatorChar + Bind.FailPrefix + baseName;
+                            var errPath = parentPath + Path.DirectorySeparatorChar + Data.FailPrefix + baseName;
                             try
                             { Directory.Move (newPath, errPath); }
                             catch (Exception)
@@ -210,12 +209,12 @@ namespace NongMediaDiags
                 if (logErrorsToFile && fb.Issues.HasError)
                     try
                     {
-                        using (var sw = new StreamWriter (Bind.CurrentDirectory + Path.DirectorySeparatorChar
-                                                        + Bind.NoncompliantName, false, Encoding.GetEncoding (1252)))
+                        using (var sw = new StreamWriter (Data.CurrentDirectory + Path.DirectorySeparatorChar
+                                                        + Data.NoncompliantName, false, Encoding.GetEncoding (1252)))
                         {
                             var dn = Path.GetDirectoryName (fb.Path);
 
-                            sw.WriteLine ("Diagnostics by the caustic " + Bind.Product + " v" + Bind.ProductVersion + ":");
+                            sw.WriteLine ("Diagnostics by the caustic " + Data.Product + " v" + Data.ProductVersion + ":");
                             sw.WriteLine ();
                             sw.Write     (dn);
                             sw.WriteLine (Path.DirectorySeparatorChar);
@@ -244,7 +243,7 @@ namespace NongMediaDiags
 
             public override void ReportLine (string message, Severity severity, bool logErrToFile)
             {
-                if (Bind.CurrentFile == null)
+                if (Data.CurrentFile == null)
                     IssueModel.Add (message, Severity.NoIssue);
 
                 base.ReportLine (message, severity, logErrToFile);
@@ -252,14 +251,14 @@ namespace NongMediaDiags
                 if (logErrToFile && severity >= Severity.Error)
                     try
                     {
-                        using (var sw = new StreamWriter (Bind.CurrentDirectory + Path.DirectorySeparatorChar
-                                                        + Bind.NoncompliantName, false, Encoding.GetEncoding (1252)))
+                        using (var sw = new StreamWriter (Data.CurrentDirectory + Path.DirectorySeparatorChar
+                                                        + Data.NoncompliantName, false, Encoding.GetEncoding (1252)))
                         {
-                            sw.WriteLine ("Error found by the caustic " + Bind.Product + " v" + Bind.ProductVersion + ":");
+                            sw.WriteLine ("Error found by the caustic " + Data.Product + " v" + Data.ProductVersion + ":");
                             sw.WriteLine ();
-                            sw.Write (Bind.CurrentDirectory);
+                            sw.Write (Data.CurrentDirectory);
                             sw.WriteLine (Path.DirectorySeparatorChar);
-                            sw.WriteLine (Bind.CurrentFile);
+                            sw.WriteLine (Data.CurrentFile);
                             string prefix = severity < Severity.Warning? "  " : (severity == Severity.Warning? "* Warning: " : "* Error: ");
                             sw.Write (prefix);
                             sw.WriteLine (message);

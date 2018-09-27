@@ -50,13 +50,13 @@ namespace AppController
         public int Run()
         {
             model = new LameDiags.Model (args.Length == 0? null : args[args.Length-1], Granularity.Advisory);
-            model.Bind.ErrEscalator = IssueTags.Substandard|IssueTags.Overstandard;
-            viewFactory.Create (this, model.Bind);
+            model.Data.ErrEscalator = IssueTags.Substandard|IssueTags.Overstandard;
+            viewFactory.Create (this, model.Data);
 
             int exitCode = ParseArgs();
             if (exitCode == 0)
             {
-                NotifyEvery = notifyEvery?? (model.Bind.Scope <= Granularity.Verbose? 0 : 1);
+                NotifyEvery = notifyEvery?? (model.Data.Scope <= Granularity.Verbose? 0 : 1);
 
                 if (mirrorName != null)
                     try
@@ -72,7 +72,7 @@ namespace AppController
                         Console.Error.WriteLine ("Ignoring malformed <mirror>");
                     }
 
-                if (model.Bind.Scope <= Granularity.Verbose)
+                if (model.Data.Scope <= Granularity.Verbose)
                 { Trace.WriteLine (ProductText + " v" + VersionText); Trace.WriteLine (String.Empty); }
 
                 Severity worstDiagnosis = model.ValidateLameRipsDeep (signature, doLogTag);
@@ -114,14 +114,14 @@ namespace AppController
                 else if (args[an] == "/fussy")
                 {
                     argOK = true;
-                    model.Bind.IsFussy = true;
+                    model.Data.IsFussy = true;
                 }
                 else if (args[an].StartsWith ("/g:"))
                 {
                     argOK = Enum.TryParse<Granularity> (args[an].Substring (3), true, out Granularity arg);
                     argOK = argOK && Enum.IsDefined (typeof (Granularity), arg) && arg <= maxGranularity;
                     if (argOK)
-                        model.Bind.Scope = arg;
+                        model.Data.Scope = arg;
                 }
                 else if (args[an] == "/k")
                 {
@@ -148,18 +148,18 @@ namespace AppController
                 {
                     argOK = int.TryParse (args[an].Substring (8), out int arg);
                     if (argOK)
-                        model.Bind.StopAfter = arg;
+                        model.Data.StopAfter = arg;
                 }
                 else if (args[an] == "/verify")
                 {
                     argOK = true;
-                    model.Bind.WillProve = true;
+                    model.Data.WillProve = true;
                 }
                 else if (args[an] == "/verify:web")
                 {
                     argOK = true;
-                    model.Bind.WillProve = true;
-                    model.Bind.IsWebCheckEnabled = true;
+                    model.Data.WillProve = true;
+                    model.Data.IsWebCheckEnabled = true;
                 }
 
                 if (! argOK)
@@ -180,10 +180,10 @@ namespace AppController
                 if (doLogTag)
                     Console.Error.WriteLine ("/logtag without /sig ignored.");
             }
-            else if (model.Bind.Scope > Granularity.Advisory)
+            else if (model.Data.Scope > Granularity.Advisory)
             {
-                Console.Error.WriteLine ("/g:" + model.Bind.Scope + " with /sig ignored.");
-                model.Bind.Scope = Granularity.Advisory;
+                Console.Error.WriteLine ("/g:" + model.Data.Scope + " with /sig ignored.");
+                model.Data.Scope = Granularity.Advisory;
             }
 
             return 0;

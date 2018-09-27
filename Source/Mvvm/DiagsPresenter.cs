@@ -97,12 +97,12 @@ namespace AppViewModel
         public new class Model : Diags.Model
         {
             public IDiagsUi Ui { get; private set; }
-            public DiagsPresenter Data => (DiagsPresenter) _data;
+            public new DiagsPresenter Data => (DiagsPresenter) _data;
 
             public Model (IDiagsUi ui)
             {
                 this.Ui = ui;
-                base._data = new DiagsPresenter (this);
+                this._data = new DiagsPresenter (this);
 
                 int ix = 0;
                 foreach (string tabHeader in Ui.GetHeadings())
@@ -112,8 +112,8 @@ namespace AppViewModel
                     ++ix;
                 }
 
-                Bind.FileVisit += Ui.FileProgress;
-                Bind.MessageSend += Ui.ShowLine;
+                base.Data.FileVisit += Ui.FileProgress;
+                base.Data.MessageSend += Ui.ShowLine;
             }
 
             public void GetFirst()
