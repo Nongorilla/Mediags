@@ -30,47 +30,47 @@ namespace NongFormat
 
         public partial class Model : FormatBase.ModelBase
         {
-            public readonly LogEacFormat Bind;
+            public new readonly LogEacFormat Data;
             public LogEacTrack.Vector.Model TracksModel;
             private LogBuffer parser;
 
             public Model (Stream stream, byte[] hdr, string path)
             {
                 TracksModel = new LogEacTrack.Vector.Model();
-                BaseBind = this.Bind = new LogEacFormat (stream, path, TracksModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new LogEacFormat (stream, path, TracksModel.Bind);
+                Data.Issues = IssueModel.Data;
 
-                Bind.AccurateRip = null;
-                Bind.RipDate = String.Empty;
+                Data.AccurateRip = null;
+                Data.RipDate = String.Empty;
 
                 // Arbitrary limit.
-                if (Bind.FileSize > 250000)
+                if (Data.FileSize > 250000)
                 {
                     IssueModel.Add ("File insanely huge.", Severity.Fatal);
                     return;
                 }
 
-                Bind.fBuf = new byte[Bind.FileSize];
-                Bind.fbs.Position = 0;
-                var got = Bind.fbs.Read (Bind.fBuf, 0, (int) Bind.FileSize);
-                if (got != Bind.FileSize)
+                Data.fBuf = new byte[Data.FileSize];
+                Data.fbs.Position = 0;
+                var got = Data.fbs.Read (Data.fBuf, 0, (int) Data.FileSize);
+                if (got != Data.FileSize)
                 {
                     IssueModel.Add ("Read failed", Severity.Fatal);
                     return;
                 }
 
-                if (got < 2 || Bind.fBuf[0] != 0xFF || Bind.fBuf[1] != 0xFE)
-                    Bind.Codepage = Encoding.GetEncoding (1252);
+                if (got < 2 || Data.fBuf[0] != 0xFF || Data.fBuf[1] != 0xFE)
+                    Data.Codepage = Encoding.GetEncoding (1252);
                 else
-                    Bind.Codepage = Encoding.Unicode;
+                    Data.Codepage = Encoding.Unicode;
 
-                parser = new LogBuffer (Bind.fBuf, Bind.Codepage);
+                parser = new LogBuffer (Data.fBuf, Data.Codepage);
                 string lx = ParseHeader();
 
-                if (! Bind.IsRangeRip)
+                if (! Data.IsRangeRip)
                 {
                     lx = ParseTracks (lx);
-                    if (Bind.Issues.HasFatal)
+                    if (Data.Issues.HasFatal)
                         return;
                 }
 
@@ -81,14 +81,14 @@ namespace NongFormat
                     lx = parser.ReadLineLTrim();
                 else if (lx == "There were errors")
                 {
-                    if (Bind.Issues.MaxSeverity < Severity.Error)
+                    if (Data.Issues.MaxSeverity < Severity.Error)
                         IssueModel.Add ("There were errors.");
                     lx = parser.ReadLineLTrim();
                 }
                 else
                     IssueModel.Add ("Missing 'errors' line.");
 
-                if (Bind.IsRangeRip)
+                if (Data.IsRangeRip)
                 {
                     if (lx == "AccurateRip summary")
                     {
@@ -105,10 +105,10 @@ namespace NongFormat
                                 int arConfidence = isOk && val > 0? val : -1;
                                 lx = parser.ReadLineLTrim();
 
-                                if (Bind.AccurateRipConfidence == null || Bind.AccurateRipConfidence.Value > arConfidence)
-                                    Bind.AccurateRipConfidence = arConfidence;
-                                if (Bind.AccurateRip == null || Bind.AccurateRip.Value > arVersion)
-                                    Bind.AccurateRip = arVersion;
+                                if (Data.AccurateRipConfidence == null || Data.AccurateRipConfidence.Value > arConfidence)
+                                    Data.AccurateRipConfidence = arConfidence;
+                                if (Data.AccurateRip == null || Data.AccurateRip.Value > arVersion)
+                                    Data.AccurateRip = arVersion;
                             }
                         }
                     }
@@ -128,7 +128,7 @@ namespace NongFormat
 
                 if (lx.StartsWith ("==== Log checksum ") && lx.Length >= 82)
                 {
-                    Bind.storedHash = ConvertTo.FromHexStringToBytes (lx, 18, 32);
+                    Data.storedHash = ConvertTo.FromHexStringToBytes (lx, 18, 32);
 
                     lx = parser.ReadLine();
                     if (! parser.EOF || ! String.IsNullOrEmpty (lx))
@@ -140,28 +140,28 @@ namespace NongFormat
             }
 
 
-            public Issue TkIssue { get { return Bind.TkIssue; } set { Bind.TkIssue = value; } }
+            public Issue TkIssue { get { return Data.TkIssue; } set { Data.TkIssue = value; } }
 
             public void SetGuiTracks()
-            { Bind.GuiTracks = Bind.Tracks; }
+            { Data.GuiTracks = Data.Tracks; }
 
 
             public void SetWorkName (string workName)
-            { Bind.WorkName = workName; }
+            { Data.WorkName = workName; }
 
             public void MatchFlacs (IList<FlacFormat.Model> flacMods)
             {
                 int expectNum = -1,
-                    mx = Math.Min (Bind.Tracks.Items.Count, flacMods.Count);
+                    mx = Math.Min (Data.Tracks.Items.Count, flacMods.Count);
 
                 for (int ix = 0; ix < mx; ++ix)
                 {
-                    LogEacTrack track = Bind.Tracks.Items[ix];
+                    LogEacTrack track = Data.Tracks.Items[ix];
                     FlacFormat.Model flacMod = flacMods[ix];
-                    FlacFormat flac = flacMod.Bind;
+                    FlacFormat flac = flacMod.Data;
 
                     if (flac.ActualPcmCRC32.Value != track.CopyCRC.Value)
-                        Bind.TkIssue = IssueModel.Add ("Audio CRC-32 mismatch on '" + flac.Name + "'.", Severity.Fatal, IssueTags.Failure);
+                        Data.TkIssue = IssueModel.Add ("Audio CRC-32 mismatch on '" + flac.Name + "'.", Severity.Fatal, IssueTags.Failure);
                     else
                         TracksModel.SetMatch (ix, flacMod);
 
@@ -183,8 +183,8 @@ namespace NongFormat
                         expectNum = trackNum + 1;
                     }
                 }
-                if (flacMods.Count != Bind.Tracks.Items.Count)
-                    Bind.TkIssue = IssueModel.Add ("Rip not complete.", Severity.Fatal, IssueTags.Failure);
+                if (flacMods.Count != Data.Tracks.Items.Count)
+                    Data.TkIssue = IssueModel.Add ("Rip not complete.", Severity.Fatal, IssueTags.Failure);
             }
 
 
@@ -210,7 +210,7 @@ namespace NongFormat
 
             public void ValidateFlacTags()
             {
-                var vendor = Bind.Tracks.Items[0].Match.Blocks.Tags.Vendor;
+                var vendor = Data.Tracks.Items[0].Match.Blocks.Tags.Vendor;
                 if (vendor == null)
                     IssueModel.Add ("FLAC vendor string is missing, cannot identify FLAC version.", Severity.Fatal);
                 else
@@ -225,26 +225,26 @@ namespace NongFormat
                         IssueModel.Add ("FLAC version identified by '" + vendor + "' is discouraged.", Severity.Noise, IssueTags.ProveErr);
                 }
 
-                bool? isSameDate = Bind.Tracks.IsFlacTagsAllSame ("DATE");
+                bool? isSameDate = Data.Tracks.IsFlacTagsAllSame ("DATE");
                 if (isSameDate == false)
                     IssueModel.Add ("Inconsistent DATE tag.");
                 else if (isSameDate == null)
                     IssueModel.Add ("Missing DATE tag.", Severity.Warning, IssueTags.BadTag);
                 else
                 {
-                    Bind.TaggedDate = Bind.Tracks.Items[0].Match.GetTag ("DATE");
-                    var err = CheckDate (Bind.TaggedDate);
+                    Data.TaggedDate = Data.Tracks.Items[0].Match.GetTag ("DATE");
+                    var err = CheckDate (Data.TaggedDate);
                     if (err != null)
                         IssueModel.Add ("DATE " + err, Severity.Warning, IssueTags.BadTag);
                 }
 
-                bool? isSameReleaseDate = Bind.Tracks.IsFlacTagsAllSame ("RELEASE DATE");
+                bool? isSameReleaseDate = Data.Tracks.IsFlacTagsAllSame ("RELEASE DATE");
                 if (isSameReleaseDate == false)
                     IssueModel.Add ("Inconsistent RELEASE DATE tag.");
                 else if (isSameReleaseDate == true)
                 {
-                    Bind.TaggedReleaseDate = Bind.Tracks.Items[0].Match.GetTag ("RELEASE DATE");
-                    var err = CheckDate (Bind.TaggedReleaseDate);
+                    Data.TaggedReleaseDate = Data.Tracks.Items[0].Match.GetTag ("RELEASE DATE");
+                    var err = CheckDate (Data.TaggedReleaseDate);
                     if (err != null)
                         IssueModel.Add ("RELEASE DATE " + err, Severity.Warning, IssueTags.BadTag);
 
@@ -252,28 +252,28 @@ namespace NongFormat
                         IssueModel.Add ("RELEASE DATE without DATE tag.");
                 }
 
-                bool? sameAlbum = Bind.Tracks.IsFlacTagsAllSame ("ALBUM");
+                bool? sameAlbum = Data.Tracks.IsFlacTagsAllSame ("ALBUM");
                 if (sameAlbum != true)
                     IssueModel.Add ("Missing or inconsistent ALBUM tag.");
                 else
                 {
-                    Bind.TaggedAlbum = Bind.Tracks.Items[0].Match.GetTag ("ALBUM");
-                    CheckWhite ("ALBUM", Bind.TaggedAlbum);
+                    Data.TaggedAlbum = Data.Tracks.Items[0].Match.GetTag ("ALBUM");
+                    CheckWhite ("ALBUM", Data.TaggedAlbum);
                 }
 
-                bool? isSameAlbumArtist = Bind.Tracks.IsFlacTagsAllSame ("ALBUMARTIST");
+                bool? isSameAlbumArtist = Data.Tracks.IsFlacTagsAllSame ("ALBUMARTIST");
                 if (isSameAlbumArtist == true)
                 {
-                    Bind.TaggedAlbumArtist = Bind.Tracks.Items[0].Match.GetTag ("ALBUMARTIST");
-                    CheckWhite ("ALBUMARTIST", Bind.TaggedAlbumArtist);
-                    Bind.CalcedAlbumArtist = Bind.TaggedAlbumArtist;
+                    Data.TaggedAlbumArtist = Data.Tracks.Items[0].Match.GetTag ("ALBUMARTIST");
+                    CheckWhite ("ALBUMARTIST", Data.TaggedAlbumArtist);
+                    Data.CalcedAlbumArtist = Data.TaggedAlbumArtist;
                 }
                 else if (isSameAlbumArtist == false)
                     IssueModel.Add ("Inconsistent ALBUMARTIST tag.");
 
-                bool? isSameArtist = Bind.Tracks.IsFlacTagsAllSame ("ARTIST");
+                bool? isSameArtist = Data.Tracks.IsFlacTagsAllSame ("ARTIST");
                 if (isSameArtist == true)
-                    CheckWhite ("ARTIST", Bind.Tracks.Items[0].Match.GetTag ("ARTIST"));
+                    CheckWhite ("ARTIST", Data.Tracks.Items[0].Match.GetTag ("ARTIST"));
 
                 if (isSameAlbumArtist == null)
                     if (isSameArtist == false)
@@ -281,17 +281,17 @@ namespace NongFormat
                     else if (isSameArtist == null)
                         IssueModel.Add ("Missing ARTIST tag.", Severity.Warning, IssueTags.Substandard);
                     else
-                        Bind.CalcedAlbumArtist = Bind.Tracks.Items[0].Match.GetTag ("ARTIST");
+                        Data.CalcedAlbumArtist = Data.Tracks.Items[0].Match.GetTag ("ARTIST");
 
-                bool? isSameBarcode = Bind.Tracks.IsFlacTagsAllSame ("BARCODE");
+                bool? isSameBarcode = Data.Tracks.IsFlacTagsAllSame ("BARCODE");
                 if (isSameBarcode == false)
                     IssueModel.Add ("Inconsistent BARCODE tag.");
 
-                bool? isSameCompilation = Bind.Tracks.IsFlacTagsAllSame ("COMPILATION");
+                bool? isSameCompilation = Data.Tracks.IsFlacTagsAllSame ("COMPILATION");
                 if (isSameCompilation == false)
                     IssueModel.Add ("Inconsistent COMPILATION tag.");
 
-                foreach (var item in Bind.Tracks.Items)
+                foreach (var item in Data.Tracks.Items)
                 {
                     var flac = item.Match;
                     if (flac != null)
@@ -318,67 +318,67 @@ namespace NongFormat
                     }
                 }
 
-                bool? isSameTrackTotal = Bind.Tracks.IsFlacTagsAllSame ("TRACKTOTAL");
+                bool? isSameTrackTotal = Data.Tracks.IsFlacTagsAllSame ("TRACKTOTAL");
                 if (isSameTrackTotal == false)
                     IssueModel.Add ("Inconsistent TRACKTOTAL tag.");
                 else if (isSameTrackTotal == true)
                 {
-                    string ttt = Bind.Tracks.Items[0].Match.GetTag ("TRACKTOTAL");
+                    string ttt = Data.Tracks.Items[0].Match.GetTag ("TRACKTOTAL");
                     bool isOK = int.TryParse (ttt, out int ttn);
                     if (! isOK)
                         IssueModel.Add ("Malformed TRACKTOTAL tag '" + ttt + "'.");
 
-                    if (ttn != Bind.Tracks.Items.Count)
-                        IssueModel.Add ("Wrong TRACKTOTAL tag. Expecting " + Bind.Tracks.Items.Count + ", got " + ttn + ".");
+                    if (ttn != Data.Tracks.Items.Count)
+                        IssueModel.Add ("Wrong TRACKTOTAL tag. Expecting " + Data.Tracks.Items.Count + ", got " + ttn + ".");
                 }
 
-                bool? isSameDisc = Bind.Tracks.IsFlacTagsAllSame ("DISCNUMBER");
+                bool? isSameDisc = Data.Tracks.IsFlacTagsAllSame ("DISCNUMBER");
                 if (isSameDisc == true)
-                    Bind.TaggedDisc = Bind.Tracks.Items[0].Match.GetTag ("DISCNUMBER");
+                    Data.TaggedDisc = Data.Tracks.Items[0].Match.GetTag ("DISCNUMBER");
                 else if (isSameDisc == false)
                     IssueModel.Add ("Inconsistent DISCNUMBER tag.");
 
-                bool? isSameDiscTotal = Bind.Tracks.IsFlacTagsAllSame ("DISCTOTAL");
+                bool? isSameDiscTotal = Data.Tracks.IsFlacTagsAllSame ("DISCTOTAL");
                 if (isSameDiscTotal == true)
-                    Bind.TaggedDiscTotal = Bind.Tracks.Items[0].Match.GetTag ("DISCTOTAL");
+                    Data.TaggedDiscTotal = Data.Tracks.Items[0].Match.GetTag ("DISCTOTAL");
                 else if (isSameDiscTotal == false)
                     IssueModel.Add ("Inconsistent DISCTOTAL tag.");
 
-                bool? isSameOrg = Bind.Tracks.IsFlacTagsAllSame ("ORGANIZATION");
+                bool? isSameOrg = Data.Tracks.IsFlacTagsAllSame ("ORGANIZATION");
                 if (isSameOrg == true)
-                    Bind.TaggedOrg = Bind.Tracks.Items[0].Match.GetTag ("ORGANIZATION");
+                    Data.TaggedOrg = Data.Tracks.Items[0].Match.GetTag ("ORGANIZATION");
                 else if (isSameOrg == false)
                     IssueModel.Add ("Inconsistent ORGANIZATION tag.");
 
-                bool? isSameCat = Bind.Tracks.IsFlacTagsAllSame ("CATALOGNUMBER");
+                bool? isSameCat = Data.Tracks.IsFlacTagsAllSame ("CATALOGNUMBER");
                 if (isSameCat == false)
                     IssueModel.Add ("Inconsistent CATALOGNUMBER tag.");
 
-                bool? isSameEdition = Bind.Tracks.IsFlacTagsAllSame ("EDITION");
+                bool? isSameEdition = Data.Tracks.IsFlacTagsAllSame ("EDITION");
                 if (isSameEdition == true)
-                    Bind.TaggedEdition = Bind.Tracks.Items[0].Match.GetTag ("EDITION");
+                    Data.TaggedEdition = Data.Tracks.Items[0].Match.GetTag ("EDITION");
 
-                bool? isSameSubtitle = Bind.Tracks.IsFlacTagsAllSame ("SUBTITLE");
+                bool? isSameSubtitle = Data.Tracks.IsFlacTagsAllSame ("SUBTITLE");
                 if (isSameSubtitle == true)
-                    Bind.TaggedSubtitle = Bind.Tracks.Items[0].Match.GetTag ("SUBTITLE");
+                    Data.TaggedSubtitle = Data.Tracks.Items[0].Match.GetTag ("SUBTITLE");
 
-                bool? isSameAASO = Bind.Tracks.IsFlacTagsAllSameMulti ("ALBUMARTISTSORTORDER");
+                bool? isSameAASO = Data.Tracks.IsFlacTagsAllSameMulti ("ALBUMARTISTSORTORDER");
                 if (isSameAASO == false)
                     IssueModel.Add ("Inconsistent ALBUMARTISTSORTORDER tag.");
 
-                if (Bind.Tracks.AnyHas ("ALBUM ARTIST"))
+                if (Data.Tracks.AnyHas ("ALBUM ARTIST"))
                         IssueModel.Add ("Use of ALBUM ARTIST tag not preferred, use ALBUMARTIST instead.", Severity.Warning, IssueTags.BadTag);
 
-                if (Bind.Tracks.AnyHas ("ALBUMARTISTSORT"))
+                if (Data.Tracks.AnyHas ("ALBUMARTISTSORT"))
                         IssueModel.Add ("Use of ALBUMARTISTSORT tag not preferred, use ALBUMARTISTSORTORDER instead.", Severity.Warning, IssueTags.BadTag);
 
-                if (Bind.Tracks.AnyHas ("PUBLISHER"))
+                if (Data.Tracks.AnyHas ("PUBLISHER"))
                         IssueModel.Add ("Use of PUBLISHER tag not preferred, use ORGANIZATION instead.", Severity.Warning, IssueTags.BadTag);
 
-                if (Bind.Tracks.AnyHas ("TOTALTRACKS"))
+                if (Data.Tracks.AnyHas ("TOTALTRACKS"))
                         IssueModel.Add ("Use of TOTALTRACKS tag deprecated, use TRACKTOTAL instead.", Severity.Warning, IssueTags.BadTag);
 
-                if (Bind.Tracks.AnyHas ("TOTALDISCS"))
+                if (Data.Tracks.AnyHas ("TOTALDISCS"))
                         IssueModel.Add ("Use of TOTALDISCS tag deprecated, use DISCTOTAL instead.", Severity.Warning, IssueTags.BadTag);
             }
 
@@ -393,10 +393,10 @@ namespace NongFormat
 
             public void CalcHashWebCheck()
             {
-                if (Bind.storedHash == null)
+                if (Data.storedHash == null)
                 {
-                    Severity sev = Bind.EacVersionText != null && Bind.EacVersionText.StartsWith ("1")? Severity.Warning : Severity.Noise;
-                    Bind.ShIssue = IssueModel.Add ("EAC log self-hash not present.", sev, IssueTags.ProveErr|IssueTags.Fussy);
+                    Severity sev = Data.EacVersionText != null && Data.EacVersionText.StartsWith ("1")? Severity.Warning : Severity.Noise;
+                    Data.ShIssue = IssueModel.Add ("EAC log self-hash not present.", sev, IssueTags.ProveErr|IssueTags.Fussy);
                 }
                 else
                 {
@@ -420,7 +420,7 @@ namespace NongFormat
                         {
                             qs.Write (bndBuf, 0, bndBuf.Length);
                             qs.Write (hdrBuf, 0, hdrBuf.Length);
-                            qs.Write (Bind.fBuf, 0, Bind.fBuf.Length);
+                            qs.Write (Data.fBuf, 0, Data.fBuf.Length);
                             qs.Write (tlrBuf, 0, tlrBuf.Length);
                         }
 
@@ -430,99 +430,99 @@ namespace NongFormat
                                 {
                                     string answer = rdr.ReadLine();
                                     if (answer.Contains ("is fine"))
-                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify successful.", Severity.Advisory, IssueTags.Success);
+                                        Data.ShIssue = IssueModel.Add ("EAC log self-hash verify successful.", Severity.Advisory, IssueTags.Success);
                                     else if (answer.Contains ("incorrect"))
-                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash mismatch, file has been modified.", Severity.Error, IssueTags.Failure);
+                                        Data.ShIssue = IssueModel.Add ("EAC log self-hash mismatch, file has been modified.", Severity.Error, IssueTags.Failure);
                                     else
-                                        Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify attempt returned unknown result.", Severity.Advisory, IssueTags.ProveErr);
+                                        Data.ShIssue = IssueModel.Add ("EAC log self-hash verify attempt returned unknown result.", Severity.Advisory, IssueTags.ProveErr);
                                 }
                     }
                     catch (Exception ex)
-                    { Bind.ShIssue = IssueModel.Add ("EAC log self-hash verify attempt failed: " + ex.Message.Trim (null), Severity.Warning, IssueTags.ProveErr); }
+                    { Data.ShIssue = IssueModel.Add ("EAC log self-hash verify attempt failed: " + ex.Message.Trim (null), Severity.Warning, IssueTags.ProveErr); }
                 }
             }
 
 
             private void GetDiagnostics()
             {
-                if (String.IsNullOrEmpty (Bind.Artist))
+                if (String.IsNullOrEmpty (Data.Artist))
                     IssueModel.Add ("Missing artist", Severity.Warning, IssueTags.Substandard);
 
-                if (String.IsNullOrEmpty (Bind.Album))
+                if (String.IsNullOrEmpty (Data.Album))
                     IssueModel.Add ("Missing album", Severity.Warning, IssueTags.Substandard);
 
-                if (String.IsNullOrEmpty (Bind.Drive))
+                if (String.IsNullOrEmpty (Data.Drive))
                     IssueModel.Add ("Missing 'Used drive'.");
 
-                if (String.IsNullOrEmpty (Bind.ReadMode))
+                if (String.IsNullOrEmpty (Data.ReadMode))
                     IssueModel.Add ("Missing 'Read mode'.");
-                else if (Bind.ReadMode != "Secure with NO C2, accurate stream, disable cache"
-                      && Bind.ReadMode != "Secure with NO C2, accurate stream,  disable cache")
+                else if (Data.ReadMode != "Secure with NO C2, accurate stream, disable cache"
+                      && Data.ReadMode != "Secure with NO C2, accurate stream,  disable cache")
                 {
-                    if (Bind.ReadMode != "Secure")
-                        Bind.DsIssue = IssueModel.Add ("Nonpreferred drive setting: Read mode: " + Bind.ReadMode, Severity.Warning, IssueTags.Substandard);
+                    if (Data.ReadMode != "Secure")
+                        Data.DsIssue = IssueModel.Add ("Nonpreferred drive setting: Read mode: " + Data.ReadMode, Severity.Warning, IssueTags.Substandard);
 
-                    if (Bind.AccurateStream == null || Bind.AccurateStream != "Yes")
-                        Bind.DsIssue = IssueModel.Add ("Missing drive setting: 'Utilize accurate stream: Yes'." + Bind.AccurateStream, Severity.Warning, IssueTags.Substandard);
+                    if (Data.AccurateStream == null || Data.AccurateStream != "Yes")
+                        Data.DsIssue = IssueModel.Add ("Missing drive setting: 'Utilize accurate stream: Yes'." + Data.AccurateStream, Severity.Warning, IssueTags.Substandard);
 
-                    if (Bind.DefeatCache == null || Bind.DefeatCache != "Yes")
-                        Bind.DsIssue = IssueModel.Add ("Missing drive setting: 'Defeat audio cache: Yes'.", Severity.Warning, IssueTags.Substandard);
+                    if (Data.DefeatCache == null || Data.DefeatCache != "Yes")
+                        Data.DsIssue = IssueModel.Add ("Missing drive setting: 'Defeat audio cache: Yes'.", Severity.Warning, IssueTags.Substandard);
 
-                    if (Bind.UseC2 == null || Bind.UseC2 != "No")
-                        Bind.DsIssue = IssueModel.Add ("Missing drive setting: 'Make use of C2 pointers: No'.", Severity.Warning, IssueTags.Substandard);
+                    if (Data.UseC2 == null || Data.UseC2 != "No")
+                        Data.DsIssue = IssueModel.Add ("Missing drive setting: 'Make use of C2 pointers: No'.", Severity.Warning, IssueTags.Substandard);
                 }
 
-                if (String.IsNullOrEmpty (Bind.ReadOffset))
+                if (String.IsNullOrEmpty (Data.ReadOffset))
                     IssueModel.Add ("Missing 'Read offset correction'.", Severity.Trivia, IssueTags.Substandard);
 
-                if (Bind.FillWithSilence != null && Bind.FillWithSilence != "Yes")
+                if (Data.FillWithSilence != null && Data.FillWithSilence != "Yes")
                     IssueModel.Add ("Missing 'Fill up missing offset samples with silence: Yes'.", Severity.Trivia, IssueTags.ProveWarn);
 
-                if (Bind.Quality != null && Bind.Quality != "High")
+                if (Data.Quality != null && Data.Quality != "High")
                     IssueModel.Add ("Missing 'Quality: High'.", Severity.Advisory, IssueTags.Substandard);
 
-                if (Bind.TrimSilence == null || Bind.TrimSilence != "No")
-                    Bind.TsIssue = IssueModel.Add ("Missing 'Delete leading and trailing silent blocks: No'.", Severity.Warning, IssueTags.Substandard);
+                if (Data.TrimSilence == null || Data.TrimSilence != "No")
+                    Data.TsIssue = IssueModel.Add ("Missing 'Delete leading and trailing silent blocks: No'.", Severity.Warning, IssueTags.Substandard);
 
-                if (Bind.CalcWithNulls != null && Bind.CalcWithNulls != "Yes")
+                if (Data.CalcWithNulls != null && Data.CalcWithNulls != "Yes")
                     IssueModel.Add ("Missing 'Null samples used in CRC calculations: Yes'.");
 
-                if (Bind.GapHandling != null)
-                    if (Bind.GapHandling != "Appended to previous track")
+                if (Data.GapHandling != null)
+                    if (Data.GapHandling != "Appended to previous track")
                     {
                         IssueTags gapTag = IssueTags.Fussy;
-                        if (Bind.GapHandling != "Not detected, thus appended to previous track")
+                        if (Data.GapHandling != "Not detected, thus appended to previous track")
                             gapTag |= IssueTags.Substandard;
 
-                        Bind.GpIssue = IssueModel.Add ("Gap handling preferred setting is 'Appended to previous track'.", Severity.Advisory, gapTag);
+                        Data.GpIssue = IssueModel.Add ("Gap handling preferred setting is 'Appended to previous track'.", Severity.Advisory, gapTag);
                     }
 
-                if (Bind.Id3Tag == "Yes")
+                if (Data.Id3Tag == "Yes")
                     IssueModel.Add ("Append ID3 tags preferred setting is 'No'.", Severity.NoIssue, IssueTags.Fussy);
 
-                if (Bind.ReadOffset == "0" && Bind.Drive.Contains ("not found in database"))
+                if (Data.ReadOffset == "0" && Data.Drive.Contains ("not found in database"))
                     IssueModel.Add ("Unknown drive with offset '0'.", Severity.Advisory, IssueTags.Fussy);
 
-                if (Bind.NormalizeTo != null)
-                    Bind.NzIssue = IssueModel.Add ("Use of normalization considered harmful.", Severity.Warning, IssueTags.Substandard);
+                if (Data.NormalizeTo != null)
+                    Data.NzIssue = IssueModel.Add ("Use of normalization considered harmful.", Severity.Warning, IssueTags.Substandard);
 
-                if (Bind.SampleFormat != null && Bind.SampleFormat != "44.100 Hz; 16 Bit; Stereo")
+                if (Data.SampleFormat != null && Data.SampleFormat != "44.100 Hz; 16 Bit; Stereo")
                     IssueModel.Add ("Missing 'Sample format: 44.100 Hz; 16 Bit; Stereo'.", Severity.Warning, IssueTags.Substandard);
 
-                if (Bind.IsRangeRip)
+                if (Data.IsRangeRip)
                     IssueModel.Add ("Range rip detected.", Severity.Advisory, IssueTags.Substandard);
                 else
                 {
-                    if (! Bind.Tracks.IsNearlyAllPresent())
-                        Bind.TkIssue = IssueModel.Add ("Gap detected in track numbers.");
+                    if (! Data.Tracks.IsNearlyAllPresent())
+                        Data.TkIssue = IssueModel.Add ("Gap detected in track numbers.");
 
-                    if (Bind.TocTrackCount != null)
+                    if (Data.TocTrackCount != null)
                     {
-                        int diff = Bind.TocTrackCount.Value - Bind.Tracks.Items.Count;
+                        int diff = Data.TocTrackCount.Value - Data.Tracks.Items.Count;
                         if (diff != 0)
                         {
                             Severity sev = diff == 1? Severity.Advisory : Severity.Error;
-                            IssueModel.Add ("Found " + Bind.Tracks.Items.Count + " of " + Bind.TocTrackCount.Value + " tracks.", sev);
+                            IssueModel.Add ("Found " + Data.Tracks.Items.Count + " of " + Data.TocTrackCount.Value + " tracks.", sev);
                         }
                     }
                 }
@@ -530,8 +530,8 @@ namespace NongFormat
                 var tpTag = IssueTags.ProveErr;
                 var arTag = IssueTags.None;
                 var arSev = Severity.Trivia;
-                if (Bind.AccurateRipConfidence != null)
-                    if (Bind.AccurateRipConfidence.Value > 0)
+                if (Data.AccurateRipConfidence != null)
+                    if (Data.AccurateRipConfidence.Value > 0)
                     {
                         tpTag = IssueTags.None;
                         arTag = IssueTags.Success;
@@ -539,18 +539,18 @@ namespace NongFormat
                     else
                     {
                         arSev = Severity.Advisory;
-                        if (Bind.AccurateRipConfidence.Value < 0)
+                        if (Data.AccurateRipConfidence.Value < 0)
                             arTag = IssueTags.Failure;
                     }
-                Bind.ArIssue = IssueModel.Add ("AccurateRip verification " + Bind.AccurateRipLong + ".", arSev, arTag);
+                Data.ArIssue = IssueModel.Add ("AccurateRip verification " + Data.AccurateRipLong + ".", arSev, arTag);
 
                 var ctSev = Severity.Trivia;
                 var ctTag = IssueTags.None;
-                if (Bind.CueToolsConfidence == null)
+                if (Data.CueToolsConfidence == null)
                     ctTag = IssueTags.ProveErr;
-                else if (Bind.CueToolsConfidence.Value < 0)
+                else if (Data.CueToolsConfidence.Value < 0)
                     ctSev = Severity.Error;
-                else if (Bind.CueToolsConfidence.Value == 0)
+                else if (Data.CueToolsConfidence.Value == 0)
                     ctSev = Severity.Advisory;
                 else
                 {
@@ -558,24 +558,24 @@ namespace NongFormat
                     tpTag = IssueTags.None;
                 }
 
-                Bind.CtIssue = IssueModel.Add ("CUETools DB verification " + Bind.CueToolsLong + ".", ctSev, ctTag);
+                Data.CtIssue = IssueModel.Add ("CUETools DB verification " + Data.CueToolsLong + ".", ctSev, ctTag);
 
-                var kt = Bind.Tracks.Items.Where (it => it.TestCRC != null).Count();
+                var kt = Data.Tracks.Items.Where (it => it.TestCRC != null).Count();
                 if (kt == 0)
-                    Bind.TpIssue = IssueModel.Add ("Test pass not performed.", Severity.Noise, IssueTags.Fussy | tpTag);
-                else if (kt < Bind.Tracks.Items.Count)
-                    Bind.TpIssue = IssueModel.Add ("Test pass incomplete.", Severity.Error, IssueTags.Failure);
-                else if (Bind.Tracks.Items.All (it => it.TestCRC == it.CopyCRC))
+                    Data.TpIssue = IssueModel.Add ("Test pass not performed.", Severity.Noise, IssueTags.Fussy | tpTag);
+                else if (kt < Data.Tracks.Items.Count)
+                    Data.TpIssue = IssueModel.Add ("Test pass incomplete.", Severity.Error, IssueTags.Failure);
+                else if (Data.Tracks.Items.All (it => it.TestCRC == it.CopyCRC))
                 {
                     var sev = tpTag != IssueTags.None? Severity.Advisory : Severity.Trivia;
-                    Bind.TpIssue = IssueModel.Add ("Test/copy CRC-32s match for all tracks.", sev, IssueTags.Success);
+                    Data.TpIssue = IssueModel.Add ("Test/copy CRC-32s match for all tracks.", sev, IssueTags.Success);
                 }
 
                 int k1=0, k2=0, k3=0;
                 int r1a=-1, r2a=-1, r3a=-1;
                 int r1b=0, r2b=0, r3b=0;
                 StringBuilder m1 = new StringBuilder(), m2 = new StringBuilder(), m3 = new StringBuilder();
-                foreach (LogEacTrack tk in Bind.Tracks.Items)
+                foreach (LogEacTrack tk in Data.Tracks.Items)
                 {
                     if (! tk.HasOK)
                     {
@@ -657,7 +657,7 @@ namespace NongFormat
                 {
                     m3.Append (" test/copy CRCs mismatched.");
                     i3 = IssueModel.Add ((k3 == 1? "Track " : "Tracks ") + m3, Severity.Error, IssueTags.Failure);
-                    Bind.TpIssue = i3;
+                    Data.TpIssue = i3;
                 }
 
                 for (int trackIndex = 0; trackIndex < TracksModel.Bind.Items.Count; ++trackIndex)

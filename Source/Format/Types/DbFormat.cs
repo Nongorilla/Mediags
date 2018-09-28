@@ -28,7 +28,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                BaseBind = Bind = new DbFormat (stream, path);
+                /*BaseBind*/ base._data = Bind = new DbFormat (stream, path);
                 Bind.Issues = IssueModel.Data;
 
                 // No content diagnostics at this time.
@@ -66,12 +66,12 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly DbOtherFormat Bind;
+            public new readonly DbOtherFormat Data;
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                BaseBind = Bind = new DbOtherFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new DbOtherFormat (stream, path);
+                Data.Issues = IssueModel.Data;
             }
         }
 

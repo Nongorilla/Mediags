@@ -29,53 +29,53 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly FlacFormat Bind;
+            public new readonly FlacFormat Data;
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                BaseBind = Bind = new FlacFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new FlacFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
-                Bind.MetadataBlockStreamInfoSize = ConvertTo.FromBig24ToInt32 (hdr, 5);
-                if (Bind.MetadataBlockStreamInfoSize < 34)
+                Data.MetadataBlockStreamInfoSize = ConvertTo.FromBig24ToInt32 (hdr, 5);
+                if (Data.MetadataBlockStreamInfoSize < 34)
                 {
-                    IssueModel.Add ("Bad metablock size of " + Bind.MetadataBlockStreamInfoSize, Severity.Fatal);
+                    IssueModel.Add ("Bad metablock size of " + Data.MetadataBlockStreamInfoSize, Severity.Fatal);
                     return;
                 }
 
-                var bb = new byte[Bind.MetadataBlockStreamInfoSize];
-                Bind.ValidSize = 8;
+                var bb = new byte[Data.MetadataBlockStreamInfoSize];
+                Data.ValidSize = 8;
 
-                Bind.fbs.Position = Bind.ValidSize;
-                var got = Bind.fbs.Read (bb, 0, Bind.MetadataBlockStreamInfoSize);
-                if (got != Bind.MetadataBlockStreamInfoSize)
+                Data.fbs.Position = Data.ValidSize;
+                var got = Data.fbs.Read (bb, 0, Data.MetadataBlockStreamInfoSize);
+                if (got != Data.MetadataBlockStreamInfoSize)
                 {
                     IssueModel.Add ("File truncated", Severity.Fatal);
                     return;
                 }
 
-                Bind.MinBlockSize = ConvertTo.FromBig16ToInt32 (bb, 0);
-                Bind.MinBlockSize = ConvertTo.FromBig16ToInt32 (bb, 2);
-                Bind.MinFrameSize = ConvertTo.FromBig24ToInt32 (bb, 4);
-                Bind.MaxFrameSize = ConvertTo.FromBig24ToInt32 (bb, 7);
+                Data.MinBlockSize = ConvertTo.FromBig16ToInt32 (bb, 0);
+                Data.MinBlockSize = ConvertTo.FromBig16ToInt32 (bb, 2);
+                Data.MinFrameSize = ConvertTo.FromBig24ToInt32 (bb, 4);
+                Data.MaxFrameSize = ConvertTo.FromBig24ToInt32 (bb, 7);
             
-                Bind.MetaSampleRate = bb[10] << 12 | bb[11] << 4 | bb[12] >> 4;
-                Bind.ChannelCount = ((bb[12] & 0x0E) >> 1) + 1;
-                Bind.BitsPerSample = (((bb[12] & 1) << 4) | (bb[13] >> 4)) + 1;
-                Bind.TotalSamples = ((bb[13] & 0x0F) << 32) | bb[14] << 24 | bb[15] << 16 | bb[16] << 8 | bb[17];
+                Data.MetaSampleRate = bb[10] << 12 | bb[11] << 4 | bb[12] >> 4;
+                Data.ChannelCount = ((bb[12] & 0x0E) >> 1) + 1;
+                Data.BitsPerSample = (((bb[12] & 1) << 4) | (bb[13] >> 4)) + 1;
+                Data.TotalSamples = ((bb[13] & 0x0F) << 32) | bb[14] << 24 | bb[15] << 16 | bb[16] << 8 | bb[17];
 
-                Bind.mHdr = bb;
-                Bind.storedAudioDataMD5 = new byte[16];
-                Array.Copy (bb, 18, Bind.storedAudioDataMD5, 0, 16);
+                Data.mHdr = bb;
+                Data.storedAudioDataMD5 = new byte[16];
+                Array.Copy (bb, 18, Data.storedAudioDataMD5, 0, 16);
 
-                Bind.ValidSize += Bind.MetadataBlockStreamInfoSize;
+                Data.ValidSize += Data.MetadataBlockStreamInfoSize;
 
                 for (;;)
                 {
                     bb = new byte[12];
                     try
                     {
-                        Bind.fbs.Position = Bind.ValidSize;
+                        Data.fbs.Position = Data.ValidSize;
                     }
                     catch (EndOfStreamException)
                     {
@@ -83,8 +83,8 @@ namespace NongFormat
                         return;
                     }
 
-                    Bind.fbs.Position = Bind.ValidSize;
-                    got = Bind.fbs.Read (bb, 0, 4);
+                    Data.fbs.Position = Data.ValidSize;
+                    got = Data.fbs.Read (bb, 0, 4);
                     if (got != 4)
                     {
                         IssueModel.Add ("File truncated near meta data", Severity.Fatal);
@@ -92,50 +92,50 @@ namespace NongFormat
                     }
 
                     var blockSize = ConvertTo.FromBig24ToInt32 (bb, 1);
-                    Bind.ValidSize += 4;
+                    Data.ValidSize += 4;
 
                     switch ((FlacBlockType) (bb[0] & 0x7F))
                     {
                         case FlacBlockType.Padding:
-                            Bind.Blocks.AddPad (blockSize);
+                            Data.Blocks.AddPad (blockSize);
                             break;
                         case FlacBlockType.Application:
-                            got = Bind.fbs.Read (bb, 0, 4);
+                            got = Data.fbs.Read (bb, 0, 4);
                             if (got != 4)
                             {
                                 IssueModel.Add ("File truncated near tags", Severity.Fatal);
                                 return;
                             }
                             int appId = ConvertTo.FromBig32ToInt32 (bb, 0);
-                            Bind.Blocks.AddApp (blockSize, appId);
+                            Data.Blocks.AddApp (blockSize, appId);
                             break;
                         case FlacBlockType.SeekTable:
                             var st = new byte[blockSize];
-                            got = Bind.fbs.Read (st, 0, blockSize);
+                            got = Data.fbs.Read (st, 0, blockSize);
                             if (got != blockSize)
                             {
                                 IssueModel.Add ("File truncated near seek table", Severity.Fatal);
                                 return;
                             }
-                            Bind.Blocks.AddSeekTable (blockSize, st);
+                            Data.Blocks.AddSeekTable (blockSize, st);
                             break;
                         case FlacBlockType.Tags:
                             bb = new byte[blockSize];
-                            Bind.fbs.Position = Bind.ValidSize;
-                            got = Bind.fbs.Read (bb, 0, blockSize);
+                            Data.fbs.Position = Data.ValidSize;
+                            got = Data.fbs.Read (bb, 0, blockSize);
                             if (got != blockSize)
                             {
                                 IssueModel.Add ("File truncated near tags", Severity.Fatal);
                                 return;
                             }
-                            if (Bind.Blocks.Tags != null)
+                            if (Data.Blocks.Tags != null)
                                 IssueModel.Add ("Contains multiple tag blocks", Severity.Error);
                             else
-                                Bind.Blocks.AddTags (blockSize, bb);
+                                Data.Blocks.AddTags (blockSize, bb);
                             break;
                         case FlacBlockType.CueSheet:
                             var sb = new byte[284];
-                            got = Bind.fbs.Read (sb, 0, 284);
+                            got = Data.fbs.Read (sb, 0, 284);
                             if (got != 284)
                             {
                                 IssueModel.Add ("File truncated near cuesheet", Severity.Fatal);
@@ -143,11 +143,11 @@ namespace NongFormat
                             }
                             var isCD = (sb[24] & 0x80) != 0;
                             int trackCount = sb[283];
-                            Bind.Blocks.AddCuesheet (blockSize, isCD, trackCount);
+                            Data.Blocks.AddCuesheet (blockSize, isCD, trackCount);
                             break;
                         case FlacBlockType.Picture:
                             var pb = new byte[blockSize];
-                            got = Bind.fbs.Read (pb, 0, blockSize);
+                            got = Data.fbs.Read (pb, 0, blockSize);
                             if (got != blockSize)
                             {
                                 IssueModel.Add ("File truncated near picture", Severity.Fatal);
@@ -160,28 +160,28 @@ namespace NongFormat
                             var desc = Encoding.UTF8.GetString (pb, mimeLen+12, descLen);
                             var width = ConvertTo.FromBig32ToInt32 (pb, mimeLen + descLen + 12);
                             var height = ConvertTo.FromBig32ToInt32 (pb, mimeLen + descLen + 16);
-                            Bind.Blocks.AddPic (blockSize, picType, width, height);
+                            Data.Blocks.AddPic (blockSize, picType, width, height);
                             break;
                         default:
                             IssueModel.Add ("Encountered unexpected metadata block type of " + (bb[0] & 0x7F), Severity.Fatal);
                             return;
                     }
 
-                    Bind.ValidSize += blockSize;
+                    Data.ValidSize += blockSize;
                     if ((bb[0] & 0x80) != 0)
                         break;
                 }
 
                 try
                 {
-                    Bind.fbs.Position = Bind.ValidSize;
+                    Data.fbs.Position = Data.ValidSize;
                 }
                 catch (EndOfStreamException)
                 {
                     IssueModel.Add ("File truncated near frame header", Severity.Fatal);
                     return;
                 }
-                got = Bind.fbs.Read (bb, 0, 4);
+                got = Data.fbs.Read (bb, 0, 4);
                 if (got != 4)
                 {
                     IssueModel.Add ("File truncated", Severity.Fatal);
@@ -195,10 +195,10 @@ namespace NongFormat
                     return;
                 }
 
-                Bind.mediaPosition = Bind.ValidSize;
+                Data.mediaPosition = Data.ValidSize;
 
-                Bind.SampleOrFrameNumber = Bind.fbs.ReadWobbly (out byte[] wtfBuf);
-                if (Bind.SampleOrFrameNumber < 0)
+                Data.SampleOrFrameNumber = Data.fbs.ReadWobbly (out byte[] wtfBuf);
+                if (Data.SampleOrFrameNumber < 0)
                 {
                     IssueModel.Add ("File truncated or badly formed sample/frame number.", Severity.Fatal);
                     return;
@@ -206,73 +206,73 @@ namespace NongFormat
                 Array.Copy (wtfBuf, 0, bb, 4, wtfBuf.Length);
                 int bPos = 4 + wtfBuf.Length;
 
-                Bind.RawBlockingStrategy = bb[1] & 1;
+                Data.RawBlockingStrategy = bb[1] & 1;
 
-                Bind.RawBlockSize = bb[2] >> 4;
-                if (Bind.RawBlockSize == 0)
-                    Bind.BlockSize = 0;
-                else if (Bind.RawBlockSize == 1)
-                    Bind.BlockSize = 192;
-                else if (Bind.RawBlockSize >= 2 && Bind.RawBlockSize <= 5)
-                    Bind.BlockSize = 576 * (1 << (Bind.RawBlockSize - 2));
-                else if (Bind.RawBlockSize == 6)
+                Data.RawBlockSize = bb[2] >> 4;
+                if (Data.RawBlockSize == 0)
+                    Data.BlockSize = 0;
+                else if (Data.RawBlockSize == 1)
+                    Data.BlockSize = 192;
+                else if (Data.RawBlockSize >= 2 && Data.RawBlockSize <= 5)
+                    Data.BlockSize = 576 * (1 << (Data.RawBlockSize - 2));
+                else if (Data.RawBlockSize == 6)
                 {
-                    got = Bind.fbs.Read (bb, bPos, 1);
-                    Bind.BlockSize = bb[bPos] + 1;
+                    got = Data.fbs.Read (bb, bPos, 1);
+                    Data.BlockSize = bb[bPos] + 1;
                     bPos += 1;
                 }
-                else if (Bind.RawBlockSize == 7)
+                else if (Data.RawBlockSize == 7)
                 {
-                    got = Bind.fbs.Read (bb, bPos, 2);
-                    Bind.BlockSize = (bb[bPos]<<8) + bb[bPos+1] + 1;
+                    got = Data.fbs.Read (bb, bPos, 2);
+                    Data.BlockSize = (bb[bPos]<<8) + bb[bPos+1] + 1;
                     bPos += 2;
                 }
                 else
-                    Bind.BlockSize = 256 * (1 << (Bind.RawBlockSize - 8));
+                    Data.BlockSize = 256 * (1 << (Data.RawBlockSize - 8));
 
 
-                Bind.RawSampleRate = bb[2] & 0xF;
-                if (Bind.RawSampleRate == 0xC)
+                Data.RawSampleRate = bb[2] & 0xF;
+                if (Data.RawSampleRate == 0xC)
                 {
-                    got = Bind.fbs.Read (bb, bPos, 1);
-                    Bind.SampleRateText = bb[bPos] + "kHz";
+                    got = Data.fbs.Read (bb, bPos, 1);
+                    Data.SampleRateText = bb[bPos] + "kHz";
                     bPos += 1;
                 }
-                else if (Bind.RawSampleRate == 0xD || Bind.RawSampleRate == 0xE)
+                else if (Data.RawSampleRate == 0xD || Data.RawSampleRate == 0xE)
                 {
-                    got = Bind.fbs.Read (bb, bPos, 2);
-                    Bind.SampleRateText = (bb[bPos]<<8).ToString() + bb[bPos+1] + (Bind.RawSampleRate == 0xD? " Hz" : " kHz");
+                    got = Data.fbs.Read (bb, bPos, 2);
+                    Data.SampleRateText = (bb[bPos]<<8).ToString() + bb[bPos+1] + (Data.RawSampleRate == 0xD? " Hz" : " kHz");
                     bPos += 2;
                 }
-                else if (Bind.RawSampleRate == 0)
-                    Bind.SampleRateText = Bind.MetaSampleRate.ToString() + " Hz";
+                else if (Data.RawSampleRate == 0)
+                    Data.SampleRateText = Data.MetaSampleRate.ToString() + " Hz";
                 else
-                    Bind.SampleRateText = SampleRateMap[Bind.RawSampleRate];
+                    Data.SampleRateText = SampleRateMap[Data.RawSampleRate];
 
-                Bind.RawChannelAssignment = bb[3] >> 4;
+                Data.RawChannelAssignment = bb[3] >> 4;
 
-                Bind.RawSampleSize = (bb[3] & 0xE) >> 1;
-                if (Bind.RawSampleSize == 0)
-                    Bind.SampleSizeText = Bind.BitsPerSample.ToString() + " bits";
+                Data.RawSampleSize = (bb[3] & 0xE) >> 1;
+                if (Data.RawSampleSize == 0)
+                    Data.SampleSizeText = Data.BitsPerSample.ToString() + " bits";
                 else
-                    Bind.SampleSizeText = SampleSizeMap[Bind.RawSampleSize];
+                    Data.SampleSizeText = SampleSizeMap[Data.RawSampleSize];
 
-                Bind.aHdr = new byte[bPos];
-                Array.Copy (bb, Bind.aHdr, bPos);
+                Data.aHdr = new byte[bPos];
+                Array.Copy (bb, Data.aHdr, bPos);
 
-                Bind.ValidSize += bPos;
-                Bind.fbs.Position = Bind.ValidSize;
-                int octet = Bind.fbs.ReadByte();
+                Data.ValidSize += bPos;
+                Data.fbs.Position = Data.ValidSize;
+                int octet = Data.fbs.ReadByte();
                 if (octet < 0)
                 {
                     IssueModel.Add ("File truncated near CRC-8", Severity.Fatal);
                     return;
                 }
-                Bind.StoredAudioHeaderCRC8 = (Byte) octet;
+                Data.StoredAudioHeaderCRC8 = (Byte) octet;
 
                 try
                 {
-                    Bind.fbs.Position = Bind.mediaPosition;
+                    Data.fbs.Position = Data.mediaPosition;
                 }
                 catch (EndOfStreamException)
                 {
@@ -282,7 +282,7 @@ namespace NongFormat
 
                 try
                 {
-                    Bind.fbs.Position = Bind.FileSize - 2;
+                    Data.fbs.Position = Data.FileSize - 2;
                 }
                 catch (EndOfStreamException)
                 {
@@ -291,51 +291,51 @@ namespace NongFormat
                 }
 
                 bb = new byte[2];
-                if (Bind.fbs.Read (bb, 0, 2) != 2)
+                if (Data.fbs.Read (bb, 0, 2) != 2)
                 {
                     IssueModel.Add ("Read failed on audio block CRC-16", Severity.Fatal);
                     return;
                 }
 
-                Bind.StoredAudioBlockCRC16 = (UInt16) (bb[0] << 8 | bb[1]);
-                Bind.MediaCount = Bind.FileSize - Bind.mediaPosition;
+                Data.StoredAudioBlockCRC16 = (UInt16) (bb[0] << 8 | bb[1]);
+                Data.MediaCount = Data.FileSize - Data.mediaPosition;
 
                 GetDiagnostics ();
             }
 
             private void GetDiagnostics()
             {
-                if (Bind.MetadataBlockStreamInfoSize != 0x22)
-                    IssueModel.Add ("Unexpected Metadata block size of " + Bind.MetadataBlockStreamInfoSize, Severity.Advisory);
+                if (Data.MetadataBlockStreamInfoSize != 0x22)
+                    IssueModel.Add ("Unexpected Metadata block size of " + Data.MetadataBlockStreamInfoSize, Severity.Advisory);
 
-                if (Bind.MinBlockSize < 16)
+                if (Data.MinBlockSize < 16)
                     IssueModel.Add ("Minimum block size too low", Severity.Error);
 
-                if (Bind.MinBlockSize > 65535)
+                if (Data.MinBlockSize > 65535)
                     IssueModel.Add ("Maximum block size too high", Severity.Error);
 
-                if (Bind.RawSampleRate == 0xF)
+                if (Data.RawSampleRate == 0xF)
                     IssueModel.Add ("Invalid sample rate", Severity.Error);
 
-                if (Bind.RawSampleSize == 3 || Bind.RawSampleSize == 7)
-                    IssueModel.Add ("Use of sample size index " + Bind.RawSampleSize + " is reserved", Severity.Error);
+                if (Data.RawSampleSize == 3 || Data.RawSampleSize == 7)
+                    IssueModel.Add ("Use of sample size index " + Data.RawSampleSize + " is reserved", Severity.Error);
 
-                if (Bind.RawChannelAssignment >= 0xB)
-                    IssueModel.Add ("Use of reserved (undefined) channel assignment " + Bind.RawChannelAssignment, Severity.Warning);
+                if (Data.RawChannelAssignment >= 0xB)
+                    IssueModel.Add ("Use of reserved (undefined) channel assignment " + Data.RawChannelAssignment, Severity.Warning);
 
-                if (Bind.RawBlockSize == 0)
+                if (Data.RawBlockSize == 0)
                     IssueModel.Add ("Block size index 0 use is reserved", Severity.Warning);
 
-                if (Bind.RawSampleRate == 0xF)
+                if (Data.RawSampleRate == 0xF)
                     IssueModel.Add ("Sample rate index 15 use is invalid", Severity.Error);
 
-                if (Bind.RawChannelAssignment >= 0xB)
-                    IssueModel.Add ("Channel index " + Bind.RawChannelAssignment + " use is reserved", Severity.Warning);
+                if (Data.RawChannelAssignment >= 0xB)
+                    IssueModel.Add ("Channel index " + Data.RawChannelAssignment + " use is reserved", Severity.Warning);
 
-                if (Bind.Blocks.Tags.Lines.Count != Bind.Blocks.Tags.StoredTagCount)
+                if (Data.Blocks.Tags.Lines.Count != Data.Blocks.Tags.StoredTagCount)
                     IssueModel.Add ("Stored tag count wrong");
 
-                foreach (var lx in Bind.Blocks.Tags.Lines)
+                foreach (var lx in Data.Blocks.Tags.Lines)
                 {
                     if (lx.IndexOf ('=') < 0)
                         IssueModel.Add ("Invalid tag line: " + lx);
@@ -349,7 +349,7 @@ namespace NongFormat
                 }
 
                 int picPlusPadSize = 0;
-                foreach (FlacBlockItem block in Bind.Blocks.Items)
+                foreach (FlacBlockItem block in Data.Blocks.Items)
                     if (block.BlockType == FlacBlockType.Padding || block.BlockType == FlacBlockType.Picture)
                         picPlusPadSize += block.Size;
 
@@ -396,29 +396,29 @@ namespace NongFormat
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
                 if ((hashFlags & Hashes.Intrinsic) != 0)
                 {
-                    if (Bind.ActualAudioHeaderCRC8 == null)
+                    if (Data.ActualAudioHeaderCRC8 == null)
                     {
                         var hasher = new Crc8Hasher();
-                        hasher.Append (Bind.aHdr);
+                        hasher.Append (Data.aHdr);
                         var hash = hasher.GetHashAndReset();
-                        Bind.ActualAudioHeaderCRC8 = hash[0];
+                        Data.ActualAudioHeaderCRC8 = hash[0];
 
-                        if (Bind.IsBadHeader)
+                        if (Data.IsBadHeader)
                             IssueModel.Add ("CRC-8 check failed on audio header.");
                     }
 
-                    if (Bind.ActualAudioBlockCRC16 == null)
+                    if (Data.ActualAudioBlockCRC16 == null)
                         try
                         {
                             var hasher = new Crc16nHasher();
-                            hasher.Append (Bind.fbs, Bind.mediaPosition, Bind.FileSize - Bind.mediaPosition - 2);
+                            hasher.Append (Data.fbs, Data.mediaPosition, Data.FileSize - Data.mediaPosition - 2);
                             var hash = hasher.GetHashAndReset();
-                            Bind.ActualAudioBlockCRC16 = BitConverter.ToUInt16 (hash, 0);
+                            Data.ActualAudioBlockCRC16 = BitConverter.ToUInt16 (hash, 0);
                         }
                         catch (EndOfStreamException ex)
                         {
@@ -426,21 +426,21 @@ namespace NongFormat
                             return;
                         }
 
-                        if (Bind.IsBadDataCRC16)
+                        if (Data.IsBadDataCRC16)
                             IssueModel.Add ("CRC-16 check failed on audio data.");
                         else
-                            if (Bind.IsBadHeader)
+                            if (Data.IsBadHeader)
                                 IssueModel.Add ("CRC-16 check successful.", Severity.Advisory);
                             else
                                 IssueModel.Add ("CRC-8, CRC-16 checks successful.", Severity.Noise);
                 }
 
 #if ! NETFX_CORE
-                if ((hashFlags & Hashes.PcmMD5) != 0 && Bind.actualAudioDataMD5 == null)
+                if ((hashFlags & Hashes.PcmMD5) != 0 && Data.actualAudioDataMD5 == null)
                 {
                     Process px = null;
                     try
-                    { px = StartFlac (Bind.Path); }
+                    { px = StartFlac (Data.Path); }
                     catch (Exception ex)
                     { IssueModel.Add ("flac executable failed with '" + ex.Message.Trim (null) + "'."); }
 
@@ -452,23 +452,23 @@ namespace NongFormat
                                 var hasher = new Md5Hasher();
                                 hasher.Append (br);
                                 var hash = hasher.GetHashAndReset();
-                                Bind.actualAudioDataMD5 = hash;
+                                Data.actualAudioDataMD5 = hash;
                             }
                             catch (EndOfStreamException ex)
                             { IssueModel.Add ("Read failed while verifying audio MD5: " + ex.Message, Severity.Fatal); }
 
-                            if (Bind.IsBadDataMD5)
+                            if (Data.IsBadDataMD5)
                                 IssueModel.Add ("MD5 check failed on audio data.");
                             else
                                 IssueModel.Add ("MD5 check successful.", Severity.Noise);
                         }
                 }
 
-                if ((hashFlags & Hashes.PcmCRC32) != 0 && Bind.ActualPcmCRC32 == null)
+                if ((hashFlags & Hashes.PcmCRC32) != 0 && Data.ActualPcmCRC32 == null)
                 {
                     Process px = null;
                     try
-                    { px = StartFlac (Bind.Path); }
+                    { px = StartFlac (Data.Path); }
                     catch (Exception ex)
                     { IssueModel.Add ("flac executable failed with '" + ex.Message.Trim (null) + "'."); }
                 
@@ -478,7 +478,7 @@ namespace NongFormat
                             var hasher = new Crc32rHasher();
                             hasher.Append (br);
                             var hash = hasher.GetHashAndReset();
-                            Bind.ActualPcmCRC32 = BitConverter.ToUInt32 (hash, 0);
+                            Data.ActualPcmCRC32 = BitConverter.ToUInt32 (hash, 0);
                         }
                 }
 #endif

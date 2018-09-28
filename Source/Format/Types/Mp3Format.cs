@@ -29,14 +29,14 @@ namespace NongFormat
         {
             public Mp3XingBlock.Model XingModel { get; private set; }
             public Mp3LameBlock.Model LameModel { get; private set; }
-            public readonly Mp3Format Bind;
+            public new readonly Mp3Format Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new Mp3Format (stream, header, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new Mp3Format (stream, header, path);
+                Data.Issues = IssueModel.Data;
 
-                if (Bind.FileSize > Int32.MaxValue)
+                if (Data.FileSize > Int32.MaxValue)
                 {
                     IssueModel.Add ("File is insanely large", Severity.Fatal);
                     return;
@@ -46,9 +46,9 @@ namespace NongFormat
                 int mediaCount32;
                 byte[] fBuf;
 
-                fBuf = Bind.fBuf = new byte[Bind.FileSize];
-                Bind.fbs.Position = 0;
-                if (Bind.fbs.Read (fBuf, 0, (int) Bind.FileSize) != Bind.FileSize)
+                fBuf = Data.fBuf = new byte[Data.FileSize];
+                Data.fbs.Position = 0;
+                if (Data.fbs.Read (fBuf, 0, (int) Data.FileSize) != Data.FileSize)
                 {
                     IssueModel.Add ("Read error", Severity.Fatal);
                     return;
@@ -57,96 +57,96 @@ namespace NongFormat
                 // Detect ID3v2 tag block.
                 if (fBuf[0]=='I' && fBuf[1]=='D' && fBuf[2]=='3')
                 {
-                    Bind.id3v2Pos = 0;
-                    if (Bind.FileSize < 10)
+                    Data.id3v2Pos = 0;
+                    if (Data.FileSize < 10)
                     {
                         IssueModel.Add ("File truncated near ID3v2 header", Severity.Fatal);
                         return;
                     }
 
-                    Bind.Id3v2Major = Bind.fBuf[3];
-                    Bind.Id3v2Revision = Bind.fBuf[4];
+                    Data.Id3v2Major = Data.fBuf[3];
+                    Data.Id3v2Revision = Data.fBuf[4];
 
-                    Bind.storedId3v2DataSize = ((fBuf[6] & 0x7F) << 21) + ((fBuf[7] & 0x7F) << 14) + ((fBuf[8] & 0x7F) << 7) + (fBuf[9] & 0x7F);
-                    if (Bind.storedId3v2DataSize == 0 || Bind.storedId3v2DataSize+12 > Bind.FileSize)
+                    Data.storedId3v2DataSize = ((fBuf[6] & 0x7F) << 21) + ((fBuf[7] & 0x7F) << 14) + ((fBuf[8] & 0x7F) << 7) + (fBuf[9] & 0x7F);
+                    if (Data.storedId3v2DataSize == 0 || Data.storedId3v2DataSize+12 > Data.FileSize)
                     {
-                        IssueModel.Add ("ID3v2 size of " + Bind.storedId3v2DataSize + " is bad or file is truncated", Severity.Fatal);
+                        IssueModel.Add ("ID3v2 size of " + Data.storedId3v2DataSize + " is bad or file is truncated", Severity.Fatal);
                         return;
                     }
 
-                    if ((fBuf[6] & 0x80) != 0 || (fBuf[7] & 0x80) != 0 || (fBuf[8] & 0x80) != 0 || (Bind.fBuf[9] & 0x80) != 0)
+                    if ((fBuf[6] & 0x80) != 0 || (fBuf[7] & 0x80) != 0 || (fBuf[8] & 0x80) != 0 || (Data.fBuf[9] & 0x80) != 0)
                         IssueModel.Add ("Zero parity error on ID3v2 size");
 
-                    Bind.actualId3v2DataSize = Bind.storedId3v2DataSize;
+                    Data.actualId3v2DataSize = Data.storedId3v2DataSize;
 
                     // Check for bug in old versions of EAC that 1.5% of time writes ID3v2 size over by 1.
-                    if (Bind.Id3v2Major == 3)
-                        if ((fBuf[10+Bind.storedId3v2DataSize] & 0xFE) == 0xFA)
+                    if (Data.Id3v2Major == 3)
+                        if ((fBuf[10+Data.storedId3v2DataSize] & 0xFE) == 0xFA)
                         {
-                            if (fBuf[9+Bind.storedId3v2DataSize] == 0xFF)
+                            if (fBuf[9+Data.storedId3v2DataSize] == 0xFF)
                             {
-                                --Bind.actualId3v2DataSize;
+                                --Data.actualId3v2DataSize;
                                 // Bug bite comfirmed.
-                                Bind.Id3v2TagRepair = String.Format ("0009=0x{0:X2}", Bind.actualId3v2DataSize & 0x7F);
-                                if ((Bind.actualId3v2DataSize & 0x7F) == 0x7F)
-                                    Bind.Id3v2TagRepair = String.Format ("0008=0x{0:X2}, ", ((Bind.actualId3v2DataSize >> 7) & 0x7F)) + Bind.Id3v2TagRepair;
+                                Data.Id3v2TagRepair = String.Format ("0009=0x{0:X2}", Data.actualId3v2DataSize & 0x7F);
+                                if ((Data.actualId3v2DataSize & 0x7F) == 0x7F)
+                                    Data.Id3v2TagRepair = String.Format ("0008=0x{0:X2}, ", ((Data.actualId3v2DataSize >> 7) & 0x7F)) + Data.Id3v2TagRepair;
                             }
                         }
 
-                    Bind.ValidSize = 10 + Bind.actualId3v2DataSize;
+                    Data.ValidSize = 10 + Data.actualId3v2DataSize;
                 }
 
-                while (Bind.ValidSize < Bind.FileSize && fBuf[Bind.ValidSize]==0)
+                while (Data.ValidSize < Data.FileSize && fBuf[Data.ValidSize]==0)
                 {
-                    ++Bind.ValidSize;
-                    ++Bind.DeadBytes;
+                    ++Data.ValidSize;
+                    ++Data.DeadBytes;
                 }
 
-                if (Bind.FileSize - Bind.ValidSize < 0xC0)
+                if (Data.FileSize - Data.ValidSize < 0xC0)
                 {
                     IssueModel.Add ("File appears truncated.", Severity.Fatal);
                     return;
                 }
 
-                Bind.Header = new Mp3Header (fBuf, (int) Bind.ValidSize);
+                Data.Header = new Mp3Header (fBuf, (int) Data.ValidSize);
 
-                if (! Bind.Header.IsMpegLayer3)
+                if (! Data.Header.IsMpegLayer3)
                 {
                     IssueModel.Add ("ID3v2 tag present but no MP3 marker found.", Severity.Fatal);
                     return;
                 }
 
-                if (Bind.Header.MpegVersionBits == 1)
+                if (Data.Header.MpegVersionBits == 1)
                 {
                     IssueModel.Add ("MP3 marker found but MPEG version is not valid.", Severity.Fatal);
                     return;
                 }
 
-                mediaPos32 = (int) Bind.ValidSize;
-                Bind.ValidSize = Bind.FileSize;
+                mediaPos32 = (int) Data.ValidSize;
+                Data.ValidSize = Data.FileSize;
 
                 // Keep the audio header.
-                Bind.aBuf = new byte[Bind.Header.XingOffset + 0x9C];
-                Array.Copy (fBuf, mediaPos32, Bind.aBuf, 0, Bind.aBuf.Length);
+                Data.aBuf = new byte[Data.Header.XingOffset + 0x9C];
+                Array.Copy (fBuf, mediaPos32, Data.aBuf, 0, Data.aBuf.Length);
 
                 // Detect Xing/LAME encodes:
 
-                XingModel = Mp3XingBlock.Create (Bind.aBuf, Bind.Header);
+                XingModel = Mp3XingBlock.Create (Data.aBuf, Data.Header);
                 if (XingModel != null)
                 {
                     LameModel = XingModel as Mp3LameBlock.Model;
-                    Bind.Xing = XingModel.BindXing;
-                    Bind.Lame = Bind.Xing as Mp3LameBlock;
+                    Data.Xing = XingModel.BindXing;
+                    Data.Lame = Data.Xing as Mp3LameBlock;
                 }
 
                 // Detect ID3v1 tag block:
 
-                int ePos = (int) Bind.FileSize;
+                int ePos = (int) Data.FileSize;
                 if (ePos >= 130 && fBuf[ePos-128]=='T' && fBuf[ePos-127]=='A' && fBuf[ePos-126]=='G')
                 {
                     ePos -= 128;
-                    Bind.id3v1Block = new byte[128];
-                    Array.Copy (fBuf, ePos, Bind.id3v1Block, 0, 128);
+                    Data.id3v1Block = new byte[128];
+                    Array.Copy (fBuf, ePos, Data.id3v1Block, 0, 128);
                 }
 
                 // Detect obsolete Lyrics3v2 block:
@@ -167,8 +167,8 @@ namespace NongFormat
                             l3size = l3size * 10 + fBuf[bi]-'0';
                         }
 
-                        Bind.Lyrics3Size = l3size + 15;
-                        ePos -= Bind.Lyrics3Size;
+                        Data.Lyrics3Size = l3size + 15;
+                        ePos -= Data.Lyrics3Size;
                         if (ePos < 2)
                         {
                             IssueModel.Add ("Invalid Lyrics3v2 length.");
@@ -185,8 +185,8 @@ namespace NongFormat
                     if (fBuf[pos]=='A' && fBuf[pos+1]=='P' && fBuf[pos+2]=='E'
                         && fBuf[pos+3]=='T' && fBuf[pos+4]=='A' && fBuf[pos+5] == 'G' && fBuf[pos+6]=='E' && fBuf[pos+7]=='X')
                     {
-                        Bind.ApeSize = 32 + fBuf[pos+12] + (fBuf[pos+13] << 8) + (fBuf[pos+14] << 16) + (fBuf[pos+15] << 24);
-                        ePos -= Bind.ApeSize;
+                        Data.ApeSize = 32 + fBuf[pos+12] + (fBuf[pos+13] << 8) + (fBuf[pos+14] << 16) + (fBuf[pos+15] << 24);
+                        ePos -= Data.ApeSize;
                     }
                 }
 
@@ -200,21 +200,21 @@ namespace NongFormat
 
                 // Detect 2nd, phantom ID3v1 tag block:
 
-                if (Bind.Lame != null && mediaCount32 == Bind.Lame.LameSize + 128 && Bind.HasId3v1 && ! Bind.HasLyrics3 && ! Bind.HasApe && ePos > 34)
+                if (Data.Lame != null && mediaCount32 == Data.Lame.LameSize + 128 && Data.HasId3v1 && ! Data.HasLyrics3 && ! Data.HasApe && ePos > 34)
                     if (fBuf[ePos-128]=='T' && fBuf[ePos-127]=='A' && fBuf[ePos-126]=='G')
                     {
                         ePos -= 128;
                         mediaCount32 -= 128;
-                        Bind.ValidSize -= 128;
+                        Data.ValidSize -= 128;
 
-                        Bind.excess = Bind.id3v1Block;
-                        Bind.id3v1Block = new byte[128];
-                        Array.Copy (fBuf, ePos, Bind.id3v1Block, 0, 128);
-                        Bind.Watermark = Likeliness.Probable;
+                        Data.excess = Data.id3v1Block;
+                        Data.id3v1Block = new byte[128];
+                        Array.Copy (fBuf, ePos, Data.id3v1Block, 0, 128);
+                        Data.Watermark = Likeliness.Probable;
                     }
 
-                Bind.mediaPosition = mediaPos32;
-                Bind.MediaCount = mediaCount32;
+                Data.mediaPosition = mediaPos32;
+                Data.MediaCount = mediaCount32;
 
                 GetDiagnostics();
             }
@@ -222,94 +222,94 @@ namespace NongFormat
 
             private void GetDiagnostics()
             {
-                if (Bind.Header.BitRate == null)
+                if (Data.Header.BitRate == null)
                     IssueModel.Add ("Invalid bit rate.");
 
-                if (Bind.Header.ChannelMode != Mp3ChannelMode.JointStereo)
+                if (Data.Header.ChannelMode != Mp3ChannelMode.JointStereo)
                 {
-                    IssueTags tags = Bind.Header.ChannelMode==Mp3ChannelMode.Stereo? IssueTags.Overstandard : IssueTags.Substandard;
-                    IssueModel.Add ("Channel mode is " + Bind.Header.ChannelMode + ".", Severity.Advisory, tags);
+                    IssueTags tags = Data.Header.ChannelMode==Mp3ChannelMode.Stereo? IssueTags.Overstandard : IssueTags.Substandard;
+                    IssueModel.Add ("Channel mode is " + Data.Header.ChannelMode + ".", Severity.Advisory, tags);
                 }
 
-                if (Bind.Header.SampleRate < 44100)
-                    IssueModel.Add ("Frequency is " + Bind.Header.SampleRate + " Hz (expecting 44100 or better)", Severity.Advisory, IssueTags.Substandard);
-                else if (Bind.Header.SampleRate > 44100)
-                    IssueModel.Add ("Frequency is " + Bind.Header.SampleRate, Severity.Advisory, IssueTags.Overstandard);
+                if (Data.Header.SampleRate < 44100)
+                    IssueModel.Add ("Frequency is " + Data.Header.SampleRate + " Hz (expecting 44100 or better)", Severity.Advisory, IssueTags.Substandard);
+                else if (Data.Header.SampleRate > 44100)
+                    IssueModel.Add ("Frequency is " + Data.Header.SampleRate, Severity.Advisory, IssueTags.Overstandard);
 
-                if (Bind.Xing != null)
+                if (Data.Xing != null)
                 {
-                    if (Bind.Header.CrcProtectedBit == 0)
+                    if (Data.Header.CrcProtectedBit == 0)
                         IssueModel.Add ("Header not flagged for CRC protection.", Severity.Noise);
 
-                    if (! Bind.Xing.HasFrameCount)
+                    if (! Data.Xing.HasFrameCount)
                         IssueModel.Add ("Missing XING frame count.");
 
-                    if (! Bind.Xing.HasSize)
+                    if (! Data.Xing.HasSize)
                         IssueModel.Add ("Missing XING file size.");
 
-                    if (! Bind.Xing.HasTableOfContents)
+                    if (! Data.Xing.HasTableOfContents)
                         IssueModel.Add ("Missing XING table of contents.");
                     else
-                        if (Bind.Xing.IsTocCorrupt())
+                        if (Data.Xing.IsTocCorrupt())
                             IssueModel.Add ("XING table of contents is corrupt.");
 
-                    if (Bind.Xing.HasQualityIndicator)
+                    if (Data.Xing.HasQualityIndicator)
                     {
-                        var qi = Bind.Xing.QualityIndicator;
+                        var qi = Data.Xing.QualityIndicator;
                         if (qi < 0 || qi > 100)
                             IssueModel.Add ("Quality indicator of " + qi + " is out of range.");
                         else
-                            if (Bind.Lame != null && Bind.Lame.IsVbr && qi < 78)
+                            if (Data.Lame != null && Data.Lame.IsVbr && qi < 78)
                                 IssueModel.Add ("VBR quality of " + qi + " is substandard.", Severity.Advisory, IssueTags.Substandard);
                     }
                 }
 
-                if (Bind.Lame == null)
+                if (Data.Lame == null)
                     IssueModel.Add ("Not a LAME encoding.", Severity.Advisory, IssueTags.Substandard);
                 else
                 {
-                    var isBlessed = blessedLames.Any (item => item == Bind.Lame.LameVersion);
+                    var isBlessed = blessedLames.Any (item => item == Data.Lame.LameVersion);
                     if (! isBlessed)
                         IssueModel.Add ("LAME version is not favored.", Severity.Advisory, IssueTags.Substandard);
 
-                    if (Bind.Lame.LameSize != Bind.MediaCount)
+                    if (Data.Lame.LameSize != Data.MediaCount)
                         IssueModel.Add ("Indicated LAME audio size incorrect or unrecognized tag block.", Severity.Warning);
 
-                    if (Bind.Lame.TagRevision == 0xF)
-                        IssueModel.Add ("Tag revision " + Bind.Lame.TagRevision + "invalid.");
+                    if (Data.Lame.TagRevision == 0xF)
+                        IssueModel.Add ("Tag revision " + Data.Lame.TagRevision + "invalid.");
 
-                    if (Bind.Lame.BitrateMethod == 0 || Bind.Lame.BitrateMethod == 0xF)
-                        IssueModel.Add ("Bitrate method " + Bind.Lame.BitrateMethod + " invalid.");
+                    if (Data.Lame.BitrateMethod == 0 || Data.Lame.BitrateMethod == 0xF)
+                        IssueModel.Add ("Bitrate method " + Data.Lame.BitrateMethod + " invalid.");
 
-                    if (Bind.Lame.IsAbr)
+                    if (Data.Lame.IsAbr)
                         IssueModel.Add ("ABR encoding method is obsolete.", Severity.Advisory, IssueTags.Substandard);
 
-                    if (Bind.Lame.AudiophileReplayGain != 0)
-                        IssueModel.Add ("Audiophile ReplayGain (" + Bind.Lame.AudiophileReplayGain + ") usage is obsolete.", Severity.Advisory, IssueTags.Substandard);
+                    if (Data.Lame.AudiophileReplayGain != 0)
+                        IssueModel.Add ("Audiophile ReplayGain (" + Data.Lame.AudiophileReplayGain + ") usage is obsolete.", Severity.Advisory, IssueTags.Substandard);
 
-                    if (Bind.Lame.IsCbr && Mp3Header.IsBadCbr (Bind.Header.MpegVersionBits, Bind.Lame.MinBitRate))
-                        IssueModel.Add ("Minimum bit rate of " + Bind.Lame.MinBitRate + " not valid.", Severity.Advisory, IssueTags.Substandard);
+                    if (Data.Lame.IsCbr && Mp3Header.IsBadCbr (Data.Header.MpegVersionBits, Data.Lame.MinBitRate))
+                        IssueModel.Add ("Minimum bit rate of " + Data.Lame.MinBitRate + " not valid.", Severity.Advisory, IssueTags.Substandard);
                 }
 
-                if (Bind.HasId3v1)
+                if (Data.HasId3v1)
                 {
-                    if (Bind.HasId3v1Phantom)
+                    if (Data.HasId3v1Phantom)
                         IssueModel.Add ("Has phantom ID3v1 tag block.",
                             Severity.Warning, IssueTags.Fussy|IssueTags.HasId3v1,
                             "Remove phantom ID3v1 tag block", RepairPhantomTag);
                     else
                     {
-                        var minor = GetMinorOfV1 (Bind.id3v1Block);
+                        var minor = GetMinorOfV1 (Data.id3v1Block);
                         Severity sev = minor == 0? Severity.Warning : Severity.Noise;
                         IssueModel.Add ("Has ID3v1." + minor + " tags.", sev, IssueTags.HasId3v1);
                     }
                 }
 
-                if (! Bind.HasId3v2)
+                if (! Data.HasId3v2)
                     IssueModel.Add ("Missing ID3v2 tags.", Severity.Trivia, IssueTags.Fussy|IssueTags.Substandard);
                 else
                 {
-                    switch (Bind.Id3v2Major)
+                    switch (Data.Id3v2Major)
                     {
                         case 2:
                             IssueModel.Add ("Has obsolete ID3v2.2 tags.", Severity.Warning, IssueTags.Fussy|IssueTags.Substandard);
@@ -321,52 +321,52 @@ namespace NongFormat
                             IssueModel.Add ("Has jumped-the-shark ID3v2.4 tags.", Severity.Trivia);
                             break;
                         default:
-                            IssueModel.Add ("Has ID3 tags of unknown version 2." + Bind.Id3v2Major);
+                            IssueModel.Add ("Has ID3 tags of unknown version 2." + Data.Id3v2Major);
                             break;
                     }
 
-                    if (Bind.Id3v2TagRepair != null)
-                        IssueModel.Add ("ID3v2 tag size over by 1 (repair with " + Bind.Id3v2TagRepair + ").",
+                    if (Data.Id3v2TagRepair != null)
+                        IssueModel.Add ("ID3v2 tag size over by 1 (repair with " + Data.Id3v2TagRepair + ").",
                             Severity.Warning, IssueTags.Fussy,
                             "Patch EAC induced ID3v2 tag size error", RepairId3v2OffBy1);
                 }
 
-                if (Bind.HasApe)
+                if (Data.HasApe)
                     IssueModel.Add ("Has APE tags.", Severity.Trivia, IssueTags.HasApe);
 
-                if (Bind.HasLyrics3)
+                if (Data.HasLyrics3)
                     IssueModel.Add ("Has obsolete Lyrics3v2 block.", Severity.Advisory);
 
-                if (Bind.DeadBytes != 0)
-                    IssueModel.Add ("Dead space preceeds audio, size=" + Bind.DeadBytes, Severity.Warning, IssueTags.Substandard);
+                if (Data.DeadBytes != 0)
+                    IssueModel.Add ("Dead space preceeds audio, size=" + Data.DeadBytes, Severity.Warning, IssueTags.Substandard);
             }
 
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
-                if (Bind.Lame != null && (hashFlags & Hashes.Intrinsic) != 0 && Bind.Lame.ActualDataCrc == null)
+                if (Data.Lame != null && (hashFlags & Hashes.Intrinsic) != 0 && Data.Lame.ActualDataCrc == null)
                 {
                     var hasher = new Crc16rHasher();
-                    hasher.Append (Bind.fBuf, (int) Bind.mediaPosition, Bind.Lame.LameHeaderSize);
+                    hasher.Append (Data.fBuf, (int) Data.mediaPosition, Data.Lame.LameHeaderSize);
                     byte[] hash = hasher.GetHashAndReset();
                     LameModel.SetActualHeaderCrc (BitConverter.ToUInt16 (hash, 0));
 
-                    hasher.Append (Bind.fBuf, (int) Bind.mediaPosition + 0xC0, (int) Bind.MediaCount - 0xC0);
+                    hasher.Append (Data.fBuf, (int) Data.mediaPosition + 0xC0, (int) Data.MediaCount - 0xC0);
                     hash = hasher.GetHashAndReset();
                     LameModel.SetActualDataCrc (BitConverter.ToUInt16 (hash, 0));
 
-                    if (Bind.IsBadHeader)
-                        Bind.ChIssue = IssueModel.Add ("CRC-16 check failed on audio header.", Severity.Error, IssueTags.Failure);
+                    if (Data.IsBadHeader)
+                        Data.ChIssue = IssueModel.Add ("CRC-16 check failed on audio header.", Severity.Error, IssueTags.Failure);
 
-                    if (Bind.IsBadData)
-                        Bind.CdIssue = IssueModel.Add ("CRC-16 check failed on audio data.", Severity.Error, IssueTags.Failure);
-                    else if (Bind.IsBadHeader)
-                        Bind.CdIssue = IssueModel.Add ("CRC-16 check successful on audio data.", Severity.Noise, IssueTags.Success);
+                    if (Data.IsBadData)
+                        Data.CdIssue = IssueModel.Add ("CRC-16 check failed on audio data.", Severity.Error, IssueTags.Failure);
+                    else if (Data.IsBadHeader)
+                        Data.CdIssue = IssueModel.Add ("CRC-16 check successful on audio data.", Severity.Noise, IssueTags.Success);
                     else
-                        Bind.ChIssue = Bind.CdIssue = IssueModel.Add ("CRC-16 checks successful.", Severity.Noise, IssueTags.Success);
+                        Data.ChIssue = Data.CdIssue = IssueModel.Add ("CRC-16 checks successful.", Severity.Noise, IssueTags.Success);
                 }
 
                 base.CalcHashes (hashFlags, validationFlags);
@@ -375,8 +375,8 @@ namespace NongFormat
 
             public string RepairPhantomTag()
             {
-                Debug.Assert (Bind.fbs != null);
-                if (Bind.fbs == null || Bind.Issues.MaxSeverity >= Severity.Error || ! Bind.HasId3v1Phantom)
+                Debug.Assert (Data.fbs != null);
+                if (Data.fbs == null || Data.Issues.MaxSeverity >= Severity.Error || ! Data.HasId3v1Phantom)
                     return "Invalid attempt";
 
                 string result = null;
@@ -385,8 +385,8 @@ namespace NongFormat
                     TruncateExcess();
 
                     // Overwrite the prior penultimate v1 with the just truncated v1 tag.
-                    Bind.fbs.Position = Bind.FileSize - 128;
-                    Bind.fbs.Write (Bind.id3v1Block, 0, 128);
+                    Data.fbs.Position = Data.FileSize - 128;
+                    Data.fbs.Write (Data.id3v1Block, 0, 128);
                 }
                 catch (UnauthorizedAccessException ex)
                 { result = ex.Message.TrimEnd (null); }
@@ -399,20 +399,20 @@ namespace NongFormat
 
             public string RepairId3v2OffBy1()
             {
-                Debug.Assert (Bind.fbs != null);
-                if (Bind.fbs == null || Bind.Issues.MaxSeverity >= Severity.Error || Bind.storedId3v2DataSize == Bind.actualId3v2DataSize)
+                Debug.Assert (Data.fbs != null);
+                if (Data.fbs == null || Data.Issues.MaxSeverity >= Severity.Error || Data.storedId3v2DataSize == Data.actualId3v2DataSize)
                     return "Invalid attempt";
 
                 // Assume values at 6,7 always 0.
-                var bb = new byte[] { (byte) ((Bind.actualId3v2DataSize >> 7) & 0x7F), (byte) (Bind.actualId3v2DataSize & 0x7F) };
+                var bb = new byte[] { (byte) ((Data.actualId3v2DataSize >> 7) & 0x7F), (byte) (Data.actualId3v2DataSize & 0x7F) };
 
                 string result = null;
                 try
                 {
-                    Bind.fbs.Position = 8;
-                    Bind.fbs.Write (bb, 0, 2);
-                    Bind.Id3v2TagRepair = null;
-                    Bind.storedId3v2DataSize = Bind.actualId3v2DataSize;
+                    Data.fbs.Position = 8;
+                    Data.fbs.Write (bb, 0, 2);
+                    Data.Id3v2TagRepair = null;
+                    Data.storedId3v2DataSize = Data.actualId3v2DataSize;
                 }
                 catch (UnauthorizedAccessException ex)
                 { result = ex.Message.TrimEnd (null); }

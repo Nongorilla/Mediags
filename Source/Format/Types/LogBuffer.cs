@@ -100,7 +100,7 @@ namespace NongFormat
                 {
                     var spacePos = lx.IndexOf (' ', 18);
                     if (spacePos > 0)
-                        Bind.EacVersionText = lx.Substring (18, spacePos-18);
+                        Data.EacVersionText = lx.Substring (18, spacePos-18);
 
                     lx = parser.ReadLine();
                     lx = parser.ReadLine();
@@ -118,7 +118,7 @@ namespace NongFormat
                     IssueModel.Add ("Missing rip date, " + parser.GetPlace() + ".");
                     return lx;
                 }
-                Bind.RipDate = lx.EndsWith (" for CD")? lx.Substring (0, lx.Length-7) : lx;
+                Data.RipDate = lx.EndsWith (" for CD")? lx.Substring (0, lx.Length-7) : lx;
 
                 lx = parser.ReadLine();
                 if (String.IsNullOrWhiteSpace (lx))
@@ -130,8 +130,8 @@ namespace NongFormat
                     IssueModel.Add ("Missing '<artist> / <album>', " + parser.GetPlace() + ".");
                     return lx;
                 }
-                Bind.Artist = lx.Substring (0, slashPos).Trim();
-                Bind.Album = lx.Substring (slashPos + 1).Trim();
+                Data.Artist = lx.Substring (0, slashPos).Trim();
+                Data.Album = lx.Substring (slashPos + 1).Trim();
 
                 for (;;)
                 {
@@ -144,12 +144,12 @@ namespace NongFormat
 
                     if (lx == "Range status and errors")
                     {
-                        Bind.IsRangeRip = true;
+                        Data.IsRangeRip = true;
                         return parser.ReadLine();
                     }
 
                     if (lx == "TOC of the extracted CD")
-                        for (Bind.TocTrackCount = 0;;)
+                        for (Data.TocTrackCount = 0;;)
                         {
                             lx = parser.ReadLine();
                             if (parser.EOF || lx.StartsWith ("==== ") || (lx.StartsWith ("Track") && ! lx.Contains ('|')))
@@ -157,14 +157,14 @@ namespace NongFormat
 
                             if (lx == "Range status and errors")
                             {
-                                Bind.IsRangeRip = true;
+                                Data.IsRangeRip = true;
                                 return parser.ReadLine();
                             }
 
                             if (lx.Length >= 60)
                             {
                                 if (int.TryParse (lx.Substring (0, 9), out int tn))
-                                    ++Bind.TocTrackCount;
+                                    ++Data.TocTrackCount;
                             }
                         }
 
@@ -180,7 +180,7 @@ namespace NongFormat
                                 {
                                     string kk = lx.Substring (ik0, ik1-ik0+1);
                                     if (kk == "Installed external ASPI interface" || kk == "Native Win32 interface for Win NT & 2000")
-                                        Bind.Interface = kk;
+                                        Data.Interface = kk;
                                     goto TOP;
                                 }
                                 if (lx[ii] == ':') break;
@@ -198,37 +198,37 @@ namespace NongFormat
                                     string optKey = lx.Substring (ik0, ik1-ik0+1),
                                            optVal = lx.Substring (iv0, iv1-iv0+1);
                                     if (optKey == "Used drive")
-                                        Bind.Drive = optVal;
+                                        Data.Drive = optVal;
                                     else if (optKey == "Utilize accurate stream")
-                                        Bind.AccurateStream = optVal;
+                                        Data.AccurateStream = optVal;
                                     else if (optKey == "Defeat audio cache")
-                                        Bind.DefeatCache = optVal;
+                                        Data.DefeatCache = optVal;
                                     else if (optKey == "Make use of C2 pointers")
-                                        Bind.UseC2 = optVal;
+                                        Data.UseC2 = optVal;
                                     else if (optKey == "Read mode")
-                                        Bind.ReadMode = optVal;
+                                        Data.ReadMode = optVal;
                                     else if (optKey == "Read offset correction" || optKey == "Combined read/write offset correction")
-                                        Bind.ReadOffset = optVal;
+                                        Data.ReadOffset = optVal;
                                     else if (optKey == "Overread into Lead-In and Lead-Out")
-                                        Bind.Overread = optVal;
+                                        Data.Overread = optVal;
                                     else if (optKey == "Fill up missing offset samples with silence")
-                                        Bind.FillWithSilence = optVal;
+                                        Data.FillWithSilence = optVal;
                                     else if (optKey == "Delete leading and trailing silent blocks")
-                                        Bind.TrimSilence = optVal;
+                                        Data.TrimSilence = optVal;
                                     else if (optKey == "Null samples used in CRC calculations")
-                                        Bind.CalcWithNulls = optVal;
+                                        Data.CalcWithNulls = optVal;
                                     else if (optKey == "Normalize to")
-                                        Bind.NormalizeTo = optVal;
+                                        Data.NormalizeTo = optVal;
                                     else if (optKey == "Used interface")
-                                        Bind.Interface = optVal;
+                                        Data.Interface = optVal;
                                     else if (optKey == "Gap handling")
-                                        Bind.GapHandling = optVal;
+                                        Data.GapHandling = optVal;
                                     else if (optKey == "Sample format")
-                                        Bind.SampleFormat = optVal;
+                                        Data.SampleFormat = optVal;
                                     else if (optKey == "Quality")
-                                        Bind.Quality = optVal;
+                                        Data.Quality = optVal;
                                     else if (optKey == "Add ID3 tag")
-                                        Bind.Id3Tag = optVal;
+                                        Data.Id3Tag = optVal;
                                     break;
                                 }
                         }
@@ -256,13 +256,13 @@ namespace NongFormat
                     bool success = Int32.TryParse (lx.Substring (6), out int num);
                     if (! success)
                     {
-                        Bind.TkIssue = IssueModel.Add ("Invalid track " + parser.GetPlace(), Severity.Fatal, IssueTags.Failure);
+                        Data.TkIssue = IssueModel.Add ("Invalid track " + parser.GetPlace(), Severity.Fatal, IssueTags.Failure);
                         break;
                     }
 
                     lx = parser.ReadLineLTrim();
                     if (! lx.StartsWith ("Filename "))
-                        Bind.TkIssue = IssueModel.Add ("Track " + num + ": Missing 'Filename'.", Severity.Error, IssueTags.Failure);
+                        Data.TkIssue = IssueModel.Add ("Track " + num + ": Missing 'Filename'.", Severity.Error, IssueTags.Failure);
                     else
                         lx = ParseTrack (lx, num);
                 }
@@ -320,7 +320,7 @@ namespace NongFormat
                     if (uint.TryParse (lx.Substring (9), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out word))
                         testCrc = word;
                     else
-                        Bind.TpIssue = IssueModel.Add ("Track " + num + ": Invalid test CRC-32.", Severity.Error, IssueTags.Failure);
+                        Data.TpIssue = IssueModel.Add ("Track " + num + ": Invalid test CRC-32.", Severity.Error, IssueTags.Failure);
                     lx = parser.ReadLineLTrim();
                 }
 
@@ -331,7 +331,7 @@ namespace NongFormat
                     if (uint.TryParse (lx.Substring (9), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out word))
                         copyCrc = word;
                     else
-                        Bind.TkIssue = IssueModel.Add ("Track " + num + ": Invalid copy CRC-32.", Severity.Error, IssueTags.Failure);
+                        Data.TkIssue = IssueModel.Add ("Track " + num + ": Invalid copy CRC-32.", Severity.Error, IssueTags.Failure);
                     lx = parser.ReadLineLTrim();
                 }
 
@@ -357,11 +357,11 @@ namespace NongFormat
 
                 if (arConfidence != null)
                 {
-                    if (Bind.AccurateRipConfidence == null || Bind.AccurateRipConfidence > arConfidence)
-                        Bind.AccurateRipConfidence = arConfidence;
+                    if (Data.AccurateRipConfidence == null || Data.AccurateRipConfidence > arConfidence)
+                        Data.AccurateRipConfidence = arConfidence;
                     if (arVersion != null)
-                        if (Bind.AccurateRip == null || Bind.AccurateRip.Value > arVersion.Value)
-                            Bind.AccurateRip = arVersion;
+                        if (Data.AccurateRip == null || Data.AccurateRip.Value > arVersion.Value)
+                            Data.AccurateRip = arVersion;
                 }
 
                 bool hasOK = false;
@@ -387,7 +387,7 @@ namespace NongFormat
 
                 if (lx.Contains ("not present"))
                 {
-                    Bind.CueToolsConfidence = 0;
+                    Data.CueToolsConfidence = 0;
                     lx = parser.ReadLineLTrim();
                     if (! parser.EOF && lx.StartsWith ("Submit"))
                         lx = parser.ReadLineLTrim();
@@ -410,7 +410,7 @@ namespace NongFormat
                         {
                             bool isOK = ToInt (lx, 12, out ctConfidence);
                         }
-                        Bind.CueToolsConfidence = ctConfidence;
+                        Data.CueToolsConfidence = ctConfidence;
                         lx = parser.ReadLineLTrim();
                         return lx;
                     }
@@ -427,7 +427,7 @@ namespace NongFormat
                     {
                         bool isOK = ToInt (lx, 9, out ctConfidence);
                         if (! isOK)
-                        { Bind.CueToolsConfidence = -1; return lx; }
+                        { Data.CueToolsConfidence = -1; return lx; }
                     }
                     else if (lx.Contains ("Differs"))
                         ctConfidence = -1;
@@ -436,8 +436,8 @@ namespace NongFormat
 
                     if (tx < TracksModel.Bind.Items.Count)
                         TracksModel.SetCtConfidence (tx, ctConfidence);
-                    if (Bind.CueToolsConfidence == null || Bind.CueToolsConfidence > ctConfidence)
-                        Bind.CueToolsConfidence = ctConfidence;
+                    if (Data.CueToolsConfidence == null || Data.CueToolsConfidence > ctConfidence)
+                        Data.CueToolsConfidence = ctConfidence;
                 }
                 return parser.ReadLineLTrim();
             }

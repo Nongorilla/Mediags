@@ -20,7 +20,7 @@ namespace UnitTest
                 fs.Read (hdr, 0, hdr.Length);
 
                 Mp3Format.Model mp3Model = Mp3Format.CreateModel (fs, hdr, fn);
-                Mp3Format mp3 = mp3Model.Bind;
+                Mp3Format mp3 = mp3Model.Data;
 
                 Assert.IsNotNull (mp3);
                 Assert.AreEqual (Severity.Warning, mp3.Issues.MaxSeverity);
@@ -51,8 +51,8 @@ namespace UnitTest
                 Assert.IsNotNull (mp3Model);
 
                 mp3Model.CalcHashes (Hashes.Intrinsic, Validations.None);
-                Assert.IsTrue (mp3Model.Bind.IsBadData);
-                Assert.AreEqual (Severity.Error, mp3Model.Bind.Issues.MaxSeverity);
+                Assert.IsTrue (mp3Model.Data.IsBadData);
+                Assert.AreEqual (Severity.Error, mp3Model.Data.Issues.MaxSeverity);
             }
         }
     }

@@ -27,41 +27,41 @@ namespace NongFormat
 
         public partial class Model : FormatBase.ModelBase
         {
-            public readonly LogXldFormat Bind;
+            public new readonly LogXldFormat Data;
             public LogEacTrack.Vector.Model TracksModel;
             private LogBuffer parser;
 
             public Model (Stream stream, byte[] hdr, string path)
             {
                 TracksModel = new LogEacTrack.Vector.Model();
-                BaseBind = this.Bind = new LogXldFormat (stream, path, TracksModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new LogXldFormat (stream, path, TracksModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 // Arbitrary limit.
-                if (Bind.FileSize > 250000)
+                if (Data.FileSize > 250000)
                 {
                     IssueModel.Add ("File insanely huge.", Severity.Fatal);
                     return;
                 }
 
-                Bind.fBuf = new byte[Bind.FileSize];
-                Bind.fbs.Position = 0;
-                var got = Bind.fbs.Read (Bind.fBuf, 0, (int) Bind.FileSize);
-                if (got != Bind.FileSize)
+                Data.fBuf = new byte[Data.FileSize];
+                Data.fbs.Position = 0;
+                var got = Data.fbs.Read (Data.fBuf, 0, (int) Data.FileSize);
+                if (got != Data.FileSize)
                 {
                     IssueModel.Add ("Read failed", Severity.Fatal);
                     return;
                 }
 
-                parser = new LogBuffer (Bind.fBuf, Encoding.ASCII);
+                parser = new LogBuffer (Data.fBuf, Encoding.ASCII);
                 string lx = parser.ReadLineLTrim();
-                Bind.XldVersionText = lx.Substring (logXldSig.Length);
+                Data.XldVersionText = lx.Substring (logXldSig.Length);
                 lx = parser.ReadLineLTrim();
                 if (parser.EOF)
                     return;
 
                 if (lx.StartsWith ("XLD extraction logfile from "))
-                    Bind.RipDate = lx.Substring (28);
+                    Data.RipDate = lx.Substring (28);
 
                 lx = parser.ReadLineLTrim();
                 if (parser.EOF)
@@ -73,8 +73,8 @@ namespace NongFormat
                     IssueModel.Add ("Missing '<artist> / <album>', " + parser.GetPlace() + ".");
                     return;
                 }
-                Bind.RipArtist = lx.Substring (0, slashPos).Trim();
-                Bind.RipAlbum = lx.Substring (slashPos + 1).Trim();
+                Data.RipArtist = lx.Substring (0, slashPos).Trim();
+                Data.RipAlbum = lx.Substring (slashPos + 1).Trim();
 
                 for (;;)
                 {
@@ -85,7 +85,7 @@ namespace NongFormat
                         lx = parser.ReadLineLTrim();
                         if (! parser.EOF)
                         {
-                            Bind.storedHash = lx;
+                            Data.storedHash = lx;
                             lx = parser.ReadLineLTrim();
                         }
                     }
@@ -96,7 +96,7 @@ namespace NongFormat
 
             private void GetDiagnostics()
             {
-                if (Bind.storedHash == null)
+                if (Data.storedHash == null)
                     IssueModel.Add ("No signature.", Severity.Trivia, IssueTags.Fussy);
             }
         }

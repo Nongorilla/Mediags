@@ -30,25 +30,25 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly JpegFormat Bind;
+            public new readonly JpegFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new JpegFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new JpegFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 // Arbitrary choice of 50MB cutoff.
-                if (Bind.FileSize > 50000000)
+                if (Data.FileSize > 50000000)
                 {
                     IssueModel.Add ("File insanely huge", Severity.Fatal);
                     return;
                 }
 
-                byte[] buf = new byte[(int) Bind.FileSize];
+                byte[] buf = new byte[(int) Data.FileSize];
 
                 stream.Position = 0;
-                int got = stream.Read (buf, 0, (int) Bind.FileSize);
-                if (got != Bind.FileSize)
+                int got = stream.Read (buf, 0, (int) Data.FileSize);
+                if (got != Data.FileSize)
                 {
                     IssueModel.Add ("Read error", Severity.Fatal);
                     return;
@@ -56,7 +56,7 @@ namespace NongFormat
 
                 for (int len = 0, pos = 2; ; pos = pos + len + 2)
                 {
-                    if (pos > Bind.FileSize - 4)
+                    if (pos > Data.FileSize - 4)
                     {
                         IssueModel.Add ("File truncated", Severity.Fatal);
                         return;
@@ -77,7 +77,7 @@ namespace NongFormat
                     // Detect SOS (Start of Stream) marker.
                     if (buf[pos+1] == 0xDA)
                     {
-                        Bind.sosPos = pos;
+                        Data.sosPos = pos;
                         break;
                     }
 
@@ -88,7 +88,7 @@ namespace NongFormat
                         return;
                     }
 
-                    if (pos+len+2 >= Bind.FileSize)
+                    if (pos+len+2 >= Data.FileSize)
                     {
                         IssueModel.Add ("File truncated.", Severity.Fatal);
                         return;
@@ -97,20 +97,20 @@ namespace NongFormat
                     if (len == 2)
                         IssueModel.Add ("Contains empty segment.", Severity.Trivia);
 
-                    ++Bind.SegmentCount;
+                    ++Data.SegmentCount;
 
                     // Detect application marker:
                     if (buf[pos+1]>=0xE0 && buf[pos+1]<=0xEF)
                     {
                         string appName = ConvertTo.FromAsciizToString (buf, pos+4);
-                        Bind.appNames.Add (appName);
+                        Data.appNames.Add (appName);
 
                         if (buf[pos+1] == 0xE0)
                         {
                             if (buf[pos+4]!='J' || buf[pos+5]!='F' || buf[pos+6]!='I' || buf[pos+7]!='F' || buf[pos+8]!=0)
                                 continue;
 
-                            if ((Bind.Apps & JpegApps.Jfif) != 0)
+                            if ((Data.Apps & JpegApps.Jfif) != 0)
                             {
                                 IssueModel.Add ("Contains ghost JFIF segment.", Severity.Advisory);
                                 continue;
@@ -122,26 +122,26 @@ namespace NongFormat
                                 return;
                             }
 
-                            Bind.Apps |= JpegApps.Jfif;
-                            Bind.VersionMajor = buf[pos+0x09];
-                            Bind.VersionMinor = buf[pos+0x0A];
-                            Bind.Units = (JpegUnits) buf[pos+0x0B];
-                            Bind.DensityX = (buf[pos+0x0C] << 8) + buf[pos+0x0D];
-                            Bind.DensityY = (buf[pos+0x0E] << 8) + buf[pos+0x0F];
-                            Bind.ThumbXLen = buf[pos+0x10];
-                            Bind.ThumbYLen = buf[pos+0x11];
+                            Data.Apps |= JpegApps.Jfif;
+                            Data.VersionMajor = buf[pos+0x09];
+                            Data.VersionMinor = buf[pos+0x0A];
+                            Data.Units = (JpegUnits) buf[pos+0x0B];
+                            Data.DensityX = (buf[pos+0x0C] << 8) + buf[pos+0x0D];
+                            Data.DensityY = (buf[pos+0x0E] << 8) + buf[pos+0x0F];
+                            Data.ThumbXLen = buf[pos+0x10];
+                            Data.ThumbYLen = buf[pos+0x11];
                         }
                         else if (buf[pos+1] == 0xE1)
                         {
                             if (buf[pos+4]=='E' && buf[pos+5]=='x' && buf[pos+6]=='i' && buf[pos+7]=='f' && buf[pos+8]==0)
                             {
-                                if ((Bind.Apps & JpegApps.Exif) != 0)
+                                if ((Data.Apps & JpegApps.Exif) != 0)
                                 {
                                     IssueModel.Add ("Contains ghost Exif segment", Severity.Trivia);
                                     continue;
                                 }
 
-                                Bind.Apps |= JpegApps.Exif;
+                                Data.Apps |= JpegApps.Exif;
                                 // Additional Exif parsing goes here...
                             }
                         }
@@ -149,11 +149,11 @@ namespace NongFormat
                 }
 
                 // Detect EOI (end of image) marker: FFD9
-                for (int pos = (int) Bind.sosPos; pos < Bind.FileSize - 1; ++pos)
+                for (int pos = (int) Data.sosPos; pos < Data.FileSize - 1; ++pos)
                     if (buf[pos]==0xFF && buf[pos+1]==0xD9)
                     {
-                        Bind.ValidSize = pos + 2;
-                        Bind.eoiPos = pos;
+                        Data.ValidSize = pos + 2;
+                        Data.eoiPos = pos;
                         break;
                     }
 
@@ -164,22 +164,22 @@ namespace NongFormat
 
             private void GetDiagnostics()
             {
-                if ((Bind.Apps & JpegApps.Jfif) != 0)
+                if ((Data.Apps & JpegApps.Jfif) != 0)
                 {
                     // This spec is often violated.
-                    if (Bind.DensityX == 0 || Bind.DensityY == 0)
-                        IssueModel.Add ("Invalid JFIF density of " + Bind.DensityX + "x" + Bind.DensityY, Severity.Trivia);
+                    if (Data.DensityX == 0 || Data.DensityY == 0)
+                        IssueModel.Add ("Invalid JFIF density of " + Data.DensityX + "x" + Data.DensityY, Severity.Trivia);
 
-                    if ((int) Bind.Units > 2)
-                        IssueModel.Add ("Invalid JFIF units of " + Bind.Units, Severity.Warning);
+                    if ((int) Data.Units > 2)
+                        IssueModel.Add ("Invalid JFIF units of " + Data.Units, Severity.Warning);
                 }
 
-                if (Bind.eoiPos == null)
+                if (Data.eoiPos == null)
                     IssueModel.Add ("Missing end marker");
                 else
-                    if (Bind.ExcessSize == 0)
+                    if (Data.ExcessSize == 0)
                     {
-                        var unparsedSize = Bind.FileSize - Bind.ValidSize;
+                        var unparsedSize = Data.FileSize - Data.ValidSize;
                         if (unparsedSize > 0)
                             IssueModel.Add ("Possible watermark, size=" + unparsedSize, Severity.Advisory);
                     }

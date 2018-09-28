@@ -30,18 +30,18 @@ namespace NongFormat
 
         public new class Model : RiffContainer.Model
         {
-            public readonly WavFormat Bind;
+            public new readonly WavFormat Data;
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                BaseBind = RiffBind = Bind = new WavFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new WavFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 ParseRiff (hdr);
 
-                Bind.ActualCRC32 = null;
+                Data.ActualCRC32 = null;
 
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
                 if (hdr.Length < 0x2C)
@@ -50,7 +50,7 @@ namespace NongFormat
                     return;
                 }
 
-                if (Bind.RiffChunkCount > 1)
+                if (Data.RiffChunkCount > 1)
                 {
                     IssueModel.Add ("Contains multiple RIFF chunks", Severity.Fatal);
                     return;
@@ -63,12 +63,12 @@ namespace NongFormat
                     return;
                 }
 
-                Bind.CompCode = hdr[hPos+8] | hdr[hPos+9] << 8;
-                Bind.ChannelCount = hdr[hPos+0x0A] | hdr[hPos+0x0B] << 8;
-                Bind.SampleRate = ConvertTo.FromLit32ToUInt32 (hdr, hPos+0x0C);
-                Bind.AverageBPS = ConvertTo.FromLit32ToUInt32 (hdr, hPos+0x10);
-                Bind.BlockAlign = hdr[hPos+0x14] | hdr[hPos+0x15] << 8;
-                Bind.BitsPerSample = hdr[hPos+0x16] | hdr[hPos+0x17] << 8;
+                Data.CompCode = hdr[hPos+8] | hdr[hPos+9] << 8;
+                Data.ChannelCount = hdr[hPos+0x0A] | hdr[hPos+0x0B] << 8;
+                Data.SampleRate = ConvertTo.FromLit32ToUInt32 (hdr, hPos+0x0C);
+                Data.AverageBPS = ConvertTo.FromLit32ToUInt32 (hdr, hPos+0x10);
+                Data.BlockAlign = hdr[hPos+0x14] | hdr[hPos+0x15] << 8;
+                Data.BitsPerSample = hdr[hPos+0x16] | hdr[hPos+0x17] << 8;
 
                 if ((hdr[hPos] & 0x80) != 0)
                 {
@@ -93,15 +93,15 @@ namespace NongFormat
                     return;
                 }
 
-                Bind.mediaPosition = dataPos + 8;
-                Bind.MediaCount = ConvertTo.FromLit32ToUInt32 (dHdr, 4);
-                if (Bind.mediaPosition + Bind.MediaCount > Bind.RiffSize)
+                Data.mediaPosition = dataPos + 8;
+                Data.MediaCount = ConvertTo.FromLit32ToUInt32 (dHdr, 4);
+                if (Data.mediaPosition + Data.MediaCount > Data.RiffSize)
                 {
                     IssueModel.Add ("Invalid data size", Severity.Fatal);
                     return;
                 }
 
-                Bind.HasTags = Bind.mediaPosition + Bind.MediaCount < Bind.RiffSize;
+                Data.HasTags = Data.mediaPosition + Data.MediaCount < Data.RiffSize;
                 GetDiagnostics();
             }
 
@@ -110,7 +110,7 @@ namespace NongFormat
             {
                 GetRiffDiagnostics();
 
-                if (Bind.CompCode != (int) WaveCompression.PCM)
+                if (Data.CompCode != (int) WaveCompression.PCM)
                     IssueModel.Add ("Data is not PCM", Severity.Trivia, IssueTags.Substandard);
             }
 
@@ -120,25 +120,25 @@ namespace NongFormat
                 if (IssueModel.Data.HasFatal)
                     return;
 
-                if ((hashFlags & Hashes.PcmMD5) != 0 && Bind.actualMediaMD5 == null)
+                if ((hashFlags & Hashes.PcmMD5) != 0 && Data.actualMediaMD5 == null)
                     try
                     {
                         var hasher = new Md5Hasher();
-                        hasher.Append (Bind.fbs, Bind.mediaPosition, Bind.MediaCount);
-                        Bind.actualMediaMD5 = hasher.GetHashAndReset();
+                        hasher.Append (Data.fbs, Data.mediaPosition, Data.MediaCount);
+                        Data.actualMediaMD5 = hasher.GetHashAndReset();
                     }
                     catch (EndOfStreamException)
                     {
                         IssueModel.Add ("File truncated near audio.", Severity.Fatal);
                     }
 
-                if ((hashFlags & Hashes.PcmCRC32) != 0 && Bind.ActualCRC32 == null)
+                if ((hashFlags & Hashes.PcmCRC32) != 0 && Data.ActualCRC32 == null)
                     try
                     {
                         var hasher = new Crc32rHasher();
-                        hasher.Append (Bind.fbs, Bind.mediaPosition, Bind.MediaCount);
+                        hasher.Append (Data.fbs, Data.mediaPosition, Data.MediaCount);
                         var hash = hasher.GetHashAndReset();
-                        Bind.ActualCRC32 = BitConverter.ToUInt32 (hash, 0);
+                        Data.ActualCRC32 = BitConverter.ToUInt32 (hash, 0);
                     }
                     catch (EndOfStreamException)
                     {

@@ -25,16 +25,16 @@ namespace NongFormat
 
         public new class Model : FilesContainer.Model
         {
-            public readonly CueFormat Bind;
+            public new readonly CueFormat Data;
 
             public Model (Stream stream, byte[] header, string path) : base (path)
             {
-                BaseBind = BindFiles = Bind = new CueFormat (stream, path, FilesModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new CueFormat (stream, path, FilesModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 SetIgnoredName ("Range.wav");
-                Bind.fbs.Position = 0;
-                TextReader tr = new StreamReader (Bind.fbs, LogBuffer.cp1252);
+                Data.fbs.Position = 0;
+                TextReader tr = new StreamReader (Data.fbs, LogBuffer.cp1252);
 
                 for (int line = 1; ; ++line)
                 {
@@ -48,15 +48,15 @@ namespace NongFormat
 
                     if (lx.StartsWith ("CATALOG "))
                     {
-                        Bind.Catalog = lx.Substring (8).Trim();
-                        if (Bind.Catalog.Length != 13)
+                        Data.Catalog = lx.Substring (8).Trim();
+                        if (Data.Catalog.Length != 13)
                             IssueModel.Add ("Invalid CATALOG.");
                         continue;
                     }
 
                     if (lx.Length > 0 && lx.StartsWith ("FILE "))
                     {
-                        var name = Bind.GetQuotedField (lx, 5);
+                        var name = Data.GetQuotedField (lx, 5);
                         if (name.Length == 0)
                             IssueModel.Add ("Missing file name.");
                         else

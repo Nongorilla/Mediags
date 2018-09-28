@@ -24,33 +24,33 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly GifFormat Bind;
+            public new readonly GifFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new GifFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new GifFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 // Arbitrary sanity limit.
-                if (Bind.FileSize > 50000000)
+                if (Data.FileSize > 50000000)
                 {
                     IssueModel.Add ("File size insanely huge", Severity.Fatal);
                     return;
                 }
 
-                Bind.fBuf = new byte[(int) Bind.FileSize];
+                Data.fBuf = new byte[(int) Data.FileSize];
 
                 stream.Position = 0;
-                int got = stream.Read (Bind.fBuf, 0, (int) Bind.FileSize);
-                if (got < Bind.FileSize)
+                int got = stream.Read (Data.fBuf, 0, (int) Data.FileSize);
+                if (got < Data.FileSize)
                 {
                     IssueModel.Add ("Read failed.", Severity.Fatal);
                     return;
                 }
 
-                Bind.Version = Bind.fBuf[4]=='7'? "87a" : "89a";
-                Bind.Width = ConvertTo.FromLit16ToInt32 (Bind.fBuf, 6);
-                Bind.Height = ConvertTo.FromLit16ToInt32 (Bind.fBuf, 8);
+                Data.Version = Data.fBuf[4]=='7'? "87a" : "89a";
+                Data.Width = ConvertTo.FromLit16ToInt32 (Data.fBuf, 6);
+                Data.Height = ConvertTo.FromLit16ToInt32 (Data.fBuf, 8);
             }
         }
 

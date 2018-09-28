@@ -22,7 +22,7 @@ namespace UnitTest
                 Assert.AreEqual (hdr.Length, got);
 
                 AviFormat.Model aviModel = AviFormat.CreateModel (fs, hdr, fs.Name);
-                AviFormat avi = aviModel.Bind;
+                AviFormat avi = aviModel.Data;
 
                 Assert.IsNotNull (avi);
                 long fileSize = avi.FileSize;

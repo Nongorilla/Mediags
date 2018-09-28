@@ -22,7 +22,7 @@ namespace UnitTest
                 Sha256Format.Model shaModel = Sha256Format.CreateModel (fs, hdr, fs.Name);
                 Assert.IsNotNull (shaModel);
 
-                Sha256Format sha = shaModel.Bind;
+                Sha256Format sha = shaModel.Data;
 
                 Assert.IsTrue (sha.Issues.MaxSeverity == Severity.NoIssue);
                 Assert.AreEqual (0, sha.Issues.Items.Count);
@@ -47,7 +47,7 @@ namespace UnitTest
                 Sha256Format.Model shaModel = Sha256Format.CreateModel (fs, hdr, fs.Name);
                 Assert.IsNotNull (shaModel);
 
-                Sha256Format sha = shaModel.Bind;
+                Sha256Format sha = shaModel.Data;
 
                 Assert.IsTrue (sha.Issues.MaxSeverity == Severity.NoIssue);
                 Assert.AreEqual (0, sha.Issues.Items.Count);

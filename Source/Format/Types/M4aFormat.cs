@@ -23,12 +23,12 @@ namespace NongFormat
 
         public new class Model : Mpeg4Container.Model
         {
-            public readonly M4aFormat Bind;
+            public new readonly M4aFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Mpeg4Bind = Bind = new M4aFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new M4aFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 ParseMpeg4 (stream, header, path);
                 GetDiagnostics();

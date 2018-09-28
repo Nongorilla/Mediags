@@ -8,8 +8,7 @@ namespace NongFormat
     {
         public abstract class Model : FormatBase.ModelBase
         {
-            public RiffContainer RiffBind { get; protected set; }
-
+            public new RiffContainer Data => (RiffContainer) _data;
             protected void ParseRiff (byte[] hdr)
             {
                 var buf = new byte[8];
@@ -20,29 +19,29 @@ namespace NongFormat
 
                 do
                 {
-                    if (RiffBind.ValidSize + chunkSize > RiffBind.FileSize)
+                    if (Data.ValidSize + chunkSize > Data.FileSize)
                     {
                         IssueModel.Add ("File truncated", Severity.Fatal);
                         return;
                     }
 
-                    ++RiffBind.RiffChunkCount;
-                    RiffBind.RiffSize = RiffBind.ValidSize = RiffBind.ValidSize + chunkSize;
+                    ++Data.RiffChunkCount;
+                    Data.RiffSize = Data.ValidSize = Data.ValidSize + chunkSize;
 
-                    if (RiffBind.ValidSize + 8 > RiffBind.FileSize)
+                    if (Data.ValidSize + 8 > Data.FileSize)
                         // Not enough bytes for a header.
                         return;
 
                     try
                     {
-                        RiffBind.fbs.Position = RiffBind.ValidSize;
+                        Data.fbs.Position = Data.ValidSize;
                     }
                     catch (EndOfStreamException)
                     {
                         IssueModel.Add ("File truncated or corrupt", Severity.Fatal);
                         return;
                     }
-                    var got = RiffBind.fbs.Read (buf, 0, 8);
+                    var got = Data.fbs.Read (buf, 0, 8);
                     if (got != 8)
                     {
                         IssueModel.Add ("Read error", Severity.Fatal);
@@ -54,35 +53,35 @@ namespace NongFormat
 
                 if (buf[0]=='J' && buf[1]=='U' && buf[2]=='N' && buf[3]=='K')
                 {
-                    if (RiffBind.ValidSize + chunkSize > RiffBind.FileSize)
+                    if (Data.ValidSize + chunkSize > Data.FileSize)
                     {
                         IssueModel.Add ("File corrupt or truncated", Severity.Fatal);
                         return;
                     }
 
-                    RiffBind.JunkSize = chunkSize;
-                    RiffBind.ValidSize += RiffBind.JunkSize;
+                    Data.JunkSize = chunkSize;
+                    Data.ValidSize += Data.JunkSize;
                 }
             }
 
             protected void GetRiffDiagnostics()
             {
-                if (RiffBind.RiffSize <= 12)
+                if (Data.RiffSize <= 12)
                     IssueModel.Add ("Missing data", Severity.Error);
 
-                long unparsedSize = RiffBind.FileSize - RiffBind.ValidSize - RiffBind.ExcessSize;
+                long unparsedSize = Data.FileSize - Data.ValidSize - Data.ExcessSize;
                 if (unparsedSize != 0)
                     IssueModel.Add ("Unrecognized bytes at end = " + unparsedSize, Severity.Warning);
             }
 
             protected void GetDiagsForMarkable()
             {
-                if (RiffBind.RiffSize <= 12)
+                if (Data.RiffSize <= 12)
                     IssueModel.Add ("Missing data", Severity.Error);
 
-                if (RiffBind.ExcessSize == 0)
+                if (Data.ExcessSize == 0)
                 {
-                    var unparsedSize = BaseBind.FileSize - BaseBind.ValidSize;
+                    var unparsedSize = base.Data.FileSize - base.Data.ValidSize;
                     if (unparsedSize > 0)
                         IssueModel.Add ("Possible watermark, size=" + unparsedSize, Severity.Trivia);
                 }

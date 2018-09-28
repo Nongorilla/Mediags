@@ -228,7 +228,7 @@ namespace NongMediaDiags
                 }
 
                 LogModel.ClearFile();
-                Bind.Log = LogModel.Bind;
+                Bind.Log = LogModel.Data;
 
                 if (Bind.Ripper == null && (Owner.Data.HashFlags & Hashes.WebCheck) != 0)
                     LogModel.CalcHashWebCheck();
@@ -295,7 +295,7 @@ namespace NongMediaDiags
                         }
                         else
                         {
-                            Mp3Format mp3 = mp3Model.Bind;
+                            Mp3Format mp3 = mp3Model.Data;
                             mp3Model.CalcHashes (Hashes.Intrinsic|Owner.Data.HashFlags|fileHash, Owner.Data.ValidationFlags);
                             if (mp3.IsBadHeader)
                                 ++Owner.Data.Mp3Format.TotalHeaderErrors;
@@ -375,7 +375,7 @@ namespace NongMediaDiags
                         Owner.SetCurrentFile (info.Name);
                         ++Owner.Data.M3uFormat.TrueTotal;
                         ++Owner.Data.TotalFiles;
-                        Owner.ReportFormat (m3uModel.Bind, Bind.Signature != null);
+                        Owner.ReportFormat (m3uModel.Data, Bind.Signature != null);
                         if (maxSeverity < m3uModel.IssueModel.Data.MaxSeverity)
                             maxSeverity = m3uModel.IssueModel.Data.MaxSeverity;
                     }
@@ -392,7 +392,7 @@ namespace NongMediaDiags
                         Owner.SetCurrentFile (info.Name);
                         ++Owner.Data.M3u8Format.TrueTotal;
                         ++Owner.Data.TotalFiles;
-                        Owner.ReportFormat (m3u8Model.Bind, Bind.Signature != null);
+                        Owner.ReportFormat (m3u8Model.Data, Bind.Signature != null);
                         if (maxSeverity < m3u8Model.IssueModel.Data.MaxSeverity)
                             maxSeverity = m3u8Model.IssueModel.Data.MaxSeverity;
                     }
@@ -420,9 +420,9 @@ namespace NongMediaDiags
                         using (var fs0 = new FileStream (newDigPath, FileMode.CreateNew))
                         {
                             Sha1xModel = new Sha1xFormat.Model (fs0, newDigPath, Bind.Log, Bind.mp3Models, Bind.Signature);
-                            Bind.Sha1x = Sha1xModel.Bind;
+                            Bind.Sha1x = Sha1xModel.Data;
 
-                            if (Owner.Data.WillProve && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
+                            if (Owner.Data.WillProve && LogModel.Data.ShIssue != null && LogModel.Data.ShIssue.Success)
                                 Sha1xModel.HistoryModel.Add ("verified", Bind.Signature);
 
                             Sha1xModel.WriteFile (Owner.Data.Product + " v" + Owner.Data.ProductVersion, Encoding.UTF8);
@@ -447,17 +447,17 @@ namespace NongMediaDiags
                     var hdr = new byte[0x2C];
                     int got = fs0.Read (hdr, 0, hdr.Length);
                     Sha1xModel = Sha1xFormat.CreateModel (fs0, hdr, Bind.DigPath);
-                    Bind.Sha1x = Sha1xModel.Bind;
+                    Bind.Sha1x = Sha1xModel.Data;
                     Sha1xModel.CalcHashes (Hashes.Intrinsic, Validations.None);
                     if (Bind.Sha1x.Issues.MaxSeverity >= Severity.Error)
                         return;
 
                     if (Sha1xModel.HistoryModel != null && Sha1xModel.HistoryModel.Bind.Prover != null)
                         Sha1xModel.IssueModel.Add ("EAC log self-hash previously verified.", Severity.Trivia);
-                    else if (Owner.Data.WillProve && LogModel.Bind.ShIssue == null)
+                    else if (Owner.Data.WillProve && LogModel.Data.ShIssue == null)
                     {
                         LogModel.CalcHashWebCheck();
-                        if (LogModel.Bind.ShIssue.Failure)
+                        if (LogModel.Data.ShIssue.Failure)
                             Sha1xModel.IssueModel.Add ("EAC log self-hash verify failed!");
                         else
                             Sha1xModel.IssueModel.Add ("EAC log self-hash verify successful.", Severity.Advisory);
@@ -465,26 +465,26 @@ namespace NongMediaDiags
                     else
                     {
                         Severity sev = Severity.Noise;
-                        if (Owner.Data.WillProve && (LogModel.Bind.ShIssue == null || ! LogModel.Bind.ShIssue.Success))
+                        if (Owner.Data.WillProve && (LogModel.Data.ShIssue == null || ! LogModel.Data.ShIssue.Success))
                             sev = Severity.Error;
                         Sha1xModel.IssueModel.Add ("EAC log self-hash not previously verified.", sev);
                     }
 
                     var logHashLine = Bind.Sha1x.HashedFiles.Items[0];
 
-                    Sha1xModel.HashedModel.SetActualHash (0, LogModel.Bind.FileSHA1);
+                    Sha1xModel.HashedModel.SetActualHash (0, LogModel.Data.FileSHA1);
                     if (logHashLine.IsMatch == false)
                         Sha1xModel.IssueModel.Add ("EAC log has been modified. Rip is not valid.");
 
-                    if (logHashLine.FileName != LogModel.Bind.Name)
+                    if (logHashLine.FileName != LogModel.Data.Name)
                         Sha1xModel.IssueModel.Add ("EAC log has been renamed.", Severity.Advisory, IssueTags.AlbumChange);
 
                     for (int ix = 0; ix < Bind.mp3Models.Count; ++ix)
                     {
                         var hashLine = Bind.Sha1x.HashedFiles.Items[ix+1];
-                        Sha1xModel.HashedModel.SetActualHash (ix+1, Bind.mp3Models[ix].Bind.MediaSHA1);
+                        Sha1xModel.HashedModel.SetActualHash (ix+1, Bind.mp3Models[ix].Data.MediaSHA1);
 
-                        var actualName = Bind.mp3Models[ix].Bind.Name;
+                        var actualName = Bind.mp3Models[ix].Data.Name;
                         if (hashLine.IsMatch == false)
                             Sha1xModel.IssueModel.Add ("Audio SHA-1 mismatch on '" + actualName + "'.");
                         if (hashLine.FileName != actualName)
@@ -514,8 +514,8 @@ namespace NongMediaDiags
 
                     if (Bind.Signature != null)
                     {
-                        if (Owner.Data.WillProve && Sha1xModel.Bind.History.Prover == null
-                                && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
+                        if (Owner.Data.WillProve && Sha1xModel.Data.History.Prover == null
+                                && LogModel.Data.ShIssue != null && LogModel.Data.ShIssue.Success)
                         {
                             Sha1xModel.HistoryModel.Add ("verified", Bind.Signature);
                             Sha1xModel.IssueModel.Add ("Change log updated with 'verified'.", Severity.Advisory);
@@ -551,7 +551,7 @@ namespace NongMediaDiags
 
                 if (Bind.TrackRenameCount > 0)
                     for (var ix = 0; ix < Bind.mp3Models.Count; ++ix)
-                        Sha1xModel.HashedModel.SetFileName (ix+1, Bind.mp3Models[ix].Bind.Name);
+                        Sha1xModel.HashedModel.SetFileName (ix+1, Bind.mp3Models[ix].Data.Name);
 
                 if (Sha1xModel.HistoryModel != null && Sha1xModel.HistoryModel.Bind.IsDirty)
                     Sha1xModel.WriteFile (Owner.Data.Product + " v" + Owner.Data.ProductVersion, Encoding.UTF8);

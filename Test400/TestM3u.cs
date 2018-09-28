@@ -22,7 +22,7 @@ namespace UnitTest
                 Assert.AreEqual (hdr.Length, got);
 
                 M3uFormat.Model model = M3uFormat.CreateModel (fs, hdr, fs.Name);
-                M3uFormat bind = model.Bind;
+                M3uFormat bind = model.Data;
 
                 Assert.IsNotNull (model);
                 Assert.IsTrue (bind.Issues.MaxSeverity == Severity.NoIssue);
@@ -53,7 +53,7 @@ namespace UnitTest
                 Assert.AreEqual (hdr.Length, got);
 
                 M3uFormat.Model model = M3uFormat.CreateModel (fs, hdr, fs.Name);
-                M3uFormat bind = model.Bind;
+                M3uFormat bind = model.Data;
 
                 Assert.IsNotNull (model);
                 Assert.IsTrue (bind.Issues.MaxSeverity == Severity.NoIssue);

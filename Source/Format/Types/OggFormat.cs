@@ -23,30 +23,30 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly OggFormat Bind;
+            public new readonly OggFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new OggFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new OggFormat (stream, path);
+                Data.Issues = IssueModel.Data;
             }
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
                 if ((hashFlags & Hashes.Intrinsic) != 0)
                 {
                     var buf1 = new byte[27+256];
                     byte[] buf2 = null;
-                    Bind.PageCount = 0;
+                    Data.PageCount = 0;
 
-                    while (Bind.ValidSize < Bind.FileSize)
+                    while (Data.ValidSize < Data.FileSize)
                     {
-                        Bind.fbs.Position = Bind.ValidSize;
-                        ++Bind.PageCount;
-                        var got = Bind.fbs.Read (buf1, 0, buf1.Length);
+                        Data.fbs.Position = Data.ValidSize;
+                        ++Data.PageCount;
+                        var got = Data.fbs.Read (buf1, 0, buf1.Length);
                         if (got < buf1.Length)
                         {
                             IssueModel.Add ("Read failed near header", Severity.Fatal);
@@ -60,14 +60,14 @@ namespace NongFormat
                         for (int ix = 27; ix < 27 + segmentCount; ++ix)
                             pageSize += buf1[ix];
 
-                        Bind.fbs.Position = Bind.ValidSize;
+                        Data.fbs.Position = Data.ValidSize;
 
                         if (buf2 == null || buf2.Length < pageSize)
                             buf2 = new byte[pageSize];
-                        got = Bind.fbs.Read (buf2, 0, pageSize);
+                        got = Data.fbs.Read (buf2, 0, pageSize);
                         if (got < pageSize)
                         {
-                            IssueModel.Add ("Read failed near page " + Bind.PageCount, Severity.Fatal);
+                            IssueModel.Add ("Read failed near page " + Data.PageCount, Severity.Fatal);
                             return;
                         }
 
@@ -80,17 +80,17 @@ namespace NongFormat
                         actualHeaderCRC32 = BitConverter.ToUInt32 (hash, 0);
 
                         if (actualHeaderCRC32 != storedHeaderCRC32)
-                            Bind.badPage.Add (Bind.PageCount.Value);
+                            Data.badPage.Add (Data.PageCount.Value);
 
-                        Bind.ValidSize += pageSize;
+                        Data.ValidSize += pageSize;
                     }
 
-                    if (Bind.badPage.Count == 0)
-                        Bind.CdIssue = IssueModel.Add ($"CRC-32 checks successful on {Bind.PageCount} pages.", Severity.Advisory, IssueTags.Success);
+                    if (Data.badPage.Count == 0)
+                        Data.CdIssue = IssueModel.Add ($"CRC-32 checks successful on {Data.PageCount} pages.", Severity.Advisory, IssueTags.Success);
                     else
                     {
-                        var err = $"CRC-32 checks failed on {Bind.badPage.Count} of {Bind.PageCount} pages.";
-                        Bind.CdIssue = IssueModel.Add (err, Severity.Error, IssueTags.Failure);
+                        var err = $"CRC-32 checks failed on {Data.badPage.Count} of {Data.PageCount} pages.";
+                        Data.CdIssue = IssueModel.Add (err, Severity.Error, IssueTags.Failure);
                     }
                 }
 

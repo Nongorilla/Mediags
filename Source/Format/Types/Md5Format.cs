@@ -24,12 +24,12 @@ namespace NongFormat
 
         public new class Model : HashesContainer.Model
         {
-            public readonly Md5Format Bind;
+            public new readonly Md5Format Data;
 
             public Model (Stream stream, byte[] hdr, string path) : base (path, 16)
             {
-                BaseBind = BindHashed = Bind = new Md5Format (stream, path, HashedModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                _data = Data = new Md5Format (stream, path, HashedModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 ParseHeaderAndHistory();
                 ParseHashes();
@@ -38,9 +38,9 @@ namespace NongFormat
 
             public Model (Stream stream, string md5Path, LogEacFormat log, string logName, M3uFormat m3u, string signature) : base (md5Path, 16)
             {
-                BaseBind = BindHashed = Bind = new Md5Format (stream, md5Path, log, logName, m3u, signature, HashedModel.Bind);
-                Bind.Issues = IssueModel.Data;
-                Bind.fbs = stream;
+                base._data = Data = new Md5Format (stream, md5Path, log, logName, m3u, signature, HashedModel.Bind);
+                Data.Issues = IssueModel.Data;
+                Data.fbs = stream;
 
                 CreateHistory();
                 HistoryModel.Add ("ripped", signature);
@@ -54,7 +54,7 @@ namespace NongFormat
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
                 if ((validationFlags & Validations.MD5) != 0)

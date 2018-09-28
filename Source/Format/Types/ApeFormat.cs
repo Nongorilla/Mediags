@@ -21,12 +21,12 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly ApeFormat Bind;
+            public new readonly ApeFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new ApeFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new ApeFormat (stream, path);
+                Data.Issues = IssueModel.Data;
             }
         }
 

@@ -25,39 +25,39 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly FlvFormat Bind;
+            public new readonly FlvFormat Data;
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                BaseBind = Bind = new FlvFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new FlvFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 var bb = new byte[15];
 
-                Bind.flags = hdr[4];
-                if ((Bind.flags & 0xA) != 0)
+                Data.flags = hdr[4];
+                if ((Data.flags & 0xA) != 0)
                     IssueModel.Add ("Unexpected flags.");
-                if ((Bind.flags & 5) == 0)
+                if ((Data.flags & 5) == 0)
                     IssueModel.Add ("Missing audio and video.");
 
                 UInt32 hdrSize = ConvertTo.FromBig32ToUInt32 (hdr, 5);
                 if (hdrSize != 9)
                     IssueModel.Add ("Wrong header size.");
 
-                Bind.mediaPosition = 9;
+                Data.mediaPosition = 9;
                 UInt32 actualPrevSize = 0;
 
-                while (Bind.mediaPosition < Bind.FileSize)
+                while (Data.mediaPosition < Data.FileSize)
                 {
-                    if (Bind.mediaPosition + 15 > Bind.FileSize)
+                    if (Data.mediaPosition + 15 > Data.FileSize)
                     { IssueModel.Add ("File truncated near packet header.", Severity.Fatal); return; }
 
-                    Bind.fbs.Position = Bind.mediaPosition;
-                    var got = Bind.fbs.Read (bb, 0, bb.Length);
+                    Data.fbs.Position = Data.mediaPosition;
+                    var got = Data.fbs.Read (bb, 0, bb.Length);
                     if (got < bb.Length)
                     { IssueModel.Add ("Read error", Severity.Fatal); return; }
 
-                    Bind.mediaPosition += 15;
+                    Data.mediaPosition += 15;
 
                     UInt32 storedPrevSize = ConvertTo.FromBig32ToUInt32 (bb, 0);
                     if (storedPrevSize != actualPrevSize)
@@ -67,11 +67,11 @@ namespace NongFormat
                     UInt32 packetSize = ConvertTo.FromBig24ToUInt32 (bb, 5);
                     actualPrevSize = packetSize + 11;
 
-                    ++Bind.PacketCount;
-                    Bind.mediaPosition += packetSize;
+                    ++Data.PacketCount;
+                    Data.mediaPosition += packetSize;
                 }
 
-                if (Bind.mediaPosition > Bind.FileSize)
+                if (Data.mediaPosition > Data.FileSize)
                     IssueModel.Add ("File truncated.", Severity.Fatal);
             }
         }

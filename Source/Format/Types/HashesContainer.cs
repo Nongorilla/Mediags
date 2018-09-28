@@ -15,7 +15,7 @@ namespace NongFormat
         public class Model : FormatBase.ModelBase
         {
             public readonly HashedFile.Vector.Model HashedModel;
-            public HashesContainer BindHashed { get; protected set; }
+            public new HashesContainer Data => (HashesContainer) _data;
             public HashesHistory.Model HistoryModel { get; protected set; }
 
             public Model (string rootPath, int hashLength)
@@ -25,20 +25,20 @@ namespace NongFormat
             public void CreateHistory()
             {
                 HistoryModel = new HashesHistory.Model();
-                BindHashed.History = HistoryModel.Bind;
+                Data.History = HistoryModel.Bind;
             }
 
             public void DestroyHistory()
             {
-                BindHashed.History = null;
+                Data.History = null;
                 HistoryModel = null;
             }
 
 
             public void ParseHeaderAndHistory()
             {
-                BindHashed.fbs.Position = 0;
-                TextReader tr = new StreamReader (BindHashed.fbs, BindHashed.encoding);
+                Data.fbs.Position = 0;
+                TextReader tr = new StreamReader (Data.fbs, Data.encoding);
                 var lx = tr.ReadLine();
                 if (lx == null)
                     return;
@@ -47,13 +47,13 @@ namespace NongFormat
                 MatchCollection reMatches = versionRegex.Matches (lx);
                 if (reMatches.Count == 1)
                 {
-                    BindHashed.Generator = reMatches[0].Groups[1].ToString();
+                    Data.Generator = reMatches[0].Groups[1].ToString();
 
                     var isOK = Int32.TryParse (reMatches[0].Groups[2].ToString(), out int major);
                     isOK = Int32.TryParse (reMatches[0].Groups[3].ToString(), out int minor);
 
-                    BindHashed.mediaPosition = lx.Length + 4;
-                    BindHashed.MediaCount = 8;
+                    Data.mediaPosition = lx.Length + 4;
+                    Data.MediaCount = 8;
 
                     lx = tr.ReadLine();
                     if (lx == null || lx.Length < 10)
@@ -101,7 +101,7 @@ namespace NongFormat
                         }
                     }
 
-                    if (BindHashed.History.Comment.Count == 0)
+                    if (Data.History.Comment.Count == 0)
                     {
                         DestroyHistory();
                         IssueModel.Add ("History comments are missing.");
@@ -114,8 +114,8 @@ namespace NongFormat
 
             protected void ParseHashes()
             {
-                BindHashed.fbs.Position = 0;
-                TextReader tr = new StreamReader (BindHashed.fbs, BindHashed.encoding);
+                Data.fbs.Position = 0;
+                TextReader tr = new StreamReader (Data.fbs, Data.encoding);
 
                 for (int line = 1;; ++line)
                 {
@@ -127,7 +127,7 @@ namespace NongFormat
                     if (lx.Length == 0 || lx[0] == ';')
                         continue;
 
-                    if (lx.Length < BindHashed.HashedFiles.HashLength*2+3)
+                    if (lx.Length < Data.HashedFiles.HashLength*2+3)
                     {
                         IssueModel.Add ("Too short, line " + line + '.', Severity.Fatal);
                         return;
@@ -135,9 +135,9 @@ namespace NongFormat
 
                     // Try typical format with hash first.
                     var style = HashStyle.Undefined;
-                    if (lx[BindHashed.HashedFiles.HashLength*2]==' ')
+                    if (lx[Data.HashedFiles.HashLength*2]==' ')
                     {
-                        var styleChar = lx[BindHashed.HashedFiles.HashLength*2+1];
+                        var styleChar = lx[Data.HashedFiles.HashLength*2+1];
                         if (styleChar==GetStyleChar (HashStyle.Text))
                             style = HashStyle.Text;
                         else if (styleChar==GetStyleChar (HashStyle.Binary))
@@ -147,10 +147,10 @@ namespace NongFormat
 
                         if (style != HashStyle.Undefined)
                         {
-                            var hash = ConvertTo.FromHexStringToBytes (lx, 0, BindHashed.HashedFiles.HashLength);
+                            var hash = ConvertTo.FromHexStringToBytes (lx, 0, Data.HashedFiles.HashLength);
                             if (hash != null)
                             {
-                                var targetName = lx.Substring (BindHashed.HashedFiles.HashLength*2 + 2);
+                                var targetName = lx.Substring (Data.HashedFiles.HashLength*2 + 2);
                                 HashedModel.Add (targetName, hash, style);
                                 continue;
                             }
@@ -158,12 +158,12 @@ namespace NongFormat
                     }
 
                     // Fall back to layout with name followed by hash.
-                    if (lx[lx.Length-BindHashed.HashedFiles.HashLength*2-1]==' ')
+                    if (lx[lx.Length-Data.HashedFiles.HashLength*2-1]==' ')
                     {
-                        var hash = ConvertTo.FromHexStringToBytes (lx, lx.Length-BindHashed.HashedFiles.HashLength*2, BindHashed.HashedFiles.HashLength);
+                        var hash = ConvertTo.FromHexStringToBytes (lx, lx.Length-Data.HashedFiles.HashLength*2, Data.HashedFiles.HashLength);
                         if (hash != null)
                         {
-                            var targetName = lx.Substring (0, lx.Length-BindHashed.HashedFiles.HashLength*2-1);
+                            var targetName = lx.Substring (0, lx.Length-Data.HashedFiles.HashLength*2-1);
                             HashedModel.Add (targetName, hash, HashStyle.Binary);
                             continue;
                         }
@@ -191,7 +191,7 @@ namespace NongFormat
                         bb = cp.GetBytes (";" + Environment.NewLine);
                         ms.Write (bb, 0, bb.Length);
 
-                        foreach (var historyItem in BindHashed.History.Comment)
+                        foreach (var historyItem in Data.History.Comment)
                         {
                             var lx = "; " + historyItem + Environment.NewLine;
                             bb = cp.GetBytes (lx);
@@ -202,7 +202,7 @@ namespace NongFormat
                     bb = cp.GetBytes (";" + Environment.NewLine);
                     ms.Write (bb, 0, bb.Length);
 
-                    foreach (var hashedItem in BindHashed.HashedFiles.Items)
+                    foreach (var hashedItem in Data.HashedFiles.Items)
                         if (hashedItem.ActualHash != null)
                         {
                             bb = cp.GetBytes (hashedItem.ActualHashToHex.ToLower() + ' ' + GetStyleChar (hashedItem.Style) + hashedItem.FileName + Environment.NewLine);
@@ -218,37 +218,37 @@ namespace NongFormat
                         HistoryModel.SetActualSelfCRC (crc);
                         HistoryModel.SetStoredSelfCRC (crc);
 
-                        bb = cp.GetBytes (String.Format ("{0:X8}", BindHashed.History.ActualCRC));
+                        bb = cp.GetBytes (String.Format ("{0:X8}", Data.History.ActualCRC));
                         ms.Seek (crcPosition, SeekOrigin.Begin);
                         ms.Write (bb, 0, bb.Length);
                         HistoryModel.SetIsDirty (false);
                     }
 
-                    BindHashed.fBuf = ms.ToArray();
+                    Data.fBuf = ms.ToArray();
                     ms.Seek (0, SeekOrigin.Begin);
-                    BindHashed.fbs.Position = 0;
-                    ms.CopyTo (BindHashed.fbs);
-                    BindHashed.fbs.SetLength (BindHashed.fbs.Position);
-                    BindHashed.mediaPosition = crcPosition;
+                    Data.fbs.Position = 0;
+                    ms.CopyTo (Data.fbs);
+                    Data.fbs.SetLength (Data.fbs.Position);
+                    Data.mediaPosition = crcPosition;
                     ResetFile();
 
-                    for (int ix = 0; ix < BindHashed.HashedFiles.Items.Count; ++ix)
+                    for (int ix = 0; ix < Data.HashedFiles.Items.Count; ++ix)
                         HashedModel.SetOldFileName (ix, null);
                 }
 
-                BindHashed.NotifyPropertyChanged (null);
+                Data.NotifyPropertyChanged (null);
             }
 
 
             protected void ComputeContentHashes (CryptoHasher hasher, Hashes mediaHash=Hashes.None)
             {
-                System.Diagnostics.Debug.Assert (BindHashed.HashedFiles.HashLength == hasher.HashLength);
+                System.Diagnostics.Debug.Assert (Data.HashedFiles.HashLength == hasher.HashLength);
 
-                for (int index = 0; index < BindHashed.HashedFiles.Items.Count; ++index)
+                for (int index = 0; index < Data.HashedFiles.Items.Count; ++index)
                 {
-                    HashedFile item = BindHashed.HashedFiles.Items[index];
+                    HashedFile item = Data.HashedFiles.Items[index];
                     string msg = null;
-                    var targetName = BindHashed.HashedFiles.GetPath (index);
+                    var targetName = Data.HashedFiles.GetPath (index);
 
                     try
                     {
@@ -273,7 +273,7 @@ namespace NongFormat
                                     {
                                         fmt.CalcHashes (mediaHash, Validations.None);
                                         fmt.CloseFile();
-                                        hash = fmt.Bind.MediaSHA1;
+                                        hash = fmt.Data.MediaSHA1;
                                     }
                                 }
                             else
@@ -284,7 +284,7 @@ namespace NongFormat
 
                             HashedModel.SetActualHash (index, hash);
                             if (item.IsMatch == false)
-                                IssueModel.Add (BindHashed.HasherName + " mismatch on '" + item.FileName + "'.");
+                                IssueModel.Add (Data.HasherName + " mismatch on '" + item.FileName + "'.");
                         }
                     }
                     catch (FileNotFoundException ex)
@@ -301,13 +301,13 @@ namespace NongFormat
                     }
                 }
 
-                string tx = BindHashed.HasherName + " validation of "  + BindHashed.HashedFiles.Items.Count + " file";
-                if (BindHashed.HashedFiles.Items.Count != 1)
+                string tx = Data.HasherName + " validation of "  + Data.HashedFiles.Items.Count + " file";
+                if (Data.HashedFiles.Items.Count != 1)
                     tx += "s";
-                if (BaseBind.Issues.MaxSeverity < Severity.Error)
+                if (base.Data.Issues.MaxSeverity < Severity.Error)
                     tx += " successful.";
                 else
-                    tx += " failed with " + BindHashed.HashedFiles.FoundCount + " found and " + BindHashed.HashedFiles.MatchCount + " matched.";
+                    tx += " failed with " + Data.HashedFiles.FoundCount + " found and " + Data.HashedFiles.MatchCount + " matched.";
 
                 IssueModel.Add (tx, Severity.Advisory);
             }
@@ -315,17 +315,17 @@ namespace NongFormat
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (BindHashed.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
-                if ((hashFlags & Hashes.Intrinsic) != 0 && BindHashed.History != null && BindHashed.History.ActualCRC == null)
+                if ((hashFlags & Hashes.Intrinsic) != 0 && Data.History != null && Data.History.ActualCRC == null)
                 {
                     var hasher = new Crc32rHasher();
-                    hasher.Append (BindHashed.fbs, 0, (int) BindHashed.mediaPosition, (int) BindHashed.mediaPosition + 8, BindHashed.FileSize - BindHashed.mediaPosition - 8);
+                    hasher.Append (Data.fbs, 0, (int) Data.mediaPosition, (int) Data.mediaPosition + 8, Data.FileSize - Data.mediaPosition - 8);
                     byte[] hash = hasher.GetHashAndReset();
                     HistoryModel.SetActualSelfCRC (BitConverter.ToUInt32 (hash, 0));
 
-                    if (BindHashed.History.ActualCRC == BindHashed.History.StoredCRC)
+                    if (Data.History.ActualCRC == Data.History.StoredCRC)
                         IssueModel.Add ("Self-CRC check successful.", Severity.Noise);
                     else
                         IssueModel.Add ("Self-CRC mismatch, file has been modified.");

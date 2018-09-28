@@ -108,7 +108,7 @@ Optional.  If present, must be consistent for all tracks.";
             if (rip.LogModel != null)
             {
                 rip.LogModel.SetGuiTracks();
-                rip.LogModel.Bind.NotifyPropertyChanged ("GuiTracks");
+                rip.LogModel.Data.NotifyPropertyChanged ("GuiTracks");
             }
 
             if (! rip.Bind.IsWip)
@@ -331,7 +331,7 @@ Optional.  If present, must be consistent for all tracks.";
                     var tab = added as TabItem;
                     if (model != null && model.RipModel != null && model.RipModel.LogModel != null)
                     {
-                        var gt = model.RipModel.LogModel.Bind.GuiTracks;
+                        var gt = model.RipModel.LogModel.Data.GuiTracks;
                         if (gt != null)
                         {
                             if (tab == logTab)

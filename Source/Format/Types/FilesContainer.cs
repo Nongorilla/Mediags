@@ -10,39 +10,39 @@ namespace NongFormat
         public abstract class Model : FormatBase.ModelBase
         {
             public readonly FileItem.Vector.Model FilesModel;
-            public FilesContainer BindFiles { get; protected set; }
+            public new FilesContainer Data => (FilesContainer) _data;
 
             public Model (string rootPath)
             { FilesModel = new FileItem.Vector.Model (rootPath); }
 
             public void SetAllowRooted (bool allow)
-            { BindFiles.ForbidRooted = ! allow; }
+            { Data.ForbidRooted = ! allow; }
 
             public void SetIgnoredName (string name)
-            { BindFiles.IgnoredName = name; }
+            { Data.IgnoredName = name; }
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (BaseBind.Issues.HasFatal)
+                if (base.Data.Issues.HasFatal)
                     return;
 
                 if ((validationFlags & Validations.Exists) != 0)
-                    if (BindFiles.Files.Items.Count != 1 || BindFiles.Files.Items[0].Name != BindFiles.IgnoredName)
+                    if (Data.Files.Items.Count != 1 || Data.Files.Items[0].Name != Data.IgnoredName)
                     {
                         int notFoundTotal = 0;
 
-                        for (int ix = 0; ix < BindFiles.Files.Items.Count; ++ix)
+                        for (int ix = 0; ix < Data.Files.Items.Count; ++ix)
                         {
-                            FileItem item = BindFiles.Files.Items[ix];
+                            FileItem item = Data.Files.Items[ix];
                             var name = item.Name;
 
-                            if (BindFiles.AllowNonFile && (name.StartsWith ("http:") || name.StartsWith ("https:")))
+                            if (Data.AllowNonFile && (name.StartsWith ("http:") || name.StartsWith ("https:")))
                                 IssueModel.Add ("Ignoring URL '" + name + "'.", Severity.Trivia);
                             else
                             {
                                 if (! System.IO.Path.IsPathRooted (item.Name))
-                                    name = BindFiles.Files.RootDir + System.IO.Path.DirectorySeparatorChar + name;
-                                else if (BindFiles.ForbidRooted)
+                                    name = Data.Files.RootDir + System.IO.Path.DirectorySeparatorChar + name;
+                                else if (Data.ForbidRooted)
                                     IssueModel.Add ("File is rooted: '" + item.Name + "'.");
 
                                 // Exists doesn't seem to throw any exceptions, so no try/catch.
@@ -56,9 +56,9 @@ namespace NongFormat
                             }
                         }
 
-                        var sfx = BindFiles.Files.Items.Count == 1? String.Empty : "s";
+                        var sfx = Data.Files.Items.Count == 1? String.Empty : "s";
 
-                        var tx = "Existence check" + sfx + " of "  + BindFiles.Files.Items.Count + " file" + sfx;
+                        var tx = "Existence check" + sfx + " of "  + Data.Files.Items.Count + " file" + sfx;
                         if (notFoundTotal == 0)
                             tx += " successful.";
                         else

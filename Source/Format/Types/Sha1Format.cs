@@ -21,12 +21,12 @@ namespace NongFormat
 
         public new class Model : HashesContainer.Model
         {
-            public readonly Sha1Format Bind;
+            public new readonly Sha1Format Data;
 
             public Model (Stream stream, byte[] header, string path) : base (path, 20)
             {
-                BaseBind = BindHashed = Bind = new Sha1Format (stream, path, HashedModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new Sha1Format (stream, path, HashedModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 ParseHashes();
             }
@@ -34,7 +34,7 @@ namespace NongFormat
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
                 if ((validationFlags & Validations.SHA1) != 0)

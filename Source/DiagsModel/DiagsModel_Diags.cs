@@ -122,7 +122,7 @@ namespace NongMediaDiags
                 ++Data.TotalFiles;
                 trueFormat.TrueTotal += 1;
 
-                FormatBase fmt = fmtModel.BaseBind;
+                FormatBase fmt = fmtModel.Data;
 
                 if (fmt.IsBadHeader)
                     ++trueFormat.TotalHeaderErrors;

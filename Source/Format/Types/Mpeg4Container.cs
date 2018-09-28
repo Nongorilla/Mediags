@@ -14,7 +14,7 @@ namespace NongFormat
     {
         public abstract class Model : FormatBase.ModelBase
         {
-            public Mpeg4Container Mpeg4Bind { get; protected set; }
+            public new Mpeg4Container Data => (Mpeg4Container) _data;
 
             public Model()
             { }
@@ -23,7 +23,7 @@ namespace NongFormat
             {
                 int got;
 
-                Mpeg4Bind.Brand = Encoding.ASCII.GetString (buf, 8, 4).Trim();
+                Data.Brand = Encoding.ASCII.GetString (buf, 8, 4).Trim();
 
                 for (;;)
                 {
@@ -33,15 +33,15 @@ namespace NongFormat
 
                     if (size == 1)
                     {
-                        if (Mpeg4Bind.ValidSize + 16 > Mpeg4Bind.FileSize)
+                        if (Data.ValidSize + 16 > Data.FileSize)
                         {
                             IssueModel.Add ("File corrupt or truncated near wide box", Severity.Error);
                             return;
                         }
 
                         // Special value of 1 indicates wide box (ulong) so get it.
-                        Mpeg4Bind.fbs.Position = Mpeg4Bind.ValidSize + 8;
-                        got = Mpeg4Bind.fbs.Read (buf, 0, 8);
+                        Data.fbs.Position = Data.ValidSize + 8;
+                        got = Data.fbs.Read (buf, 0, 8);
                         if (got != 8)
                         {
                             IssueModel.Add ("Read failed near wide box", Severity.Fatal);
@@ -57,21 +57,21 @@ namespace NongFormat
                             IssueModel.Add ("Size insanely large", Severity.Fatal);
                             return;
                         }
-                        ++Mpeg4Bind.Wide;
+                        ++Data.Wide;
                     }
 
-                    if (Mpeg4Bind.ValidSize + size > Mpeg4Bind.FileSize)
+                    if (Data.ValidSize + size > Data.FileSize)
                     {
                         IssueModel.Add ("File truncated", Severity.Fatal);
                         break;
                     }
 
-                    Mpeg4Bind.ValidSize += size;
-                    if (Mpeg4Bind.ValidSize + 8 >= Mpeg4Bind.FileSize)
+                    Data.ValidSize += size;
+                    if (Data.ValidSize + 8 >= Data.FileSize)
                         break;
 
-                    Mpeg4Bind.fbs.Position = Mpeg4Bind.ValidSize;
-                    got = Mpeg4Bind.fbs.Read (buf, 0, 8);
+                    Data.fbs.Position = Data.ValidSize;
+                    got = Data.fbs.Read (buf, 0, 8);
                     if (got != 8)
                     {
                         IssueModel.Add ("Read failed", Severity.Fatal);
@@ -79,20 +79,20 @@ namespace NongFormat
                     }
 
                     if (buf[4]=='m' && buf[5]=='o' && buf[6]=='o' && buf[7]=='v')
-                        ++Mpeg4Bind.Moov;
+                        ++Data.Moov;
                     else if (buf[4]=='m' && buf[5]=='d' && buf[6]=='a' && buf[7]=='t')
-                        ++Mpeg4Bind.Mdat;
+                        ++Data.Mdat;
                     else if (buf[4]=='f' && buf[5]=='r' && buf[6]=='e' && buf[7]=='e')
-                        ++Mpeg4Bind.Free;
+                        ++Data.Free;
                     else if (buf[4]==0 && buf[5]==0 && buf[6]==0 && buf[7]==0)
                     {
                         if (buf[0]==0 && buf[1]==0 && buf[2]==0 && buf[3]==0)
                         {
-                            if (Mpeg4Bind.FileSize - Mpeg4Bind.ValidSize < 16)
+                            if (Data.FileSize - Data.ValidSize < 16)
                                 break;
 
-                            Mpeg4Bind.fbs.Position = Mpeg4Bind.ValidSize + 8;
-                            got = Mpeg4Bind.fbs.Read (buf, 0, 8);
+                            Data.fbs.Position = Data.ValidSize + 8;
+                            got = Data.fbs.Read (buf, 0, 8);
                             if (got != 8)
                             {
                                 IssueModel.Add ("Read failed", Severity.Fatal);
@@ -102,8 +102,8 @@ namespace NongFormat
                             {
                                 // Sometimes there is a dummy header of 8 bytes of 0, then an mdat header.
                                 IssueModel.Add ("Has dummy mdat header", Severity.Trivia);
-                                ++Mpeg4Bind.Mdat;
-                                Mpeg4Bind.ValidSize += 8;
+                                ++Data.Mdat;
+                                Data.ValidSize += 8;
                             }
                             else
                                 // Can't parse so bail.
@@ -119,19 +119,19 @@ namespace NongFormat
 
             protected void GetDiagnostics()
             {
-                if (Mpeg4Bind.Moov == 0)
+                if (Data.Moov == 0)
                     IssueModel.Add ("Missing 'moov' section.", Severity.Error);
 
-                if (Mpeg4Bind.Mdat == 0)
+                if (Data.Mdat == 0)
                     IssueModel.Add ("Missing 'mdat' section.", Severity.Error);
 
                 // Wide boxes are rare.
-                if (Mpeg4Bind.Wide != 0)
-                    IssueModel.Add ("Number of wide boxes=" + Mpeg4Bind.Wide + ".", Severity.Trivia);
+                if (Data.Wide != 0)
+                    IssueModel.Add ("Number of wide boxes=" + Data.Wide + ".", Severity.Trivia);
 
-                if (Mpeg4Bind.ExcessSize == 0)
+                if (Data.ExcessSize == 0)
                 {
-                    var unparsedSize = Mpeg4Bind.FileSize - Mpeg4Bind.ValidSize;
+                    var unparsedSize = Data.FileSize - Data.ValidSize;
                     if (unparsedSize != 0)
                         IssueModel.Add ("Possible watermark, size=" + unparsedSize + ".", Severity.Advisory);
                 }

@@ -31,31 +31,31 @@ namespace NongFormat
 
         private class Model : FormatBase.ModelBase
         {
-            public readonly Mpeg2Format Bind;
+            public new readonly Mpeg2Format Data;
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                BaseBind = Bind = new Mpeg2Format (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new Mpeg2Format (stream, path);
+                Data.Issues = IssueModel.Data;
 
-                if (Bind.FileSize < 12)
+                if (Data.FileSize < 12)
                 {
                     IssueModel.Add ("File truncated near start", Severity.Error);
                     return;
                 }
 
-                Bind.IsVOB = hdr[3] == 0xBA;
+                Data.IsVOB = hdr[3] == 0xBA;
 
                 // TODO parse contents for watermark/truncation
-                Bind.ValidSize = Bind.FileSize;
+                Data.ValidSize = Data.FileSize;
 
-                long loopStop = Bind.FileSize-36;
+                long loopStop = Data.FileSize-36;
                 if (loopStop < 8)
                     loopStop = 8;
-                for (long ePos = Bind.FileSize-4; ePos > loopStop; --ePos)
+                for (long ePos = Data.FileSize-4; ePos > loopStop; --ePos)
                 {
-                    Bind.fbs.Position = ePos;
-                    var got = Bind.fbs.Read (hdr, 0, 4);
+                    Data.fbs.Position = ePos;
+                    var got = Data.fbs.Read (hdr, 0, 4);
                     if (got != 4)
                     {
                         IssueModel.Add ("Read error looking for trailer", Severity.Fatal);
@@ -65,17 +65,17 @@ namespace NongFormat
                     if (hdr[0]==0 && hdr[1]==0 && hdr[2]==1 && hdr[3]==0xB9)
                     {
                         // 20 bytes of zero seem typical .mpg pad, so can't do this watermark calculation
-                        Bind.trailerPos = ePos;
-                        Bind.ValidSize = ePos + 4;
+                        Data.trailerPos = ePos;
+                        Data.ValidSize = ePos + 4;
                         break;
                     }
                 }
 
-                if (Bind.trailerPos < 0)
+                if (Data.trailerPos < 0)
                     IssueModel.Add ("No trailermark found.", Severity.Trivia);
                 else
                 {
-                    long unparsedSize = Bind.FileSize - Bind.ValidSize;
+                    long unparsedSize = Data.FileSize - Data.ValidSize;
                     if (unparsedSize != 0)
                         IssueModel.Add ("Possible watermark, size=" + unparsedSize, Severity.Trivia);
                 }

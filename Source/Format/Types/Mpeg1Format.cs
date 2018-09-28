@@ -11,12 +11,12 @@ namespace NongFormat
 
         public new class Model : RiffContainer.Model
         {
-            public readonly Mpeg1Format Bind;
+            public new readonly Mpeg1Format Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = RiffBind = Bind = new Mpeg1Format (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new Mpeg1Format (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 ParseRiff (header);
                 GetDiagsForMarkable();

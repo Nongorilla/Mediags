@@ -26,7 +26,7 @@ namespace UnitTest
                 Assert.IsNotNull (wavModel);
             }
 
-            WavFormat wav = wavModel.Bind;
+            WavFormat wav = wavModel.Data;
 
             Assert.IsTrue (wav.Issues.MaxSeverity == Severity.NoIssue);
             Assert.AreEqual (0, wav.Issues.Items.Count);

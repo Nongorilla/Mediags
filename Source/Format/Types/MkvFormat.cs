@@ -313,60 +313,60 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly MkvFormat Bind;
+            public new readonly MkvFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new MkvFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new MkvFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 var bb = new byte[5];
 
-                Bind.fbs.Position = Bind.ValidSize = 4;
+                Data.fbs.Position = Data.ValidSize = 4;
 
-                Bind.root = ParseTree (rootSig);
-                Bind.layout.Add (Bind.root);
+                Data.root = ParseTree (rootSig);
+                Data.layout.Add (Data.root);
 
-                if (Bind.Issues.HasError)
+                if (Data.Issues.HasError)
                     return;
 
-                System.Diagnostics.Debug.Assert (Bind.ValidSize == Bind.fbs.Position);
+                System.Diagnostics.Debug.Assert (Data.ValidSize == Data.fbs.Position);
 
-                Bind.fbs.Position = Bind.ValidSize;
+                Data.fbs.Position = Data.ValidSize;
                 long SegmentLength = ReadMTF (0x18, 0x53, 0x80, 0x67);
                 if (SegmentLength < 0)
                 { IssueModel.Add ("Missing root element.", Severity.Fatal); return; }
 
-                System.Diagnostics.Debug.Assert (Bind.ValidSize == Bind.fbs.Position);
+                System.Diagnostics.Debug.Assert (Data.ValidSize == Data.fbs.Position);
 
-                long segmentStart = Bind.ValidSize;
+                long segmentStart = Data.ValidSize;
 
-                var diff = Bind.ValidSize + SegmentLength - Bind.FileSize;
+                var diff = Data.ValidSize + SegmentLength - Data.FileSize;
                 if (diff > 0)
                     IssueModel.Add ("File appears truncated by " + diff + " bytes.", Severity.Error);
 
-                Bind.segment = new EbmlNodeMaster (segmentSig, SegmentLength);
-                Bind.layout.Add (Bind.segment);
+                Data.segment = new EbmlNodeMaster (segmentSig, SegmentLength);
+                Data.layout.Add (Data.segment);
 
-                Bind.fbs.Position = Bind.ValidSize;
+                Data.fbs.Position = Data.ValidSize;
 
-                while (Bind.ValidSize < segmentStart + SegmentLength)
+                while (Data.ValidSize < segmentStart + SegmentLength)
                 {
-                    Bind.fbs.Position = Bind.ValidSize;
-                    int got = Bind.fbs.Read (bb, 0, 4);
+                    Data.fbs.Position = Data.ValidSize;
+                    int got = Data.fbs.Read (bb, 0, 4);
                     if (got < 3)
                         break;
 
                     if (bb[0] == voidSig.Sig32)
                     {
-                        Bind.fbs.Position = Bind.ValidSize + 1;
-                        var voidLenBuf = ReadMTF (Bind.fbs, out long voidLen);
+                        Data.fbs.Position = Data.ValidSize + 1;
+                        var voidLenBuf = ReadMTF (Data.fbs, out long voidLen);
                         if (voidLen < 0)
                         { IssueModel.Add ("File truncated near void.", Severity.Fatal); return; }
 
-                        Bind.ValidSize += 1 + voidLenBuf.Length + voidLen;
+                        Data.ValidSize += 1 + voidLenBuf.Length + voidLen;
                         var voidNode = new EbmlNodeLeaf (voidSig, voidLen);
-                        Bind.segment.AddNode (voidNode);
+                        Data.segment.AddNode (voidNode);
                         continue;
                     }
 
@@ -377,48 +377,48 @@ namespace NongFormat
                     {
                         if (mstr.SigIsStartOf (bb))
                         {
-                            Bind.fbs.Position = Bind.ValidSize = Bind.ValidSize + 4;
+                            Data.fbs.Position = Data.ValidSize = Data.ValidSize + 4;
 
                             if ((mstr.Flag & ParseFlag.PrunePayload) != 0)
                             {
-                                var payloadLenBuf = ReadMTF (Bind.fbs, out long payloadLen);
+                                var payloadLenBuf = ReadMTF (Data.fbs, out long payloadLen);
                                 if (payloadLen < 0)
                                 { IssueModel.Add ("File corrupt or truncated.", Severity.Fatal); return; }
 
-                                Bind.ValidSize += payloadLenBuf.Length + payloadLen;
-                                Bind.segment.AddMaster (mstr, payloadLenBuf.Length + payloadLen);
+                                Data.ValidSize += payloadLenBuf.Length + payloadLen;
+                                Data.segment.AddMaster (mstr, payloadLenBuf.Length + payloadLen);
                             }
                             else
                             {
                                 var newNode = ParseTree (mstr);
                                 if (IssueModel.Data.HasFatal)
                                 {
-                                    if (newNode != null) Bind.segment.AddNode (newNode);
+                                    if (newNode != null) Data.segment.AddNode (newNode);
                                     return;
                                 }
-                                Bind.segment.AddNode (newNode);
+                                Data.segment.AddNode (newNode);
                             }
                             goto NEXT_SEG;
                         }
                     }
 
-                    string msg = String.Format ("Parse fail at 0x{0:X} on [{1:X2}][{2:X2}][{3:X2}][{4:X2}].", Bind.ValidSize, bb[0], bb[1], bb[2], bb[3]);
+                    string msg = String.Format ("Parse fail at 0x{0:X} on [{1:X2}][{2:X2}][{3:X2}][{4:X2}].", Data.ValidSize, bb[0], bb[1], bb[2], bb[3]);
                     IssueModel.Add (msg, Severity.Fatal);
                     return;
 
                 NEXT_SEG:;
                 }
 
-                Bind.fbs.Position = Bind.ValidSize;
-                var got2 = Bind.fbs.Read (bb, 0, 4);
+                Data.fbs.Position = Data.ValidSize;
+                var got2 = Data.fbs.Read (bb, 0, 4);
                 if (got2 == 4 && attachSig.SigIsStartOf (bb))
                 {
                     // By spec, everything should be within a single Segment.
-                    Bind.HasMisplacedAttachment = true;
-                    IssueModel.Add (String.Format ("Misplaced attachment at {0:X}", Bind.ValidSize), Severity.Warning);
+                    Data.HasMisplacedAttachment = true;
+                    IssueModel.Add (String.Format ("Misplaced attachment at {0:X}", Data.ValidSize), Severity.Warning);
                 }
 
-                Bind.fbs.Position = Bind.ValidSize;
+                Data.fbs.Position = Data.ValidSize;
                 CalcMark (true);
                 return;
             }
@@ -427,19 +427,19 @@ namespace NongFormat
             EbmlNodeMaster ParseTree (EbmlSig element)
             {
                 string err = null;
-                var contentLenBuf = ReadMTF (Bind.fbs, out long contentLen);
+                var contentLenBuf = ReadMTF (Data.fbs, out long contentLen);
                 if (contentLen < 0)
                     return null;
-                Bind.ValidSize += contentLenBuf.Length;
+                Data.ValidSize += contentLenBuf.Length;
 
                 var newMaster = new EbmlNodeMaster (element, contentLenBuf.Length + contentLen);
                 var buf = new byte[3];
-                long stop = Bind.ValidSize + contentLen;
+                long stop = Data.ValidSize + contentLen;
 
-                while (Bind.ValidSize < stop)
+                while (Data.ValidSize < stop)
                 {
-                    Bind.fbs.Position = Bind.ValidSize;
-                    var got = Bind.fbs.Read (buf, 0, 3);
+                    Data.fbs.Position = Data.ValidSize;
+                    var got = Data.fbs.Read (buf, 0, 3);
                     if (got < 3)
                     { err = "File corrupt or truncated"; goto FATAL; }
 
@@ -448,7 +448,7 @@ namespace NongFormat
                     foreach (var item in masterSigs)
                         if (item.SigIsStartOf (buf))
                         {
-                            Bind.fbs.Position = Bind.ValidSize = Bind.ValidSize + item.Signature.Count;
+                            Data.fbs.Position = Data.ValidSize = Data.ValidSize + item.Signature.Count;
                             newNode = ParseTree (item);
                             if (IssueModel.Data.HasFatal)
                             {
@@ -462,25 +462,25 @@ namespace NongFormat
                     {
                         if (item.SigIsStartOf (buf))
                         {
-                            Bind.fbs.Position = Bind.ValidSize = Bind.ValidSize + item.Signature.Count;
+                            Data.fbs.Position = Data.ValidSize = Data.ValidSize + item.Signature.Count;
 
                             byte[] payload = null;
-                            byte[] payloadHdr = ReadMTF (Bind.fbs, out long payloadLen);
+                            byte[] payloadHdr = ReadMTF (Data.fbs, out long payloadLen);
                             if (payloadHdr == null)
                             { err = "File truncated or corrupt"; goto FATAL; }
 
                             if ((item.Flag & ParseFlag.Persist) != 0)
                             {
                                 payload = new byte[payloadLen];
-                                got = Bind.fbs.Read (payload, 0, (int) payloadLen);
+                                got = Data.fbs.Read (payload, 0, (int) payloadLen);
                             }
 
                             if (buf[0] != CrcSig.Sig32)
                                 newNode = new EbmlNodeLeaf (item, payload);
                             else
                             {
-                                ++Bind.CrcCount;
-                                long hashStart = Bind.ValidSize + payloadHdr.Length + payloadLen;
+                                ++Data.CrcCount;
+                                long hashStart = Data.ValidSize + payloadHdr.Length + payloadLen;
                                 long hashCount;
                                 if (newMaster.Nodes.Count == 0)
                                     hashCount = contentLen - 5 - payloadHdr.Length;
@@ -492,7 +492,7 @@ namespace NongFormat
                                 newNode = new EbmlNodeCRC (item, payload, hashStart, hashCount);
                             }
 
-                            Bind.ValidSize += payloadHdr.Length + payloadLen;
+                            Data.ValidSize += payloadHdr.Length + payloadLen;
                             goto NEXT;
                         }
                     }
@@ -501,12 +501,12 @@ namespace NongFormat
                 NEXT:
                     newMaster.AddNode (newNode);
                 }
-                if (Bind.ValidSize == stop)
+                if (Data.ValidSize == stop)
                     return newMaster;
 
                 err = "Positional error";
             FATAL:
-                err += String.Format (" at {0:X}.", Bind.ValidSize);
+                err += String.Format (" at {0:X}.", Data.ValidSize);
                 IssueModel.Add (err, Severity.Fatal);
                 return newMaster;
             }
@@ -515,16 +515,16 @@ namespace NongFormat
             long ReadMTF (byte m1, byte m2, byte m3, byte m4)
             {
                 var buf = new byte[4];
-                var got = Bind.fbs.Read (buf, 0, 4);
+                var got = Data.fbs.Read (buf, 0, 4);
                 if (got != 4)
                     return -1;
 
                 if (buf[0] != m1 || buf[1] != m2 || buf[2] != m3 || buf[3] != m4)
                     return -1;
 
-                buf = ReadMTF (Bind.fbs, out long result);
+                buf = ReadMTF (Data.fbs, out long result);
                 if (buf != null)
-                    Bind.ValidSize += 4 + buf.Length;
+                    Data.ValidSize += 4 + buf.Length;
 
                 return result;
             }
@@ -576,13 +576,13 @@ namespace NongFormat
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
                 if ((hashFlags & Hashes.Intrinsic) != 0)
                 {
-                    Bind.badCrcCount = 0;
-                    foreach (var master in Bind.layout)
+                    Data.badCrcCount = 0;
+                    foreach (var master in Data.layout)
                         foreach (var cx in master.GetNodeTraces ("CRC-32"))
                         {
                             var top = cx.Peek();
@@ -590,11 +590,11 @@ namespace NongFormat
                             if (node.Count > 0)
                             {
                                 var hasher = new Crc32rHasher();
-                                hasher.Append (Bind.fbs, node.Start, node.Count);
+                                hasher.Append (Data.fbs, node.Start, node.Count);
                                 var hash = hasher.GetHashAndReset();
                                 node.ActualCRC32 = BitConverter.ToUInt32 (hash, 0);
                                 if (node.StoredCRC32 != node.ActualCRC32)
-                                    ++Bind.badCrcCount;
+                                    ++Data.badCrcCount;
                             }
                         }
                 }

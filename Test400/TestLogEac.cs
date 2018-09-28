@@ -27,7 +27,7 @@ namespace UnitTest
                 var hdr = new byte[0x28];
                 fs.Read (hdr, 0, hdr.Length);
                 logModel = LogEacFormat.CreateModel (fs, hdr, fn);
-                log = logModel.Bind;
+                log = logModel.Data;
             }
 
             Assert.AreEqual (3, log.Tracks.Items.Count);
@@ -95,7 +95,7 @@ namespace UnitTest
                 var hdr = new byte[0x28];
                 fs.Read (hdr, 0, hdr.Length);
                 logModel = LogEacFormat.CreateModel (fs, hdr, fn);
-                log = logModel.Bind;
+                log = logModel.Data;
             }
 
             Assert.AreEqual (3, log.Tracks.Items.Count);
@@ -124,7 +124,7 @@ namespace UnitTest
                 var flacModel = FlacFormat.CreateModel (ffs, hdr, flacInfo.FullName);
                 Assert.IsNotNull (flacModel);
 
-                Assert.IsTrue (flacModel.Bind.Issues.MaxSeverity < Severity.Warning);
+                Assert.IsTrue (flacModel.Data.Issues.MaxSeverity < Severity.Warning);
                 flacModel.CalcHashes (Hashes.Intrinsic|Hashes.PcmCRC32, Validations.None);
                 flacMods.Add (flacModel);
             }
@@ -193,7 +193,7 @@ namespace UnitTest
                 fs.Read (hdr, 0, hdr.Length);
                 Md5Format.Model md5Model = Md5Format.CreateModel (fs, hdr, fs.Name);
                 md5Model.CalcHashes (Hashes.Intrinsic, Validations.MD5);
-                Assert.IsFalse (md5Model.Bind.Issues.HasError);
+                Assert.IsFalse (md5Model.Data.Issues.HasError);
             }
         }
 
@@ -215,7 +215,7 @@ namespace UnitTest
             log1Model.CalcHashes (model.Data.HashFlags, 0);
             model.Data.ErrEscalator = IssueTags.ProveErr;
             log1Model.IssueModel.Escalate (model.Data.WarnEscalator, model.Data.ErrEscalator);
-            var b1 = log1Model.Bind;
+            var b1 = log1Model.Data;
 
             Assert.IsFalse (b1.Issues.HasError);
             if ((model.Data.HashFlags & Hashes.WebCheck) != 0)
@@ -231,7 +231,7 @@ namespace UnitTest
             log2Model.CalcHashes (model.Data.HashFlags, 0);
             model.Data.ErrEscalator = IssueTags.ProveErr | IssueTags.Fussy;
             log2Model.IssueModel.Escalate (model.Data.WarnEscalator, model.Data.ErrEscalator);
-            var b2 = log2Model.Bind;
+            var b2 = log2Model.Data;
 
             Assert.IsTrue (b2.Issues.HasError);
             if ((model.Data.HashFlags & Hashes.WebCheck) != 0)

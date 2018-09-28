@@ -21,14 +21,14 @@ namespace UnitTest
                 fs.Read (hdr, 0, hdr.Length);
 
                 FlacFormat.Model flacModel = FlacFormat.CreateModel (fs, hdr, fn);
-                Assert.IsNotNull (flacModel.Bind);
+                Assert.IsNotNull (flacModel.Data);
 
-                Assert.IsTrue (flacModel.Bind.Issues.MaxSeverity == Severity.NoIssue);
+                Assert.IsTrue (flacModel.Data.Issues.MaxSeverity == Severity.NoIssue);
 
-                var isBadHdr = flacModel.Bind.IsBadHeader;
+                var isBadHdr = flacModel.Data.IsBadHeader;
                 Assert.IsFalse (isBadHdr);
 
-                var isBadData = flacModel.Bind.IsBadData;
+                var isBadData = flacModel.Data.IsBadData;
                 Assert.IsFalse (isBadData);
             }
         }
@@ -49,12 +49,12 @@ namespace UnitTest
                 Assert.IsNotNull (flacModel);
 
                 flacModel.CalcHashes (Hashes.Intrinsic, Validations.None);
-                Assert.IsTrue (flacModel.Bind.Issues.MaxSeverity == Severity.Error);
+                Assert.IsTrue (flacModel.Data.Issues.MaxSeverity == Severity.Error);
 
-                var isBadHdr = flacModel.Bind.IsBadHeader;
+                var isBadHdr = flacModel.Data.IsBadHeader;
                 Assert.IsFalse (isBadHdr);
 
-                var isBadData = flacModel.Bind.IsBadData;
+                var isBadData = flacModel.Data.IsBadData;
                 Assert.IsTrue (isBadData);
             }
         }

@@ -29,8 +29,8 @@ namespace NongFormat
     {
         public class ModelBase
         {
-            private FormatBase bind;
-            public FormatBase BaseBind { get { return bind; } protected set { bind = value; } }
+            protected FormatBase _data { get; set; }
+            public FormatBase Data => _data;
             public Issue.Vector.Model IssueModel { get; private set; }
 
             public ModelBase()
@@ -44,68 +44,68 @@ namespace NongFormat
                 if (IssueModel.Data.HasFatal)
                     return;
 
-                bool hitCache = bind.fBuf != null && bind.FileSize < Int32.MaxValue;
+                bool hitCache = _data.fBuf != null && _data.FileSize < Int32.MaxValue;
 
-                if ((hashFlags & Hashes.FileMD5) != 0 && bind.fileMD5 == null)
+                if ((hashFlags & Hashes.FileMD5) != 0 && _data.fileMD5 == null)
                 {
                     var hasher = new Md5Hasher();
                     if (hitCache)
-                        hasher.Append (bind.fBuf, 0, bind.fBuf.Length);
+                        hasher.Append (_data.fBuf, 0, _data.fBuf.Length);
                     else
-                        hasher.Append (bind.fbs);
-                    bind.fileMD5 = hasher.GetHashAndReset();
+                        hasher.Append (_data.fbs);
+                    _data.fileMD5 = hasher.GetHashAndReset();
                 }
 
-                if ((hashFlags & Hashes.FileSHA1) != 0 && bind.fileSHA1 == null)
+                if ((hashFlags & Hashes.FileSHA1) != 0 && _data.fileSHA1 == null)
                 {
                     var hasher = new Sha1Hasher();
                     if (hitCache)
-                        hasher.Append (bind.fBuf, 0, bind.fBuf.Length);
+                        hasher.Append (_data.fBuf, 0, _data.fBuf.Length);
                     else
-                        hasher.Append (bind.fbs);
-                    bind.fileSHA1 = hasher.GetHashAndReset();
+                        hasher.Append (_data.fbs);
+                    _data.fileSHA1 = hasher.GetHashAndReset();
                 }
 
-                if ((hashFlags & Hashes.FileSHA256) != 0 && bind.fileSHA256 == null)
+                if ((hashFlags & Hashes.FileSHA256) != 0 && _data.fileSHA256 == null)
                 {
                     var hasher = new Sha256Hasher();
                     if (hitCache)
-                        hasher.Append (bind.fBuf, 0, bind.fBuf.Length);
+                        hasher.Append (_data.fBuf, 0, _data.fBuf.Length);
                     else
-                        hasher.Append (bind.fbs);
-                    bind.fileSHA256 = hasher.GetHashAndReset();
+                        hasher.Append (_data.fbs);
+                    _data.fileSHA256 = hasher.GetHashAndReset();
                 }
 
-                if ((hashFlags & Hashes.MediaSHA1) != 0 && bind.mediaSHA1 == null)
-                    if (bind.MediaCount == bind.FileSize && bind.fileSHA1 != null)
+                if ((hashFlags & Hashes.MediaSHA1) != 0 && _data.mediaSHA1 == null)
+                    if (_data.MediaCount == _data.FileSize && _data.fileSHA1 != null)
                     {
-                        System.Diagnostics.Debug.Assert (bind.mediaPosition == 0);
-                        bind.mediaSHA1 = bind.fileSHA1;
+                        System.Diagnostics.Debug.Assert (_data.mediaPosition == 0);
+                        _data.mediaSHA1 = _data.fileSHA1;
                     }
                     else
                     {
                         var hasher = new Sha1Hasher();
                         if (hitCache)
-                            hasher.Append (bind.fBuf, (int) bind.mediaPosition, (int) bind.MediaCount);
+                            hasher.Append (_data.fBuf, (int) _data.mediaPosition, (int) _data.MediaCount);
                         else
-                            hasher.Append (bind.fbs, bind.mediaPosition, bind.MediaCount);
-                        bind.mediaSHA1 = hasher.GetHashAndReset();
+                            hasher.Append (_data.fbs, _data.mediaPosition, _data.MediaCount);
+                        _data.mediaSHA1 = hasher.GetHashAndReset();
                     }
 
-                if ((hashFlags & Hashes.MetaSHA1) != 0 && bind.metaSHA1 == null)
+                if ((hashFlags & Hashes.MetaSHA1) != 0 && _data.metaSHA1 == null)
                 {
-                    if (bind.MediaCount == 0 && bind.fileSHA1 != null)
-                        bind.metaSHA1 = bind.fileSHA1;
+                    if (_data.MediaCount == 0 && _data.fileSHA1 != null)
+                        _data.metaSHA1 = _data.fileSHA1;
                     else
                     {
                         var hasher = new Sha1Hasher();
-                        var suffixPos = bind.mediaPosition + bind.MediaCount;
-                        if (bind.mediaPosition > 0 || suffixPos < bind.FileSize)
+                        var suffixPos = _data.mediaPosition + _data.MediaCount;
+                        if (_data.mediaPosition > 0 || suffixPos < _data.FileSize)
                             if (hitCache)
-                                hasher.Append (bind.fBuf, 0, (int) bind.mediaPosition, (int) suffixPos, (int) (bind.FileSize - suffixPos));
+                                hasher.Append (_data.fBuf, 0, (int) _data.mediaPosition, (int) suffixPos, (int) (_data.FileSize - suffixPos));
                             else
-                                hasher.Append (bind.fbs, 0, bind.mediaPosition, suffixPos, bind.FileSize - suffixPos);
-                        bind.metaSHA1 = hasher.GetHashAndReset();
+                                hasher.Append (_data.fbs, 0, _data.mediaPosition, suffixPos, _data.FileSize - suffixPos);
+                        _data.metaSHA1 = hasher.GetHashAndReset();
                     }
                 }
             }
@@ -115,26 +115,26 @@ namespace NongFormat
             {
                 byte[] buf = null;
 
-                long markSize = bind.FileSize - bind.ValidSize;
+                long markSize = _data.FileSize - _data.ValidSize;
                 if (markSize <= 0)
                     return;
 
                 // 1000 is somewhat arbitrary here.
                 if (markSize > 1000)
-                    bind.Watermark = Likeliness.Possible;
+                    _data.Watermark = Likeliness.Possible;
                 else
                 {
-                    bind.fbs.Position = bind.ValidSize;
+                    _data.fbs.Position = _data.ValidSize;
                     buf = new byte[(int) markSize];
-                    int got = bind.fbs.Read (buf, 0, (int) markSize);
+                    int got = _data.fbs.Read (buf, 0, (int) markSize);
                     if (got != markSize)
                     {
                         IssueModel.Add ("Read failure", Severity.Fatal);
                         return;
                     }
 
-                    bind.excess = null;
-                    bind.Watermark = Likeliness.Probable;
+                    _data.excess = null;
+                    _data.Watermark = Likeliness.Probable;
                     if (! assumeProbable)
                         for (int ix = 0; ix < buf.Length; ++ix)
                         {
@@ -143,17 +143,17 @@ namespace NongFormat
                             var bb = buf[ix];
                             if (bb > 127 || (bb < 32 && bb != 0 && bb != 9 && bb != 0x0A && bb != 0x0D))
                             {
-                                bind.Watermark = Likeliness.Possible;
+                                _data.Watermark = Likeliness.Possible;
                                 break;
                             }
                         }
                 }
 
-                if (bind.Watermark == Likeliness.Probable)
+                if (_data.Watermark == Likeliness.Probable)
                 {
-                    bind.excess = buf;
-                    var caption = bind.Watermark.ToString() + " watermark, size=" + bind.ExcessSize + ".";
-                    var prompt = "Trim probable watermark of " + bind.ExcessSize + " byte" + (bind.ExcessSize!=1? "s" : "");
+                    _data.excess = buf;
+                    var caption = _data.Watermark.ToString() + " watermark, size=" + _data.ExcessSize + ".";
+                    var prompt = "Trim probable watermark of " + _data.ExcessSize + " byte" + (_data.ExcessSize!=1? "s" : "");
                     IssueModel.Add (caption, Severity.Warning, IssueTags.None, prompt, TrimWatermark);
                 }
             }
@@ -161,16 +161,16 @@ namespace NongFormat
 
             public string Rename (string newName)
             {
-                string p1 = System.IO.Path.GetDirectoryName (bind.Path);
+                string p1 = System.IO.Path.GetDirectoryName (_data.Path);
                 string newPath = p1 + System.IO.Path.DirectorySeparatorChar + newName;
 
                 try
                 {
-                    File.Move (bind.Path, newPath);
-                    bind.Path = newPath;
-                    bind.Name = newName;
-                    bind.NotifyPropertyChanged ("Path");
-                    bind.NotifyPropertyChanged ("Name");
+                    File.Move (_data.Path, newPath);
+                    _data.Path = newPath;
+                    _data.Name = newName;
+                    _data.NotifyPropertyChanged ("Path");
+                    _data.NotifyPropertyChanged ("Name");
                 }
                 catch (Exception ex)
                 { return ex.Message.Trim (null); }
@@ -183,57 +183,57 @@ namespace NongFormat
             /// <returns>Error text if failure; null if success.</returns>
             public string RepairWrongExtension()
             {
-                if (BaseBind.Issues.HasFatal || BaseBind.ValidNames.Length == 0)
+                if (Data.Issues.HasFatal || Data.ValidNames.Length == 0)
                     return "Invalid attempt";
 
-                foreach (var vfn in BaseBind.ValidNames)
-                    if (BaseBind.NamedFormat == vfn)
+                foreach (var vfn in Data.ValidNames)
+                    if (Data.NamedFormat == vfn)
                         return "Invalid attempt";
 
                 CloseFile();
-                string newPath = System.IO.Path.ChangeExtension (BaseBind.Path, BaseBind.ValidNames[0]);
+                string newPath = System.IO.Path.ChangeExtension (Data.Path, Data.ValidNames[0]);
                 try
                 {
-                    File.Move (BaseBind.Path, newPath);
+                    File.Move (Data.Path, newPath);
                 }
                 catch (UnauthorizedAccessException ex)
                 { return ex.Message.TrimEnd (null); }
                 catch (IOException ex)
                 { return ex.Message.TrimEnd (null); }
 
-                BaseBind.Path = newPath;
-                BaseBind.Name = System.IO.Path.GetFileName (newPath);
+                Data.Path = newPath;
+                Data.Name = System.IO.Path.GetFileName (newPath);
                 return null;
             }
 
 
             protected void ResetFile()
             {
-                bind.fileMD5 = null;
-                bind.fileSHA1 = null;
-                bind.mediaSHA1 = null;
-                bind.metaSHA1 = null;
-                bind.FileSize = bind.fbs==null? 0 : bind.fbs.Length;
+                _data.fileMD5 = null;
+                _data.fileSHA1 = null;
+                _data.mediaSHA1 = null;
+                _data.metaSHA1 = null;
+                _data.FileSize = _data.fbs==null? 0 : _data.fbs.Length;
             }
 
 
             public string TrimWatermark()
             {
-                if (BaseBind.Issues.MaxSeverity >= Severity.Error || BaseBind.Watermark != Likeliness.Probable)
+                if (Data.Issues.MaxSeverity >= Severity.Error || Data.Watermark != Likeliness.Probable)
                     return "Invalid attempt";
 
                 string result = null;
-                if (BaseBind.fbs != null)
+                if (Data.fbs != null)
                     result = TrimWatermarkUpdate();
                 else
                     try
                     {
-                        using (BaseBind.fbs = new FileStream (BaseBind.Path, FileMode.Open, FileAccess.Write, FileShare.Read))
+                        using (Data.fbs = new FileStream (Data.Path, FileMode.Open, FileAccess.Write, FileShare.Read))
                         {
                             result = TrimWatermarkUpdate();
                         }
                     }
-                    finally { BaseBind.fbs = null; }
+                    finally { Data.fbs = null; }
 
                 return result;
             }
@@ -245,7 +245,7 @@ namespace NongFormat
                 try
                 {
                     TruncateExcess();
-                    BaseBind.Watermark = Likeliness.None;
+                    Data.Watermark = Likeliness.None;
                 }
                 catch (UnauthorizedAccessException ex)
                 { result = ex.Message.TrimEnd (null); }
@@ -257,23 +257,23 @@ namespace NongFormat
 
             protected void TruncateExcess()
             {
-                BaseBind.fbs.SetLength (BaseBind.FileSize - BaseBind.ExcessSize);
-                BaseBind.FileSize -= BaseBind.ExcessSize;
-                BaseBind.excised = BaseBind.excess;
-                BaseBind.excess = null;
+                Data.fbs.SetLength (Data.FileSize - Data.ExcessSize);
+                Data.FileSize -= Data.ExcessSize;
+                Data.excised = Data.excess;
+                Data.excess = null;
             }
 
 
             public void ClearFile()
-            { bind.fbs = null; }
+            { _data.fbs = null; }
 
 
             public void CloseFile()
             {
-                if (bind.fbs != null)
+                if (_data.fbs != null)
                 {
-                    bind.fbs.Dispose();
-                    bind.fbs = null;
+                    _data.fbs.Dispose();
+                    _data.fbs = null;
                 }
             }
         }
@@ -446,7 +446,7 @@ namespace NongFormat
 
                 if (model != null)
                 {
-                    FormatBase fmt = model.BaseBind;
+                    FormatBase fmt = model.Data;
                     if (! fmt.Issues.HasFatal)
                     {
                         model.CalcHashes (hashFlags, validationFlags);
@@ -470,7 +470,7 @@ namespace NongFormat
                 if (fs0 != null)
                 {
                     if (model != null)
-                        model.BaseBind.fbs = null;
+                        model.Data.fbs = null;
                     fs0.Dispose();
                 }
             }

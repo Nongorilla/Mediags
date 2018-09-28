@@ -30,7 +30,7 @@ namespace UnitTest
                 pngModel.CalcHashes (Hashes.Intrinsic, Validations.None);
             }
 
-            png = pngModel.Bind;
+            png = pngModel.Data;
 
             Assert.AreEqual (Severity.Noise, png.Issues.MaxSeverity);
             Assert.AreEqual (1, png.Issues.Items.Count);

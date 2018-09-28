@@ -24,12 +24,12 @@ namespace NongFormat
 
         public new class Model : HashesContainer.Model
         {
-            public readonly Sha1xFormat Bind;
+            public new readonly Sha1xFormat Data;
 
             public Model (Stream stream, byte[] header, string path) : base (path, 20)
             {
-                BaseBind = BindHashed = Bind = new Sha1xFormat (stream, path, HashedModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new Sha1xFormat (stream, path, HashedModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 ParseHeaderAndHistory();
                 ParseHashes();
@@ -37,22 +37,22 @@ namespace NongFormat
 
             public Model (Stream stream, string digPath, LogEacFormat log, IList<Mp3Format.Model> mp3s, string signature) : base (digPath, 16)
             {
-                BaseBind = BindHashed = Bind = new Sha1xFormat (stream, digPath, HashedModel.Bind);
-                Bind.Issues = IssueModel.Data;
-                Bind.fbs = stream;
+                base._data = Data = new Sha1xFormat (stream, digPath, HashedModel.Bind);
+                Data.Issues = IssueModel.Data;
+                Data.fbs = stream;
 
                 CreateHistory();
                 HistoryModel.Add ("ripped", signature);
 
                 HashedModel.AddActual (log.Name, log.FileSHA1);
                 foreach (var mp3Model in mp3s)
-                    HashedModel.AddActual (mp3Model.Bind.Name, mp3Model.Bind.MediaSHA1, HashStyle.Media);
+                    HashedModel.AddActual (mp3Model.Data.Name, mp3Model.Data.MediaSHA1, HashStyle.Media);
             }
 
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if (Bind.Issues.HasFatal)
+                if (Data.Issues.HasFatal)
                     return;
 
                 base.CalcHashes (hashFlags, validationFlags);

@@ -152,7 +152,7 @@ namespace NongFormat
                 if (! HasOK || ! HasQuality || IsBadCRC || CtConfidence < 0) return false;
                 if (RipSeverest != null && RipSeverest.Level >= Severity.Error) return false;
                 if (MatchModel == null) return null;
-                return ! MatchModel.Bind.Issues.HasError;
+                return ! MatchModel.Data.Issues.HasError;
             }
         }
 
@@ -173,7 +173,7 @@ namespace NongFormat
         public bool IsBadCRC { get { return CopyCRC != null && TestCRC != null && TestCRC != CopyCRC; } }
 
         private FlacFormat.Model MatchModel = null;
-        public FlacFormat Match { get { return MatchModel?.Bind; } }
+        public FlacFormat Match { get { return MatchModel?.Data; } }
         public Issue RipSeverest { get; private set; }
     }
 }

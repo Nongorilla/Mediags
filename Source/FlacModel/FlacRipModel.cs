@@ -76,7 +76,7 @@ namespace NongMediaDiags
                     }
                     Bind.IsWip = false;
                     Bind.Status = Bind.Log.Issues.MaxSeverity;
-                    Bind.IsProven = LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success;
+                    Bind.IsProven = LogModel.Data.ShIssue != null && LogModel.Data.ShIssue.Success;
                     return;
                 }
 
@@ -232,7 +232,7 @@ namespace NongMediaDiags
                 }
 
                 LogModel.ClearFile();
-                Bind.Log = LogModel.Bind;
+                Bind.Log = LogModel.Data;
 
                 if (Bind.LogRipper == null && Owner.Data.IsWebCheckEnabled)
                     LogModel.CalcHashWebCheck();
@@ -313,7 +313,7 @@ namespace NongMediaDiags
                             sb2.Append ("s");
                     sb2.Append (" successful.");
                     LogModel.TkIssue = LogModel.IssueModel.Add (sb2.ToString(), Severity.Advisory, IssueTags.Success);
-                    LogModel.Bind.NotifyPropertyChanged (null);
+                    LogModel.Data.NotifyPropertyChanged (null);
                 }
 
                 ++Owner.Data.LogFormat.TrueTotal;
@@ -341,7 +341,7 @@ namespace NongMediaDiags
                         }
                         else
                         {
-                            FlacFormat flac = flacModel.Bind;
+                            FlacFormat flac = flacModel.Data;
                             flacModel.CalcHashes (Hashes.Intrinsic|Hashes.PcmCRC32|Owner.Data.HashFlags|fileHash, Owner.Data.ValidationFlags);
                             if (flac.IsBadHeader)
                                 ++Owner.Data.FlacFormat.TotalHeaderErrors;
@@ -369,7 +369,7 @@ namespace NongMediaDiags
 
             private void ValidateAlbum()
             {
-                LogModel.SetWorkName (LogModel.Bind.GetCleanWorkName (Bind.Autoname));
+                LogModel.SetWorkName (LogModel.Data.GetCleanWorkName (Bind.Autoname));
                 if (Bind.Autoname == NamingStrategy.Manual && Bind.Log.WorkName != Bind.WorkName)
                 {
                     LogModel.IssueModel.Add ("Album file names are not Windows-1252 clean.");
@@ -399,13 +399,13 @@ namespace NongMediaDiags
                         for (int logIx = 0; logIx < LogModel.TracksModel.Bind.Items.Count; ++logIx)
                         {
                             var flacModel = LogModel.TracksModel.GetMatch (logIx);
-                            var newName = flacModel.Bind.GetCleanFileName (Owner.Data.Autoname, Bind.Log.CalcedAlbumArtist, trackWidth);
-                            if (newName != flacModel.Bind.Name)
+                            var newName = flacModel.Data.GetCleanFileName (Owner.Data.Autoname, Bind.Log.CalcedAlbumArtist, trackWidth);
+                            if (newName != flacModel.Data.Name)
                             {
                                 var err = flacModel.Rename (newName);
                                 if (err != null)
                                 {
-                                    LogModel.IssueModel.Add ("Rename of track " + flacModel.Bind.GetTag ("TRACKNUMBER") + " failed: " + err);
+                                    LogModel.IssueModel.Add ("Rename of track " + flacModel.Data.GetTag ("TRACKNUMBER") + " failed: " + err);
                                     break;
                                 }
                                 else
@@ -433,7 +433,7 @@ namespace NongMediaDiags
                         var hdr = new byte[7];
                         fs0.Read (hdr, 0, hdr.Length);
                         M3uModel = M3uFormat.CreateModel (fs0, hdr, m3uPath);
-                        Bind.M3u = M3uModel.Bind;
+                        Bind.M3u = M3uModel.Data;
 
                         if (! Bind.M3u.Issues.HasError)
                             if (Bind.M3u.Files.Items.Count != Bind.Log.Tracks.Items.Count)
@@ -470,7 +470,7 @@ namespace NongMediaDiags
                     using (var fs0 = new FileStream (m3uPath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
                     {
                         M3uModel = new M3uFormat.Model (fs0, fs0.Name, Bind.Log);
-                        Bind.M3u = M3uModel.Bind;
+                        Bind.M3u = M3uModel.Data;
                         M3uModel.WriteFile();
                         M3uModel.CalcHashes (Hashes.FileMD5, Validations.None);
                     }
@@ -523,9 +523,9 @@ namespace NongMediaDiags
                                 return;
 
                             Md5Model = new Md5Format.Model (fs0, newMd5Path, Bind.Log, newLogName, Bind.M3u, Bind.Signature);
-                            Bind.Md5 = Md5Model.Bind;
+                            Bind.Md5 = Md5Model.Data;
 
-                            if (Owner.Data.WillProve && LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
+                            if (Owner.Data.WillProve && LogModel.Data.ShIssue != null && LogModel.Data.ShIssue.Success)
                             {
                                 Md5Model.HistoryModel.Add ("proved", Bind.Signature);
                                 Bind.IsProven = true;
@@ -561,7 +561,7 @@ namespace NongMediaDiags
                     var hdr = new byte[0x2C];
                     int got = fs0.Read (hdr, 0, hdr.Length);
                     Md5Model = Md5Format.CreateModel (fs0, hdr, oldMd5Path);
-                    Bind.Md5 = Md5Model.Bind;
+                    Bind.Md5 = Md5Model.Data;
                     Md5Model.CalcHashes (Hashes.Intrinsic, Validations.None);
                     if (Bind.Md5.Issues.MaxSeverity >= Severity.Error)
                         return;
@@ -571,10 +571,10 @@ namespace NongMediaDiags
                         Md5Model.IssueModel.Add ("Highest quality previously proven.", Severity.Trivia);
                         Bind.IsProven = true;
                     }
-                    else if (Owner.Data.IsWebCheckEnabled && LogModel.Bind.ShIssue == null)
+                    else if (Owner.Data.IsWebCheckEnabled && LogModel.Data.ShIssue == null)
                     {
                         LogModel.CalcHashWebCheck();
-                        if (LogModel.Bind.ShIssue.Failure)
+                        if (LogModel.Data.ShIssue.Failure)
                             Md5Model.IssueModel.Add ("EAC log self-hash verify failed!");
                         else
                             Md5Model.IssueModel.Add ("EAC log self-hash verify successful.", Severity.Advisory);
@@ -582,8 +582,8 @@ namespace NongMediaDiags
                     else
                     {
                         Severity sev = Severity.Noise;
-                        if (Owner.Data.WillProve && (LogModel.Bind.ShIssue == null || !LogModel.Bind.ShIssue.Success
-                                                    || LogModel.Bind.TpIssue == null || LogModel.Bind.TpIssue.Failure))
+                        if (Owner.Data.WillProve && (LogModel.Data.ShIssue == null || !LogModel.Data.ShIssue.Success
+                                                    || LogModel.Data.TpIssue == null || LogModel.Data.TpIssue.Failure))
                             sev = Severity.Error;
                         Md5Model.IssueModel.Add ("Highest quality not previously proven.", sev);
                     }
@@ -743,7 +743,7 @@ namespace NongMediaDiags
                         var buf = new byte[7];
                         fs2.Read (buf, 0, buf.Length);
                         M3uModel = M3uFormat.CreateModel (fs2, buf, oldM3uPath);
-                        Bind.M3u = M3uModel.Bind;
+                        Bind.M3u = M3uModel.Data;
                         ++Owner.Data.M3uFormat.TrueTotal;
                         ++Owner.Data.TotalFiles;
 
@@ -798,8 +798,8 @@ namespace NongMediaDiags
                     {
                         bool addProver = false;
                         if (Owner.Data.WillProve && Bind.Md5.History.Prover == null)
-                            if (LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
-                                if (LogModel.Bind.TpIssue != null && ! LogModel.Bind.TpIssue.Failure)
+                            if (LogModel.Data.ShIssue != null && LogModel.Data.ShIssue.Success)
+                                if (LogModel.Data.TpIssue != null && ! LogModel.Data.TpIssue.Failure)
                                     addProver = true;
                         string action = addProver? "proved" : "checked";
 
@@ -901,8 +901,8 @@ namespace NongMediaDiags
                     Md5Model.HistoryModel.Add ("changed: " + comment, Bind.Signature);
 
                     if (Owner.Data.WillProve && Bind.Md5.History.Prover == null)
-                        if (LogModel.Bind.ShIssue != null && LogModel.Bind.ShIssue.Success)
-                            if (LogModel.Bind.TpIssue != null && ! LogModel.Bind.TpIssue.Failure)
+                        if (LogModel.Data.ShIssue != null && LogModel.Data.ShIssue.Success)
+                            if (LogModel.Data.TpIssue != null && ! LogModel.Data.TpIssue.Failure)
                                 Md5Model.HistoryModel.Add ("proved", Bind.Signature);
                 }
 

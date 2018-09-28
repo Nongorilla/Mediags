@@ -24,12 +24,12 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly MovFormat Bind;
+            public new readonly MovFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new MovFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                _data = Data = new MovFormat (stream, path);
+                Data.Issues = IssueModel.Data;
             }
         }
 
@@ -45,12 +45,12 @@ namespace NongFormat
 
         public new class Model : Mpeg4Container.Model
         {
-            public readonly MovFormat2 Bind;
+            public new readonly MovFormat2 Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Mpeg4Bind = Bind = new MovFormat2 (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new MovFormat2 (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 ParseMpeg4 (stream, header, path);
                 CalcMark();

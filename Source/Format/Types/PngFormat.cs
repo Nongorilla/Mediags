@@ -30,74 +30,74 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly PngFormat Bind;
+            public new readonly PngFormat Data;
             public readonly PngChunk.Vector.Model ChunksModel;
 
             public Model (Stream stream, byte[] header, string path)
             {
                 ChunksModel = new PngChunk.Vector.Model();
-                BaseBind = Bind = new PngFormat (stream, path, ChunksModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new PngFormat (stream, path, ChunksModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 // Arbitrary sanity limit.
-                if (Bind.FileSize > 100000000)
+                if (Data.FileSize > 100000000)
                 {
                     IssueModel.Add ("File size insanely huge.", Severity.Fatal);
                     return;
                 }
 
-                Bind.fBuf = new byte[(int) Bind.FileSize];
-                var fBuf = Bind.fBuf;
+                Data.fBuf = new byte[(int) Data.FileSize];
+                var fBuf = Data.fBuf;
 
                 stream.Position = 0;
-                int got = stream.Read (fBuf, 0, (int) Bind.FileSize);
-                if (got < Bind.FileSize)
+                int got = stream.Read (fBuf, 0, (int) Data.FileSize);
+                if (got < Data.FileSize)
                 {
                     IssueModel.Add ("Read failed.", Severity.Fatal);
                     return;
                 }
 
-                Bind.ValidSize = 8;
+                Data.ValidSize = 8;
 
-                if (fBuf[0x0C]!='I' || fBuf[0x0D]!='H' || Bind.fBuf[0x0E]!='D' || Bind.fBuf[0x0F]!='R')
+                if (fBuf[0x0C]!='I' || fBuf[0x0D]!='H' || Data.fBuf[0x0E]!='D' || Data.fBuf[0x0F]!='R')
                 {
                     IssueModel.Add ("Missing 'IHDR' chunk.", Severity.Fatal);
                     return;
                 }
 
-                Bind.Width = ConvertTo.FromBig32ToInt32 (fBuf, 0x10);
-                Bind.Height = ConvertTo.FromBig32ToInt32 (fBuf, 0x14);
-                Bind.BitDepth = fBuf[0x18];
-                Bind.ColorType = fBuf[0x19];
-                Bind.CompressionMethod = fBuf[0x1A];
-                Bind.FilterMethod = fBuf[0x1B];
-                Bind.InterlaceMethod = fBuf[0x1C];
+                Data.Width = ConvertTo.FromBig32ToInt32 (fBuf, 0x10);
+                Data.Height = ConvertTo.FromBig32ToInt32 (fBuf, 0x14);
+                Data.BitDepth = fBuf[0x18];
+                Data.ColorType = fBuf[0x19];
+                Data.CompressionMethod = fBuf[0x1A];
+                Data.FilterMethod = fBuf[0x1B];
+                Data.InterlaceMethod = fBuf[0x1C];
 
                 do
                 {
-                    UInt32 chunkSize = ConvertTo.FromBig32ToUInt32 (fBuf, (int) Bind.ValidSize);
-                    if (Bind.ValidSize + chunkSize + 12 > Bind.FileSize)
+                    UInt32 chunkSize = ConvertTo.FromBig32ToUInt32 (fBuf, (int) Data.ValidSize);
+                    if (Data.ValidSize + chunkSize + 12 > Data.FileSize)
                     {
                         IssueModel.Add ("File is corrupt or truncated.", Severity.Fatal);
                         return;
                     }
 
-                    string type = Encoding.ASCII.GetString (fBuf, (int) Bind.ValidSize+4, 4);
-                    UInt32 storedCRC = ConvertTo.FromBig32ToUInt32 (fBuf, (int) (Bind.ValidSize + chunkSize + 8));
+                    string type = Encoding.ASCII.GetString (fBuf, (int) Data.ValidSize+4, 4);
+                    UInt32 storedCRC = ConvertTo.FromBig32ToUInt32 (fBuf, (int) (Data.ValidSize + chunkSize + 8));
                     ChunksModel.Add (type, chunkSize, storedCRC);
 
                     var typeLow = type.ToLower();
                     switch (typeLow)
                     {
                         case "idat":
-                            if (Bind.mediaPosition <= 0)
-                                Bind.mediaPosition = Bind.ValidSize;
+                            if (Data.mediaPosition <= 0)
+                                Data.mediaPosition = Data.ValidSize;
                             break;
                         case "iend":
-                            if (Bind.MediaCount > 0)
+                            if (Data.MediaCount > 0)
                                 IssueModel.Add ("Multiple IEND chunks.");
                             else
-                                Bind.MediaCount = Bind.ValidSize - Bind.mediaPosition + chunkSize + 0xC;
+                                Data.MediaCount = Data.ValidSize - Data.mediaPosition + chunkSize + 0xC;
                             break;
                         case "text":
                             if (chunkSize > 0x7FFF)
@@ -105,76 +105,76 @@ namespace NongFormat
                             else
                             {
                                 var escaped = new StringBuilder();
-                                for (int ix = (int) Bind.ValidSize+8; ix < (int) Bind.ValidSize+8+chunkSize; ++ix)
+                                for (int ix = (int) Data.ValidSize+8; ix < (int) Data.ValidSize+8+chunkSize; ++ix)
                                     if (fBuf[ix] < ' ' || fBuf[ix] > 0x7F)
                                         escaped.AppendFormat ("\\{0:x2}", fBuf[ix]);
                                     else
                                         escaped.Append ((char) fBuf[ix]);
 
-                                Bind.texts.Add (escaped.ToString());
+                                Data.texts.Add (escaped.ToString());
                             }
                             break;
                         case "gama":
-                            if (Bind.Gamma != null)
+                            if (Data.Gamma != null)
                                 IssueModel.Add ("Unexpected multiple gamma chunks.");
                             else
                                 if (chunkSize != 4)
                                     IssueModel.Add ("Bad gamma chunk size '" + chunkSize + "', expecting '4'.");
                                 else
-                                    Bind.Gamma = ConvertTo.FromBig32ToUInt32 (fBuf, (int) Bind.ValidSize+8) / 100000f;
+                                    Data.Gamma = ConvertTo.FromBig32ToUInt32 (fBuf, (int) Data.ValidSize+8) / 100000f;
                             break;
                     }
 
-                    Bind.ValidSize += chunkSize + 0xC;
+                    Data.ValidSize += chunkSize + 0xC;
                 }
-                while (Bind.ValidSize < Bind.FileSize);
+                while (Data.ValidSize < Data.FileSize);
 
-                if (Bind.Chunks.Items[Bind.Chunks.Items.Count-1].Type != "IEND")
+                if (Data.Chunks.Items[Data.Chunks.Items.Count-1].Type != "IEND")
                     IssueModel.Add ("Missing 'IEND' chunk.");
 
-                if (Bind.Width <= 0 || Bind.Height <= 0)
+                if (Data.Width <= 0 || Data.Height <= 0)
                     IssueModel.Add ("Invalid dimensions.");
 
-                if (Bind.BitDepth != 1 && Bind.BitDepth != 2 && Bind.BitDepth != 4 && Bind.BitDepth != 8 && Bind.BitDepth != 16)
-                    IssueModel.Add ("Invalid bit depth '" + Bind.BitDepth + "'.");
+                if (Data.BitDepth != 1 && Data.BitDepth != 2 && Data.BitDepth != 4 && Data.BitDepth != 8 && Data.BitDepth != 16)
+                    IssueModel.Add ("Invalid bit depth '" + Data.BitDepth + "'.");
 
-                if (Bind.CompressionMethod != 0)
-                    IssueModel.Add ("Invalid compression '" + Bind.CompressionMethod + "'.");
+                if (Data.CompressionMethod != 0)
+                    IssueModel.Add ("Invalid compression '" + Data.CompressionMethod + "'.");
 
-                if (Bind.FilterMethod != 0)
-                    IssueModel.Add ("Invalid filter '" + Bind.FilterMethod + "'.");
+                if (Data.FilterMethod != 0)
+                    IssueModel.Add ("Invalid filter '" + Data.FilterMethod + "'.");
 
-                if (Bind.InterlaceMethod != 0 && Bind.InterlaceMethod != 1)
-                    IssueModel.Add ("Invalid interlace '" + Bind.InterlaceMethod + "'.");
+                if (Data.InterlaceMethod != 0 && Data.InterlaceMethod != 1)
+                    IssueModel.Add ("Invalid interlace '" + Data.InterlaceMethod + "'.");
             }
 
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
-                if ((hashFlags & Hashes.Intrinsic) != 0 && Bind.BadCrcCount == null)
+                if ((hashFlags & Hashes.Intrinsic) != 0 && Data.BadCrcCount == null)
                 {
-                    Bind.BadCrcCount = 0;
+                    Data.BadCrcCount = 0;
                     var hasher = new Crc32rHasher();
                     int pos = 12;
-                    for (int ix = 0; ix < Bind.Chunks.Items.Count; ++ix)
+                    for (int ix = 0; ix < Data.Chunks.Items.Count; ++ix)
                     {
-                        PngChunk chunk = Bind.Chunks.Items[ix];
-                        hasher.Append (Bind.fBuf, pos, (int) chunk.Size + 4);
+                        PngChunk chunk = Data.Chunks.Items[ix];
+                        hasher.Append (Data.fBuf, pos, (int) chunk.Size + 4);
                         byte[] hash = hasher.GetHashAndReset();
                         UInt32 actualCRC = BitConverter.ToUInt32 (hash, 0);
                         ChunksModel.SetActualCRC (ix, actualCRC);
 
                         if (actualCRC != chunk.StoredCRC)
-                            ++Bind.BadCrcCount;
+                            ++Data.BadCrcCount;
                         pos += (int) chunk.Size + 12;
                     }
 
                     var sb = new StringBuilder();
-                    sb.Append (Bind.Chunks.Items.Count - Bind.BadCrcCount);
+                    sb.Append (Data.Chunks.Items.Count - Data.BadCrcCount);
                     sb.Append (" of ");
-                    sb.Append (Bind.Chunks.Items.Count);
+                    sb.Append (Data.Chunks.Items.Count);
                     sb.Append (" CRC checks successful.");
-                    IssueModel.Add (sb.ToString(), Bind.BadCrcCount==0? Severity.Noise : Severity.Error);
+                    IssueModel.Add (sb.ToString(), Data.BadCrcCount==0? Severity.Noise : Severity.Error);
                 }
 
                 base.CalcHashes (hashFlags, validationFlags);

@@ -26,12 +26,12 @@ namespace NongFormat
 
         public new class Model : RiffContainer.Model
         {
-            public readonly AviFormat Bind;
+            public new readonly AviFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = RiffBind = Bind = new AviFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new AviFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 ParseRiff (header);
 
@@ -45,10 +45,10 @@ namespace NongFormat
                     return;
                 }
 
-                Bind.StreamCount = ConvertTo.FromLit32ToInt32 (buf, 0x38);
-                Bind.Width = ConvertTo.FromLit32ToInt32 (buf, 0x40);
-                Bind.Height = ConvertTo.FromLit32ToInt32 (buf, 0x44);
-                Bind.Codec = Encoding.ASCII.GetString (buf, 0xBC, 4).Trim();
+                Data.StreamCount = ConvertTo.FromLit32ToInt32 (buf, 0x38);
+                Data.Width = ConvertTo.FromLit32ToInt32 (buf, 0x40);
+                Data.Height = ConvertTo.FromLit32ToInt32 (buf, 0x44);
+                Data.Codec = Encoding.ASCII.GetString (buf, 0xBC, 4).Trim();
 
                 CalcMark();
                 GetDiagsForMarkable();

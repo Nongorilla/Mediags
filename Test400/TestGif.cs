@@ -26,7 +26,7 @@ namespace UnitTest
                 Assert.IsNotNull (gifModel);
             }
 
-            GifFormat gif = gifModel.Bind;
+            GifFormat gif = gifModel.Data;
             Assert.AreEqual (300, gif.Width);
             Assert.AreEqual (301, gif.Height);
 

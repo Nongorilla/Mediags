@@ -25,12 +25,12 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly AsfFormat Bind;
+            public new readonly AsfFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new AsfFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new AsfFormat (stream, path);
+                Data.Issues = IssueModel.Data;
             }
         }
 

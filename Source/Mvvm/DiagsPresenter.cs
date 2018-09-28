@@ -163,11 +163,11 @@ namespace AppViewModel
                 {
                     foreach (FormatBase.ModelBase parsing in CheckRoot())
                         if (parsing != null)
-                            if (Data.tabInfo.TryGetValue (parsing.BaseBind.NamedFormat, out TabInfo tInfo))
+                            if (Data.tabInfo.TryGetValue (parsing.Data.NamedFormat, out TabInfo tInfo))
                             {
                                 if (firstTInfo == null)
                                 { firstTInfo = tInfo; firstParsingIx = tInfo.TabPosition; }
-                                tInfo.Add (parsing.BaseBind);
+                                tInfo.Add (parsing.Data);
                             }
                 }
                 catch (IOException ex)

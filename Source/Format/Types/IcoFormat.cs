@@ -49,24 +49,24 @@ namespace NongFormat
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly IcoFormat Bind;
+            public new readonly IcoFormat Data;
 
             public Model (Stream stream, byte[] header, string path)
             {
-                BaseBind = Bind = new IcoFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new IcoFormat (stream, path);
+                Data.Issues = IssueModel.Data;
 
                 // Arbitrary sanity limit.
-                if (Bind.FileSize > 50000000)
+                if (Data.FileSize > 50000000)
                 {
                     IssueModel.Add ("File insanely large", Severity.Fatal);
                     return;
                 }
 
-                var buf = new byte[Bind.FileSize];
+                var buf = new byte[Data.FileSize];
                 stream.Position = 0;
-                var got = stream.Read (buf, 0, (int) Bind.FileSize);
-                if (got != Bind.FileSize)
+                var got = stream.Read (buf, 0, (int) Data.FileSize);
+                if (got != Data.FileSize)
                 {
                     IssueModel.Add ("Read error", Severity.Fatal);
                     return;
@@ -92,7 +92,7 @@ namespace NongFormat
 
                     if (storedStart != actualStart || storedSize <= 0)
                     {
-                        IssueModel.Add ("Corrupt header near byte " + Bind.ValidSize, Severity.Fatal);
+                        IssueModel.Add ("Corrupt header near byte " + Data.ValidSize, Severity.Fatal);
                         return;
                     }
 
@@ -119,12 +119,12 @@ namespace NongFormat
                         bpp = buf[pos+6];
                     }
 
-                    Bind.icons.Add (new IconItem (width, height, paletteSize, bpp, storedStart, storedSize, isPNG));
+                    Data.icons.Add (new IconItem (width, height, paletteSize, bpp, storedStart, storedSize, isPNG));
 
                     actualStart += storedSize;
                 }
 
-                if (actualStart != Bind.FileSize)
+                if (actualStart != Data.FileSize)
                 {
                     IssueModel.Add ("Incorrect file size");
                     return;

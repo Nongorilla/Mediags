@@ -22,12 +22,12 @@ namespace NongFormat
 
         public new class Model : FilesContainer.Model
         {
-            public readonly M3u8Format Bind;
+            public new readonly M3u8Format Data;
 
             public Model (Stream stream, byte[] header, string path) : base (path)
             {
-                BaseBind = BindFiles = Bind = new M3u8Format (stream, path, FilesModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new M3u8Format (stream, path, FilesModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 stream.Position = 0;
                 TextReader tr = new StreamReader (stream, Encoding.UTF8);

@@ -24,12 +24,12 @@ namespace NongFormat
 
         public new class Model : FilesContainer.Model
         {
-            public readonly M3uFormat Bind;
+            public new readonly M3uFormat Data;
 
             public Model (Stream stream, byte[] header, string path) : base (path)
             {
-                BaseBind = BindFiles = Bind = new M3uFormat (stream, path, FilesModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new M3uFormat (stream, path, FilesModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 stream.Position = 0;
                 TextReader tr = new StreamReader (stream, LogBuffer.cp1252);
@@ -47,8 +47,8 @@ namespace NongFormat
 
             public Model (Stream stream, string m3uPath, LogEacFormat log) : base (m3uPath)
             {
-                BaseBind = BindFiles = Bind = new M3uFormat (stream, m3uPath, log, FilesModel.Bind);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new M3uFormat (stream, m3uPath, log, FilesModel.Bind);
+                Data.Issues = IssueModel.Data;
 
                 foreach (var track in log.Tracks.Items)
                     FilesModel.Add (track.Match.Name);
@@ -58,14 +58,14 @@ namespace NongFormat
             public void WriteFile()
             {
                 var nl = LogBuffer.cp1252.GetBytes (Environment.NewLine);
-                Bind.fbs.Position = 0;
-                foreach (var line in Bind.Files.Items)
+                Data.fbs.Position = 0;
+                foreach (var line in Data.Files.Items)
                 {
                     var bb = LogBuffer.cp1252.GetBytes (line.Name);
-                    Bind.fbs.Write (bb, 0, bb.Length);
-                    Bind.fbs.Write (nl, 0, nl.Length);
+                    Data.fbs.Write (bb, 0, bb.Length);
+                    Data.fbs.Write (nl, 0, nl.Length);
                 }
-                Bind.fbs.SetLength (Bind.fbs.Position);
+                Data.fbs.SetLength (Data.fbs.Position);
                 ResetFile();
             }
         }

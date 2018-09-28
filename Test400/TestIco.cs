@@ -24,7 +24,7 @@ namespace UnitTest
                 Assert.AreEqual (hdr.Length, got);
 
                 IcoFormat.Model icoModel = IcoFormat.CreateModel (fs, hdr, fs.Name);
-                fmt = icoModel.Bind;
+                fmt = icoModel.Data;
 
                 Assert.IsNull (fmt.FileMD5ToHex);
                 Assert.IsNull (fmt.FileSHA1ToHex);
@@ -59,7 +59,7 @@ namespace UnitTest
             FileFormat actual;
             var fs = new FileStream (fn, FileMode.Open);
             var fmt = FormatBase.CreateModel (model.Data.FileFormats.Items, fs, fn, 0, 0, null, out isKnown, out actual);
-            var fb = fmt.BaseBind;
+            var fb = fmt.Data;
 
             Assert.IsNotNull (fmt);
             Assert.IsTrue (fb.Issues.MaxSeverity == Severity.Warning);

@@ -11,7 +11,7 @@ namespace NongMediaDiags
     {
         public partial class Model
         {
-            protected virtual Diags _data { get; set; }
+            protected Diags _data { get; set; }
             public Diags Data => _data;
             public FileFormat.Vector.Model FormatModel;
 
@@ -257,9 +257,9 @@ namespace NongMediaDiags
 
                 if (Data.Response == Interaction.PromptToRepair)
                 {
-                    for (int ix = 0; ix < formatModel.BaseBind.Issues.Items.Count; ++ix)
+                    for (int ix = 0; ix < formatModel.Data.Issues.Items.Count; ++ix)
                     {
-                        Issue issue = formatModel.BaseBind.Issues.Items[ix];
+                        Issue issue = formatModel.Data.Issues.Items[ix];
                         if (issue.IsRepairable)
                             for (;;)
                             {
