@@ -67,7 +67,7 @@ namespace NongFormat
             }
         }
 
-        public Mp3XingBlock (byte[] frameBuf, int xix, Mp3Header header, string xingString)
+        protected Mp3XingBlock (byte[] frameBuf, int xix, Mp3Header header, string xingString)
         {
             this.buf = frameBuf;
             this.header = header;
@@ -139,7 +139,7 @@ namespace NongFormat
         public ushort? ActualHeaderCrc { get; private set; } = null;
         public ushort? ActualDataCrc { get; private set; } = null;
 
-        public Mp3LameBlock (byte[] buf, int xix, Mp3Header header, string xingString, string lameString) : base (buf, xix, header, xingString)
+        private Mp3LameBlock (byte[] buf, int xix, Mp3Header header, string xingString, string lameString) : base (buf, xix, header, xingString)
          => LameVersion = lameString;
 
         public bool IsVbr { get { int b = buf[xingIx+0x81] & 0xF; return b >= 3 && b <= 7; } }

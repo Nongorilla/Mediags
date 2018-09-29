@@ -77,7 +77,7 @@ namespace NongFormat
         public bool ForbidRooted { get; private set; }
         public string IgnoredName { get; private set; }
 
-        public FilesContainer (Stream stream, string path, FileItem.Vector files) : base (stream, path)
+        protected FilesContainer (Stream stream, string path, FileItem.Vector files) : base (stream, path)
         {
             this.Files = files;
             this.AllowNonFile = true;

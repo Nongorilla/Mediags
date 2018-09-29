@@ -145,7 +145,7 @@ namespace NongFormat
         public string Brand { get; private set; }
 
 
-        public Mpeg4Container (Stream stream, string path) : base (stream, path)
+        protected Mpeg4Container (Stream stream, string path) : base (stream, path)
         { }
 
 

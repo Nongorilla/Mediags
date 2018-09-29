@@ -65,7 +65,7 @@ namespace AppViewModel
         public ICommand DoConsoleZoomMinus { get; private set; }
         public ICommand DoConsoleZoomPlus { get; private set; }
 
-        public DiagsPresenter (DiagsPresenter.Model model) : base (model)
+        private DiagsPresenter (DiagsPresenter.Model model) : base (model)
         {
             this.Scope = Granularity.Verbose;
             this.HashFlags = Hashes.Intrinsic;

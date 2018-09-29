@@ -9,6 +9,7 @@ namespace NongFormat
         public abstract class Model : FormatBase.ModelBase
         {
             public new RiffContainer Data => (RiffContainer) _data;
+
             protected void ParseRiff (byte[] hdr)
             {
                 var buf = new byte[8];
@@ -95,7 +96,7 @@ namespace NongFormat
         public long ExpectedPaddedSize
         { get { return ((ValidSize - JunkSize + 2048 + 8) / 2048) * 2048; } }
 
-        public RiffContainer (Stream stream, string path) : base (stream, path)
+        protected RiffContainer (Stream stream, string path) : base (stream, path)
         { }
 
 

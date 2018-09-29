@@ -304,7 +304,7 @@ namespace NongFormat
         { get { return System.IO.Path.GetExtension (Path).Substring (1); } }
 
 
-        public FormatBase (Stream stream, string path)
+        protected FormatBase (Stream stream, string path)
         {
             this.fbs = stream;
             this.Name = System.IO.Path.GetFileName (path);
