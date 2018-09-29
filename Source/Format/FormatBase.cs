@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 using NongIssue;
 using NongCrypto;
 
@@ -29,83 +29,80 @@ namespace NongFormat
     {
         public class ModelBase
         {
-            protected FormatBase _data { get; set; }
+            protected FormatBase _data;
             public FormatBase Data => _data;
             public Issue.Vector.Model IssueModel { get; private set; }
 
             public ModelBase()
-            {
-                IssueModel = new Issue.Vector.Model();
-            }
-
+             => IssueModel = new Issue.Vector.Model();
 
             public virtual void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
                 if (IssueModel.Data.HasFatal)
                     return;
 
-                bool hitCache = _data.fBuf != null && _data.FileSize < Int32.MaxValue;
+                bool hitCache = Data.fBuf != null && Data.FileSize < Int32.MaxValue;
 
-                if ((hashFlags & Hashes.FileMD5) != 0 && _data.fileMD5 == null)
+                if ((hashFlags & Hashes.FileMD5) != 0 && Data.fileMD5 == null)
                 {
                     var hasher = new Md5Hasher();
                     if (hitCache)
-                        hasher.Append (_data.fBuf, 0, _data.fBuf.Length);
+                        hasher.Append (Data.fBuf, 0, Data.fBuf.Length);
                     else
-                        hasher.Append (_data.fbs);
-                    _data.fileMD5 = hasher.GetHashAndReset();
+                        hasher.Append (Data.fbs);
+                    Data.fileMD5 = hasher.GetHashAndReset();
                 }
 
-                if ((hashFlags & Hashes.FileSHA1) != 0 && _data.fileSHA1 == null)
+                if ((hashFlags & Hashes.FileSHA1) != 0 && Data.fileSHA1 == null)
                 {
                     var hasher = new Sha1Hasher();
                     if (hitCache)
-                        hasher.Append (_data.fBuf, 0, _data.fBuf.Length);
+                        hasher.Append (Data.fBuf, 0, Data.fBuf.Length);
                     else
-                        hasher.Append (_data.fbs);
-                    _data.fileSHA1 = hasher.GetHashAndReset();
+                        hasher.Append (Data.fbs);
+                    Data.fileSHA1 = hasher.GetHashAndReset();
                 }
 
-                if ((hashFlags & Hashes.FileSHA256) != 0 && _data.fileSHA256 == null)
+                if ((hashFlags & Hashes.FileSHA256) != 0 && Data.fileSHA256 == null)
                 {
                     var hasher = new Sha256Hasher();
                     if (hitCache)
-                        hasher.Append (_data.fBuf, 0, _data.fBuf.Length);
+                        hasher.Append (Data.fBuf, 0, Data.fBuf.Length);
                     else
-                        hasher.Append (_data.fbs);
-                    _data.fileSHA256 = hasher.GetHashAndReset();
+                        hasher.Append (Data.fbs);
+                    Data.fileSHA256 = hasher.GetHashAndReset();
                 }
 
-                if ((hashFlags & Hashes.MediaSHA1) != 0 && _data.mediaSHA1 == null)
-                    if (_data.MediaCount == _data.FileSize && _data.fileSHA1 != null)
+                if ((hashFlags & Hashes.MediaSHA1) != 0 && Data.mediaSHA1 == null)
+                    if (Data.MediaCount == Data.FileSize && Data.fileSHA1 != null)
                     {
-                        System.Diagnostics.Debug.Assert (_data.mediaPosition == 0);
-                        _data.mediaSHA1 = _data.fileSHA1;
+                        System.Diagnostics.Debug.Assert (Data.mediaPosition == 0);
+                        Data.mediaSHA1 = Data.fileSHA1;
                     }
                     else
                     {
                         var hasher = new Sha1Hasher();
                         if (hitCache)
-                            hasher.Append (_data.fBuf, (int) _data.mediaPosition, (int) _data.MediaCount);
+                            hasher.Append (Data.fBuf, (int) Data.mediaPosition, (int) Data.MediaCount);
                         else
-                            hasher.Append (_data.fbs, _data.mediaPosition, _data.MediaCount);
-                        _data.mediaSHA1 = hasher.GetHashAndReset();
+                            hasher.Append (Data.fbs, Data.mediaPosition, Data.MediaCount);
+                        Data.mediaSHA1 = hasher.GetHashAndReset();
                     }
 
-                if ((hashFlags & Hashes.MetaSHA1) != 0 && _data.metaSHA1 == null)
+                if ((hashFlags & Hashes.MetaSHA1) != 0 && Data.metaSHA1 == null)
                 {
-                    if (_data.MediaCount == 0 && _data.fileSHA1 != null)
-                        _data.metaSHA1 = _data.fileSHA1;
+                    if (Data.MediaCount == 0 && Data.fileSHA1 != null)
+                        Data.metaSHA1 = Data.fileSHA1;
                     else
                     {
                         var hasher = new Sha1Hasher();
-                        var suffixPos = _data.mediaPosition + _data.MediaCount;
-                        if (_data.mediaPosition > 0 || suffixPos < _data.FileSize)
+                        var suffixPos = Data.mediaPosition + Data.MediaCount;
+                        if (Data.mediaPosition > 0 || suffixPos < Data.FileSize)
                             if (hitCache)
-                                hasher.Append (_data.fBuf, 0, (int) _data.mediaPosition, (int) suffixPos, (int) (_data.FileSize - suffixPos));
+                                hasher.Append (Data.fBuf, 0, (int) Data.mediaPosition, (int) suffixPos, (int) (Data.FileSize - suffixPos));
                             else
-                                hasher.Append (_data.fbs, 0, _data.mediaPosition, suffixPos, _data.FileSize - suffixPos);
-                        _data.metaSHA1 = hasher.GetHashAndReset();
+                                hasher.Append (Data.fbs, 0, Data.mediaPosition, suffixPos, Data.FileSize - suffixPos);
+                        Data.metaSHA1 = hasher.GetHashAndReset();
                     }
                 }
             }
@@ -115,26 +112,26 @@ namespace NongFormat
             {
                 byte[] buf = null;
 
-                long markSize = _data.FileSize - _data.ValidSize;
+                long markSize = Data.FileSize - Data.ValidSize;
                 if (markSize <= 0)
                     return;
 
                 // 1000 is somewhat arbitrary here.
                 if (markSize > 1000)
-                    _data.Watermark = Likeliness.Possible;
+                    Data.Watermark = Likeliness.Possible;
                 else
                 {
-                    _data.fbs.Position = _data.ValidSize;
+                    Data.fbs.Position = Data.ValidSize;
                     buf = new byte[(int) markSize];
-                    int got = _data.fbs.Read (buf, 0, (int) markSize);
+                    int got = Data.fbs.Read (buf, 0, (int) markSize);
                     if (got != markSize)
                     {
                         IssueModel.Add ("Read failure", Severity.Fatal);
                         return;
                     }
 
-                    _data.excess = null;
-                    _data.Watermark = Likeliness.Probable;
+                    Data.excess = null;
+                    Data.Watermark = Likeliness.Probable;
                     if (! assumeProbable)
                         for (int ix = 0; ix < buf.Length; ++ix)
                         {
@@ -143,17 +140,17 @@ namespace NongFormat
                             var bb = buf[ix];
                             if (bb > 127 || (bb < 32 && bb != 0 && bb != 9 && bb != 0x0A && bb != 0x0D))
                             {
-                                _data.Watermark = Likeliness.Possible;
+                                Data.Watermark = Likeliness.Possible;
                                 break;
                             }
                         }
                 }
 
-                if (_data.Watermark == Likeliness.Probable)
+                if (Data.Watermark == Likeliness.Probable)
                 {
-                    _data.excess = buf;
-                    var caption = _data.Watermark.ToString() + " watermark, size=" + _data.ExcessSize + ".";
-                    var prompt = "Trim probable watermark of " + _data.ExcessSize + " byte" + (_data.ExcessSize!=1? "s" : "");
+                    Data.excess = buf;
+                    var caption = Data.Watermark.ToString() + " watermark, size=" + Data.ExcessSize + ".";
+                    var prompt = "Trim probable watermark of " + Data.ExcessSize + " byte" + (Data.ExcessSize!=1? "s" : "");
                     IssueModel.Add (caption, Severity.Warning, IssueTags.None, prompt, TrimWatermark);
                 }
             }
@@ -161,16 +158,16 @@ namespace NongFormat
 
             public string Rename (string newName)
             {
-                string p1 = System.IO.Path.GetDirectoryName (_data.Path);
+                string p1 = System.IO.Path.GetDirectoryName (Data.Path);
                 string newPath = p1 + System.IO.Path.DirectorySeparatorChar + newName;
 
                 try
                 {
-                    File.Move (_data.Path, newPath);
-                    _data.Path = newPath;
-                    _data.Name = newName;
-                    _data.NotifyPropertyChanged ("Path");
-                    _data.NotifyPropertyChanged ("Name");
+                    File.Move (Data.Path, newPath);
+                    Data.Path = newPath;
+                    Data.Name = newName;
+                    Data.NotifyPropertyChanged ("Path");
+                    Data.NotifyPropertyChanged ("Name");
                 }
                 catch (Exception ex)
                 { return ex.Message.Trim (null); }
@@ -209,11 +206,11 @@ namespace NongFormat
 
             protected void ResetFile()
             {
-                _data.fileMD5 = null;
-                _data.fileSHA1 = null;
-                _data.mediaSHA1 = null;
-                _data.metaSHA1 = null;
-                _data.FileSize = _data.fbs==null? 0 : _data.fbs.Length;
+                Data.fileMD5 = null;
+                Data.fileSHA1 = null;
+                Data.mediaSHA1 = null;
+                Data.metaSHA1 = null;
+                Data.FileSize = Data.fbs==null? 0 : Data.fbs.Length;
             }
 
 
@@ -265,15 +262,15 @@ namespace NongFormat
 
 
             public void ClearFile()
-            { _data.fbs = null; }
+            { Data.fbs = null; }
 
 
             public void CloseFile()
             {
-                if (_data.fbs != null)
+                if (Data.fbs != null)
                 {
-                    _data.fbs.Dispose();
-                    _data.fbs = null;
+                    Data.fbs.Dispose();
+                    Data.fbs = null;
                 }
             }
         }
