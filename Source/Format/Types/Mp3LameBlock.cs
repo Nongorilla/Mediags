@@ -27,10 +27,10 @@ namespace NongFormat
 
         public class Model
         {
-            public Mp3XingBlock BindXing { get; protected set; }
+            public Mp3XingBlock Data { get; protected set; }
 
             public Model (byte[] hdr, int xingIx, Mp3Header header, string xingText)
-            { BindXing = new Mp3XingBlock (hdr, xingIx, header, xingText); }
+            { Data = new Mp3XingBlock (hdr, xingIx, header, xingText); }
         }
 
         protected byte[] buf;
@@ -122,13 +122,13 @@ namespace NongFormat
     {
         public new class Model : Mp3XingBlock.Model
         {
-            public readonly Mp3LameBlock Bind;
+            public new Mp3LameBlock Data => (Mp3LameBlock) base.Data;
 
             public Model (byte[] buf, int hix, Mp3Header header, string xingString, string lameString) : base (buf, hix, header, xingString)
-            { BindXing = Bind = new Mp3LameBlock (buf, hix, header, xingString, lameString); }
+            { base.Data = new Mp3LameBlock (buf, hix, header, xingString, lameString); }
 
-            public void SetActualHeaderCrc (ushort crc) => Bind.ActualHeaderCrc = crc;
-            public void SetActualDataCrc (ushort crc) => Bind.ActualDataCrc = crc;
+            public void SetActualHeaderCrc (ushort crc) => Data.ActualHeaderCrc = crc;
+            public void SetActualDataCrc (ushort crc) => Data.ActualDataCrc = crc;
         }
 
         public string LameVersion { get; private set; }

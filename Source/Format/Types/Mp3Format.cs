@@ -135,7 +135,7 @@ namespace NongFormat
                 if (XingModel != null)
                 {
                     LameModel = XingModel as Mp3LameBlock.Model;
-                    Data.Xing = XingModel.BindXing;
+                    Data.Xing = XingModel.Data;
                     Data.Lame = Data.Xing as Mp3LameBlock;
                 }
 
