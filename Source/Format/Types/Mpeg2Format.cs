@@ -35,8 +35,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                base._data = Data = new Mpeg2Format (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new Mpeg2Format (this, stream, path);
 
                 if (Data.FileSize < 12)
                 {
@@ -87,7 +86,7 @@ namespace NongFormat
         private long trailerPos = -1;
 
 
-        private Mpeg2Format (Stream stream, string path) : base (stream, path)
+        private Mpeg2Format (Model model, Stream stream, string path) : base (model, stream, path)
         { }
 
 

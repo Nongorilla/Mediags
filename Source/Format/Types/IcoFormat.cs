@@ -42,7 +42,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (hdr.Length >= 4 && hdr[0]==0 && hdr[1]==0 && hdr[2]==1 && hdr[3]==0)
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -51,10 +51,9 @@ namespace NongFormat
         {
             public new readonly IcoFormat Data;
 
-            public Model (Stream stream, byte[] header, string path)
+            public Model (Stream stream, string path)
             {
-                base._data = Data = new IcoFormat (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new IcoFormat (this, stream, path);
 
                 // Arbitrary sanity limit.
                 if (Data.FileSize > 50000000)
@@ -137,13 +136,11 @@ namespace NongFormat
         public ReadOnlyCollection<IconItem> Icons { get; private set; }
         public int Count { get { return icons.Count; } }
 
-
-        private IcoFormat (Stream stream, string path) : base (stream, path)
+        private IcoFormat (Model model, Stream stream, string path) : base (model, stream, path)
         {
             this.icons = new List<IconItem>();
             this.Icons = new ReadOnlyCollection<IconItem> (this.icons);
         }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

@@ -17,7 +17,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (path.ToLower().EndsWith(".md5"))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -26,20 +26,16 @@ namespace NongFormat
         {
             public new readonly Md5Format Data;
 
-            public Model (Stream stream, byte[] hdr, string path) : base (path, 16)
+            public Model (Stream stream, string path) : base (path, 16)
             {
-                _data = Data = new Md5Format (stream, path, HashedModel.Bind);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new Md5Format (this, stream, path);
                 ParseHeaderAndHistory();
                 ParseHashes();
             }
 
-
             public Model (Stream stream, string md5Path, LogEacFormat log, string logName, M3uFormat m3u, string signature) : base (md5Path, 16)
             {
-                base._data = Data = new Md5Format (stream, md5Path, log, logName, m3u, signature, HashedModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new Md5Format (this, stream, md5Path);
                 Data.fbs = stream;
 
                 CreateHistory();
@@ -50,7 +46,6 @@ namespace NongFormat
                 foreach (var track in log.Tracks.Items)
                     HashedModel.AddActual (track.Match.Name, track.Match.FileMD5);
             }
-
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
@@ -64,18 +59,8 @@ namespace NongFormat
             }
         }
 
-
-        private Md5Format (Stream stream, string path, HashedFile.Vector hashedVector) : base (stream, path, hashedVector)
-        {
-            this.Validation = Validations.MD5;
-        }
-
-
-        private Md5Format (Stream stream, string md5Path, LogEacFormat log, string newLogName, M3uFormat m3u, string signature, HashedFile.Vector hashedVector) : base (stream, md5Path, hashedVector)
-        {
-            this.Validation = Validations.MD5;
-        }
-
+        private Md5Format (Model model, Stream stream, string path) : base (model, stream, path)
+         => Validation = Validations.MD5;
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

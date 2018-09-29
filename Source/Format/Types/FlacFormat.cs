@@ -33,8 +33,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                base._data = Data = new FlacFormat (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new FlacFormat (this, stream, path);
 
                 Data.MetadataBlockStreamInfoSize = ConvertTo.FromBig24ToInt32 (hdr, 5);
                 if (Data.MetadataBlockStreamInfoSize < 34)
@@ -554,10 +553,8 @@ namespace NongFormat
         public bool IsBadDataCRC16 { get { return ActualAudioBlockCRC16 != null && ActualAudioBlockCRC16.Value != StoredAudioBlockCRC16; } }
         public bool IsBadDataMD5 { get { return actualAudioDataMD5 != null && ! actualAudioDataMD5.SequenceEqual (storedAudioDataMD5); } }
 
-
-        private FlacFormat (Stream stream, string path) : base (stream, path)
+        private FlacFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override bool IsBadHeader
         {

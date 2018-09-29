@@ -145,9 +145,8 @@ namespace NongFormat
         public string Brand { get; private set; }
 
 
-        protected Mpeg4Container (Stream stream, string path) : base (stream, path)
+        protected Mpeg4Container (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

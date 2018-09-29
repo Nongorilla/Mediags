@@ -14,23 +14,19 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (path.ToLower().EndsWith(".sha1"))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
-
 
         public new class Model : HashesContainer.Model
         {
             public new readonly Sha1Format Data;
 
-            public Model (Stream stream, byte[] header, string path) : base (path, 20)
+            public Model (Stream stream, string path) : base (path, 20)
             {
-                base._data = Data = new Sha1Format (stream, path, HashedModel.Bind);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new Sha1Format (this, stream, path);
                 ParseHashes();
             }
-
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
@@ -44,10 +40,7 @@ namespace NongFormat
             }
         }
 
-
-        private Sha1Format (Stream stream, string path, HashedFile.Vector hashedVector) : base (stream, path, hashedVector)
-        {
-            this.Validation = Validations.SHA1;
-        }
+        private Sha1Format (Model model, Stream stream, string path) : base (model, stream, path)
+         => this.Validation = Validations.SHA1;
     }
 }

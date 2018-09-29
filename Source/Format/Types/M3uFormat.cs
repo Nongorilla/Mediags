@@ -17,7 +17,7 @@ namespace NongFormat
             if (path.ToLower().EndsWith(".m3u") ||
                   hdr.Length >= 7 && hdr[0]=='#' && hdr[1]=='E' && hdr[2]=='X'
                    && hdr[3]=='T' && hdr[4]=='M' && hdr[5]=='3' && hdr[6]=='U')
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -26,10 +26,9 @@ namespace NongFormat
         {
             public new readonly M3uFormat Data;
 
-            public Model (Stream stream, byte[] header, string path) : base (path)
+            public Model (Stream stream, string path) : base (path)
             {
-                base._data = Data = new M3uFormat (stream, path, FilesModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new M3uFormat (this, stream, path);
 
                 stream.Position = 0;
                 TextReader tr = new StreamReader (stream, LogBuffer.cp1252);
@@ -47,13 +46,10 @@ namespace NongFormat
 
             public Model (Stream stream, string m3uPath, LogEacFormat log) : base (m3uPath)
             {
-                base._data = Data = new M3uFormat (stream, m3uPath, log, FilesModel.Bind);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new M3uFormat (this, stream, m3uPath);
                 foreach (var track in log.Tracks.Items)
                     FilesModel.Add (track.Match.Name);
             }
-
 
             public void WriteFile()
             {
@@ -70,12 +66,7 @@ namespace NongFormat
             }
         }
 
-
-        private M3uFormat (Stream stream, string path, FileItem.Vector files) : base (stream, path, files)
-        { }
-
-
-        private M3uFormat (Stream stream, string m3uPath, LogEacFormat log, FileItem.Vector files) : base (stream, m3uPath, files)
+        private M3uFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 }

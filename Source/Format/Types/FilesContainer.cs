@@ -13,7 +13,7 @@ namespace NongFormat
             public new FilesContainer Data => (FilesContainer) _data;
 
             public Model (string rootPath)
-            { FilesModel = new FileItem.Vector.Model (rootPath); }
+             => FilesModel = new FileItem.Vector.Model (rootPath);
 
             public void SetAllowRooted (bool allow)
             { Data.ForbidRooted = ! allow; }
@@ -77,9 +77,9 @@ namespace NongFormat
         public bool ForbidRooted { get; private set; }
         public string IgnoredName { get; private set; }
 
-        protected FilesContainer (Stream stream, string path, FileItem.Vector files) : base (stream, path)
+        protected FilesContainer (Model model, Stream stream, string path) : base (model, stream, path)
         {
-            this.Files = files;
+            this.Files = model.FilesModel.Bind;
             this.AllowNonFile = true;
         }
 

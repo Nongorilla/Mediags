@@ -17,28 +17,26 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (path.EndsWith (System.IO.Path.DirectorySeparatorChar + "thumbs.db", StringComparison.InvariantCultureIgnoreCase))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
 
         public class Model : FormatBase.ModelBase
         {
-            public readonly DbFormat Bind;
+            public new readonly DbFormat Data;
 
-            public Model (Stream stream, byte[] hdr, string path)
+            public Model (Stream stream, string path)
             {
-                /*BaseBind*/ base._data = Bind = new DbFormat (stream, path);
-                Bind.Issues = IssueModel.Data;
+                base._data = Data = new DbFormat (this, stream, path);
 
                 // No content diagnostics at this time.
-                if (Bind.fbs.Length == 0)
+                if (Data.fbs.Length == 0)
                     IssueModel.Add ("File is empty.");
             }
         }
 
-
-        private DbFormat (Stream stream, string path) : base (stream, path)
+        private DbFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 
@@ -59,24 +57,19 @@ namespace NongFormat
         {
             if (path.EndsWith (".db", StringComparison.InvariantCultureIgnoreCase))
                 if (! path.EndsWith (System.IO.Path.DirectorySeparatorChar + "thumbs.db", StringComparison.InvariantCultureIgnoreCase))
-                    return new DbOtherFormat.Model (stream, hdr, path);
+                    return new DbOtherFormat.Model (stream, path);
             return null;
         }
-
 
         public class Model : FormatBase.ModelBase
         {
             public new readonly DbOtherFormat Data;
 
-            public Model (Stream stream, byte[] hdr, string path)
-            {
-                base._data = Data = new DbOtherFormat (stream, path);
-                Data.Issues = IssueModel.Data;
-            }
+            public Model (Stream stream, string path)
+             => base._data = Data = new DbOtherFormat (this, stream, path);
         }
 
-
-        private DbOtherFormat (Stream stream, string path) : base (stream, path)
+        private DbOtherFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 }

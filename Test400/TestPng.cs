@@ -24,7 +24,7 @@ namespace UnitTest
                 var got = fs.Read (hdr, 0, hdr.Length);
                 Assert.AreEqual (hdr.Length, got);
 
-                pngModel = new PngFormat.Model (fs, hdr, fs.Name);
+                pngModel = new PngFormat.Model (fs, fs.Name);
                 Assert.IsNotNull (pngModel);
 
                 pngModel.CalcHashes (Hashes.Intrinsic, Validations.None);

@@ -15,7 +15,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (path.ToLower().EndsWith(".m3u8"))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -24,10 +24,9 @@ namespace NongFormat
         {
             public new readonly M3u8Format Data;
 
-            public Model (Stream stream, byte[] header, string path) : base (path)
+            public Model (Stream stream, string path) : base (path)
             {
-                base._data = Data = new M3u8Format (stream, path, FilesModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new M3u8Format (this, stream, path);
 
                 stream.Position = 0;
                 TextReader tr = new StreamReader (stream, Encoding.UTF8);
@@ -44,8 +43,7 @@ namespace NongFormat
             }
         }
 
-
-        private M3u8Format (Stream stream, string path, FileItem.Vector files) : base (stream, path, files)
+        private M3u8Format (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 }

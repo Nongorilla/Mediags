@@ -23,7 +23,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (StartsWith (hdr, logEacSig0x) || StartsWith (hdr, logEacSig0y) || StartsWith (hdr, logEacSig1x))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -34,11 +34,10 @@ namespace NongFormat
             public LogEacTrack.Vector.Model TracksModel;
             private LogBuffer parser;
 
-            public Model (Stream stream, byte[] hdr, string path)
+            public Model (Stream stream, string path)
             {
                 TracksModel = new LogEacTrack.Vector.Model();
-                base._data = Data = new LogEacFormat (stream, path, TracksModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new LogEacFormat (this, stream, path);
 
                 Data.AccurateRip = null;
                 Data.RipDate = String.Empty;
@@ -802,13 +801,10 @@ namespace NongFormat
         public string TaggedEdition { get; private set; }
         public string TaggedSubtitle { get; private set; }
         public string WorkName { get; private set; }
-
         public Encoding Codepage { get; private set; }
 
-
-        private LogEacFormat (Stream fs, string path, LogEacTrack.Vector tracks) : base (fs, path)
-        { this.Tracks = tracks; }
-
+        private LogEacFormat (Model model, Stream stream, string path) : base (model, stream, path)
+         => this.Tracks = model.TracksModel.Bind;
 
         public string GetCleanWorkName (NamingStrategy strategy)
         {

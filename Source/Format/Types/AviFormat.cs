@@ -30,8 +30,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] header, string path)
             {
-                base._data = Data = new AviFormat (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new AviFormat (this, stream, path);
 
                 ParseRiff (header);
 
@@ -61,10 +60,8 @@ namespace NongFormat
         public int Height { get; private set; }
         public string Codec {get; private set; }
 
-
-        private AviFormat (Stream stream, string path) : base (stream, path)
+        private AviFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

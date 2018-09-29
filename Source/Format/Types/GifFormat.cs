@@ -17,7 +17,7 @@ namespace NongFormat
         {
             if (hdr.Length >= 0x20 && hdr[0]=='G' && hdr[1]=='I' && hdr[2]=='F'
                     && hdr[3]=='8' && (hdr[4]=='7' || hdr[4]=='9') && hdr[5] == 'a')
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -26,10 +26,9 @@ namespace NongFormat
         {
             public new readonly GifFormat Data;
 
-            public Model (Stream stream, byte[] header, string path)
+            public Model (Stream stream, string path)
             {
-                base._data = Data = new GifFormat (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new GifFormat (this, stream, path);
 
                 // Arbitrary sanity limit.
                 if (Data.FileSize > 50000000)
@@ -60,7 +59,7 @@ namespace NongFormat
         public string Version { get; private set; }
 
 
-        private GifFormat (Stream stream, string path) : base (stream, path)
+        private GifFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
 
 

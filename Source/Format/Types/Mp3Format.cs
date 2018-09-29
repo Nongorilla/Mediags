@@ -20,7 +20,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if ((hdr[0]=='I' && hdr[1]=='D' && hdr[2]=='3') || (hdr[0] == 0xFF && ((hdr[1] & 0xE6) == 0xE2)))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -31,10 +31,9 @@ namespace NongFormat
             public Mp3LameBlock.Model LameModel { get; private set; }
             public new readonly Mp3Format Data;
 
-            public Model (Stream stream, byte[] header, string path)
+            public Model (Stream stream, string path)
             {
-                base._data = Data = new Mp3Format (stream, header, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new Mp3Format (this, stream, path);
 
                 if (Data.FileSize > Int32.MaxValue)
                 {
@@ -485,7 +484,7 @@ namespace NongFormat
         public Issue ChIssue { get; private set; }
         public Issue CdIssue { get; private set; }
 
-        private Mp3Format (Stream stream, byte[] hdr, string path) : base (stream, path)
+        private Mp3Format (Model model, Stream stream, string path) : base (model, stream, path)
         { }
 
         public override bool IsBadHeader

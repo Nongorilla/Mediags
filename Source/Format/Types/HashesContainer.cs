@@ -19,8 +19,7 @@ namespace NongFormat
             public HashesHistory.Model HistoryModel { get; protected set; }
 
             public Model (string rootPath, int hashLength)
-            { HashedModel = new HashedFile.Vector.Model (rootPath, hashLength); }
-
+             => HashedModel = new HashedFile.Vector.Model (rootPath, hashLength);
 
             public void CreateHistory()
             {
@@ -348,12 +347,11 @@ namespace NongFormat
 
         private Encoding encoding;
 
-        public HashesContainer (Stream stream, string path, HashedFile.Vector hashedVector, Encoding encoding=null) : base (stream, path)
+        public HashesContainer (Model model, Stream stream, string path, Encoding encoding = null) : base (model, stream, path)
         {
             this.encoding = encoding ?? LogBuffer.cp1252;
-            this.HashedFiles = hashedVector;
+            this.HashedFiles = model.HashedModel.Bind;
         }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

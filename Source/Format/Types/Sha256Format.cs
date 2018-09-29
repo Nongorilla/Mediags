@@ -14,7 +14,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (path.ToLower().EndsWith(".sha256"))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -23,11 +23,9 @@ namespace NongFormat
         {
             public new readonly Sha256Format Data;
 
-            public Model (Stream stream, byte[] header, string path) : base (path, 32)
+            public Model (Stream stream, string path) : base (path, 32)
             {
-                base._data = Data = new Sha256Format (stream, path, HashedModel.Bind);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new Sha256Format (this, stream, path);
                 ParseHashes();
             }
 
@@ -44,10 +42,7 @@ namespace NongFormat
             }
         }
 
-
-        private Sha256Format (Stream stream, string path, HashedFile.Vector hashedVector) : base (stream, path, hashedVector)
-        {
-            this.Validation = Validations.SHA256;
-        }
+        private Sha256Format (Model model, Stream stream, string path) : base (model, stream, path)
+         => this.Validation = Validations.SHA256;
     }
 }

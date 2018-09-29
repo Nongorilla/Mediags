@@ -96,9 +96,8 @@ namespace NongFormat
         public long ExpectedPaddedSize
         { get { return ((ValidSize - JunkSize + 2048 + 8) / 2048) * 2048; } }
 
-        protected RiffContainer (Stream stream, string path) : base (stream, path)
+        protected RiffContainer (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

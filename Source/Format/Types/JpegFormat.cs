@@ -23,7 +23,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (hdr.Length >= 0x20 && hdr[0]==0xFF && hdr[1]==0xD8 && hdr[2]==0xFF)
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
            return null;
         }
 
@@ -32,10 +32,9 @@ namespace NongFormat
         {
             public new readonly JpegFormat Data;
 
-            public Model (Stream stream, byte[] header, string path)
+            public Model (Stream stream, string path)
             {
-                base._data = Data = new JpegFormat (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new JpegFormat (this, stream, path);
 
                 // Arbitrary choice of 50MB cutoff.
                 if (Data.FileSize > 50000000)
@@ -161,7 +160,6 @@ namespace NongFormat
                 GetDiagnostics();
             }
 
-
             private void GetDiagnostics()
             {
                 if ((Data.Apps & JpegApps.Jfif) != 0)
@@ -186,6 +184,7 @@ namespace NongFormat
             }
         }
 
+
         private int? eoiPos = null, sosPos = null;
         private readonly List<string> appNames;
         public ReadOnlyCollection<string> AppNames { get; private set; }
@@ -200,13 +199,11 @@ namespace NongFormat
         public int ThumbYLen { get; private set; }
         public int SegmentCount { get; private set; }
 
-
-        private JpegFormat (Stream stream, string path) : base (stream, path)
+        private JpegFormat (Model model, Stream stream, string path) : base (model, stream, path)
         {
             this.appNames = new List<string>();
             this.AppNames = new ReadOnlyCollection<string> (this.appNames);
         }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

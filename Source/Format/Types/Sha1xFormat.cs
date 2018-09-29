@@ -17,7 +17,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (path.ToLower().EndsWith(".sha1x"))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -26,19 +26,16 @@ namespace NongFormat
         {
             public new readonly Sha1xFormat Data;
 
-            public Model (Stream stream, byte[] header, string path) : base (path, 20)
+            public Model (Stream stream, string path) : base (path, 20)
             {
-                base._data = Data = new Sha1xFormat (stream, path, HashedModel.Bind);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new Sha1xFormat (this, stream, path);
                 ParseHeaderAndHistory();
                 ParseHashes();
             }
 
             public Model (Stream stream, string digPath, LogEacFormat log, IList<Mp3Format.Model> mp3s, string signature) : base (digPath, 16)
             {
-                base._data = Data = new Sha1xFormat (stream, digPath, HashedModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new Sha1xFormat (this, stream, digPath);
                 Data.fbs = stream;
 
                 CreateHistory();
@@ -62,9 +59,7 @@ namespace NongFormat
             }
         }
 
-        private Sha1xFormat (Stream stream, string path, HashedFile.Vector hashedVector) : base (stream, path, hashedVector, Encoding.UTF8)
-        {
-            this.Validation = Validations.SHA1;
-        }
+        private Sha1xFormat (Model model, Stream stream, string path) : base (model, stream, path, Encoding.UTF8)
+         => Validation = Validations.SHA1;
     }
 }

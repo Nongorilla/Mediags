@@ -15,18 +15,14 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] header, string path)
             {
-                base._data = Data = new Mpeg1Format (stream, path);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new Mpeg1Format (this, stream, path);
                 ParseRiff (header);
                 GetDiagsForMarkable();
             }
         }
 
-
-        public Mpeg1Format (Stream stream, string path) : base (stream, path)
+        public Mpeg1Format (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

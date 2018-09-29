@@ -34,8 +34,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                base._data = Data = new WavFormat (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new WavFormat (this, stream, path);
 
                 ParseRiff (hdr);
 
@@ -149,6 +148,7 @@ namespace NongFormat
             }
         }
 
+
         public UInt32? ActualCRC32 { get; private set; }
         public bool HasTags { get; private set; }
 
@@ -162,10 +162,8 @@ namespace NongFormat
         public int BlockAlign { get; private set; }
         public int BitsPerSample { get; private set; }
 
-
-        private WavFormat (Stream stream, string path) : base (stream, path)
+        private WavFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

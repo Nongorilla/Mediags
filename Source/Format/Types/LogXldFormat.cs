@@ -20,7 +20,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (StartsWith (hdr, logXldSig))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -31,11 +31,10 @@ namespace NongFormat
             public LogEacTrack.Vector.Model TracksModel;
             private LogBuffer parser;
 
-            public Model (Stream stream, byte[] hdr, string path)
+            public Model (Stream stream, string path)
             {
                 TracksModel = new LogEacTrack.Vector.Model();
-                base._data = Data = new LogXldFormat (stream, path, TracksModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new LogXldFormat (this, stream, path);
 
                 // Arbitrary limit.
                 if (Data.FileSize > 250000)
@@ -101,8 +100,8 @@ namespace NongFormat
             }
         }
 
-        private LogXldFormat (Stream stream, string path, LogEacTrack.Vector tracks) : base (stream, path)
-        { this.Tracks = tracks; }
+        private LogXldFormat (Model model, Stream stream, string path) : base (model, stream, path)
+         => Tracks = model.TracksModel.Bind;
 
         private static readonly byte[] logXldSig = Encoding.ASCII.GetBytes ("X Lossless Decoder version ");
         public LogEacTrack.Vector Tracks { get; private set; }

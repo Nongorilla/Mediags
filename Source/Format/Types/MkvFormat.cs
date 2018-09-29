@@ -306,7 +306,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (hdr.Length >= 4 && hdr[0]==0x1A && hdr[1]==0x45 && hdr[2]==0xDF && hdr[3]==0xA3)
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
            return null;
         }
 
@@ -315,11 +315,10 @@ namespace NongFormat
         {
             public new readonly MkvFormat Data;
 
-            public Model (Stream stream, byte[] header, string path)
+            public Model (Stream stream, string path)
             {
-                base._data = Data = new MkvFormat (stream, path);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new MkvFormat (this, stream, path);
+                
                 var bb = new byte[5];
 
                 Data.fbs.Position = Data.ValidSize = 4;
@@ -819,14 +818,11 @@ namespace NongFormat
         private int? badCrcCount = null;
         public bool HasMisplacedAttachment { get; private set; }
 
-
-        private MkvFormat (Stream stream, string path) : base (stream, path)
+        private MkvFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override bool IsBadData
         { get { return badCrcCount != null && badCrcCount.Value != 0; } }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

@@ -18,7 +18,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (path.ToLower().EndsWith(".cue"))
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -27,10 +27,9 @@ namespace NongFormat
         {
             public new readonly CueFormat Data;
 
-            public Model (Stream stream, byte[] header, string path) : base (path)
+            public Model (Stream stream, string path) : base (path)
             {
-                base._data = Data = new CueFormat (stream, path, FilesModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new CueFormat (this, stream, path);
 
                 SetIgnoredName ("Range.wav");
                 Data.fbs.Position = 0;
@@ -66,10 +65,8 @@ namespace NongFormat
             }
         }
 
-
-        private CueFormat (Stream stream, string path, FileItem.Vector files) : base (stream, path, files)
+        private CueFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public string Catalog { get; private set; }
 

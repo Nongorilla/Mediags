@@ -27,16 +27,14 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] header, string path)
             {
-                base._data = Data = new M4aFormat (stream, path);
-                Data.Issues = IssueModel.Data;
-
+                base._data = Data = new M4aFormat (this, stream, path);
                 ParseMpeg4 (stream, header, path);
                 GetDiagnostics();
             }
         }
 
 
-        private M4aFormat (Stream stream, string path) : base (stream, path)
+        private M4aFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 }

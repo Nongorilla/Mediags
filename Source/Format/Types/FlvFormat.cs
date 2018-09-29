@@ -29,8 +29,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] hdr, string path)
             {
-                base._data = Data = new FlvFormat (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new FlvFormat (this, stream, path);
 
                 var bb = new byte[15];
 
@@ -82,10 +81,8 @@ namespace NongFormat
         public bool HasAudio { get { return (flags & 4) != 0; } }
         public int PacketCount { get; private set; }
 
-
-        private FlvFormat (Stream stream, string path) : base (stream, path)
+        private FlvFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
-
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

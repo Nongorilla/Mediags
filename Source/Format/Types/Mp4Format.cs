@@ -28,8 +28,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] header, string path)
             {
-                base._data = Data = new Mp4Format (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new Mp4Format (this, stream, path);
 
                 ParseMpeg4 (stream, header, path);
                 CalcMark();
@@ -37,8 +36,7 @@ namespace NongFormat
             }
         }
 
-
-        private Mp4Format (Stream stream, string path) : base (stream, path)
+        private Mp4Format (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 }

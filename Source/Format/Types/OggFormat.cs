@@ -17,7 +17,7 @@ namespace NongFormat
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (hdr.Length >= 0x28 && hdr[0]=='O' && hdr[1]=='g' && hdr[2]=='g' && hdr[3]=='S' && hdr[4]==0)
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -25,11 +25,8 @@ namespace NongFormat
         {
             public new readonly OggFormat Data;
 
-            public Model (Stream stream, byte[] header, string path)
-            {
-                base._data = Data = new OggFormat (stream, path);
-                Data.Issues = IssueModel.Data;
-            }
+            public Model (Stream stream, string path)
+             => base._data = Data = new OggFormat (this, stream, path);
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
@@ -104,7 +101,7 @@ namespace NongFormat
         public int? GoodPageCount => PageCount == null ? null : PageCount - badPage.Count;
         public override bool IsBadData => badPage.Count != 0;
 
-        private OggFormat (Stream stream, string path) : base (stream, path)
+        private OggFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)

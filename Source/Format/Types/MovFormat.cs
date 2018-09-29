@@ -14,7 +14,7 @@ namespace NongFormat
         {
             if (hdr.Length >= 0x20)
                 if (hdr[4]=='m' && hdr[5]=='o' && hdr[6]=='o' && hdr[7]=='v')
-                    return new MovFormat.Model (stream, hdr, path);
+                    return new MovFormat.Model (stream, path);
                 else if (hdr[0x04]=='f' && hdr[0x05]=='t' && hdr[0x06]=='y' && hdr[0x07]=='p'
                       && hdr[0x08]=='q' && hdr[0x09]=='t' && hdr[0x0A]==' ' && hdr[0x0B]==' ')
                     return new MovFormat2.Model (stream, hdr, path);
@@ -26,14 +26,11 @@ namespace NongFormat
         {
             public new readonly MovFormat Data;
 
-            public Model (Stream stream, byte[] header, string path)
-            {
-                _data = Data = new MovFormat (stream, path);
-                Data.Issues = IssueModel.Data;
-            }
+            public Model (Stream stream, string path)
+             => base._data = Data = new MovFormat (this, stream, path);
         }
 
-        private MovFormat (Stream stream, string path) : base (stream, path)
+        private MovFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 
@@ -49,8 +46,7 @@ namespace NongFormat
 
             public Model (Stream stream, byte[] header, string path)
             {
-                base._data = Data = new MovFormat2 (stream, path);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new MovFormat2 (this, stream, path);
 
                 ParseMpeg4 (stream, header, path);
                 CalcMark();
@@ -58,7 +54,7 @@ namespace NongFormat
             }
         }
 
-        private MovFormat2 (Stream stream, string path) : base (stream, path)
+        private MovFormat2 (Model model, Stream stream, string path) : base (model, stream, path)
         { }
     }
 }

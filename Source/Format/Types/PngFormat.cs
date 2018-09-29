@@ -23,7 +23,7 @@ namespace NongFormat
             if (hdr.Length >= 0x28
                     && hdr[0x00]==0x89 && hdr[0x01]=='P' && hdr[0x02]=='N' && hdr[0x03]=='G'
                     && hdr[0x04]==0x0D && hdr[0x05]==0x0A && hdr[0x06]==0x1A && hdr[0x07]==0x0A)
-                return new Model (stream, hdr, path);
+                return new Model (stream, path);
             return null;
         }
 
@@ -33,11 +33,10 @@ namespace NongFormat
             public new readonly PngFormat Data;
             public readonly PngChunk.Vector.Model ChunksModel;
 
-            public Model (Stream stream, byte[] header, string path)
+            public Model (Stream stream, string path)
             {
                 ChunksModel = new PngChunk.Vector.Model();
-                base._data = Data = new PngFormat (stream, path, ChunksModel.Bind);
-                Data.Issues = IssueModel.Data;
+                base._data = Data = new PngFormat (this, stream, path);
 
                 // Arbitrary sanity limit.
                 if (Data.FileSize > 100000000)
@@ -207,17 +206,13 @@ namespace NongFormat
             }
         }
 
-
-        public PngFormat (Stream stream, string path, PngChunk.Vector chunks) : base (stream, path)
+        public PngFormat (Model model, Stream stream, string path) : base (model, stream, path)
         {
             this.BadCrcCount = null;
-
-            this.Chunks = chunks;
-
+            this.Chunks = model.ChunksModel.Bind;
             this.texts = new ObservableCollection<string>();
             this.Texts = new ReadOnlyObservableCollection<string> (this.texts);
         }
-
 
         public override bool IsBadData
         { get { return BadCrcCount != null && BadCrcCount.Value != 0; } }

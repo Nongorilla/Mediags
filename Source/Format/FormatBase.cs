@@ -312,6 +312,9 @@ namespace NongFormat
             this.FileSize = stream.Length;
         }
 
+        protected FormatBase (ModelBase model, Stream stream, string path) : this (stream, path)
+         => this.Issues = model.IssueModel.Data;
+
 
         public abstract string[] ValidNames
         { get; }
