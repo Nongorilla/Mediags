@@ -27,10 +27,14 @@ namespace NongFormat
 
         public class Model
         {
-            public Mp3XingBlock Data { get; protected set; }
+            protected Mp3XingBlock _data;
+            public Mp3XingBlock Data => _data;
 
             public Model (byte[] hdr, int xingIx, Mp3Header header, string xingText)
-            { Data = new Mp3XingBlock (hdr, xingIx, header, xingText); }
+             => _data = new Mp3XingBlock (hdr, xingIx, header, xingText);
+
+            protected Model()
+            { }
         }
 
         protected byte[] buf;
@@ -122,10 +126,10 @@ namespace NongFormat
     {
         public new class Model : Mp3XingBlock.Model
         {
-            public new Mp3LameBlock Data => (Mp3LameBlock) base.Data;
+            public new Mp3LameBlock Data => (Mp3LameBlock) _data;
 
-            public Model (byte[] buf, int hix, Mp3Header header, string xingString, string lameString) : base (buf, hix, header, xingString)
-            { base.Data = new Mp3LameBlock (buf, hix, header, xingString, lameString); }
+            public Model (byte[] buf, int hix, Mp3Header header, string xingString, string lameString)
+             => base._data = new Mp3LameBlock (buf, hix, header, xingString, lameString);
 
             public void SetActualHeaderCrc (ushort crc) => Data.ActualHeaderCrc = crc;
             public void SetActualDataCrc (ushort crc) => Data.ActualDataCrc = crc;
@@ -136,7 +140,7 @@ namespace NongFormat
         public ushort? ActualDataCrc { get; private set; } = null;
 
         public Mp3LameBlock (byte[] buf, int xix, Mp3Header header, string xingString, string lameString) : base (buf, xix, header, xingString)
-        { LameVersion = lameString; }
+         => LameVersion = lameString;
 
         public bool IsVbr { get { int b = buf[xingIx+0x81] & 0xF; return b >= 3 && b <= 7; } }
         public bool IsCbr { get { int b = buf[xingIx+0x81] & 0xF; return b == 1 || b == 8; } }
