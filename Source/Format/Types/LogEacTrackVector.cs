@@ -12,21 +12,26 @@ namespace NongFormat
         {
             public class Model
             {
-                public readonly Vector Bind;
+                public readonly Vector Data;
 
                 public Model()
-                { Bind = new Vector(); }
+                 => Data = new Vector();
 
-                public FlacFormat.Model GetMatch (int index) { return Bind.items[index].MatchModel; }
-                public void SetMatch (int index, FlacFormat.Model flacModel) { Bind.items[index].MatchModel = flacModel; }
-                public void SetSeverest (int index, Issue issue) { Bind.items[index].RipSeverest = issue; }
+                public FlacFormat.Model GetMatch (int index)
+                 => Data.items[index].MatchModel;
+
+                public void SetMatch (int index, FlacFormat.Model flacModel)
+                 => Data.items[index].MatchModel = flacModel;
+
+                public void SetSeverest (int index, Issue issue)
+                 => Data.items[index].RipSeverest = issue;
 
                 public void Add (int number, string fileName, string pregap, string peak, string speed,
                                  string quality, uint? testCRC, uint? copyCRC, bool hasOK, int? arVersion, int? arConfidence)
-                { Bind.items.Add (new LogEacTrack (number, fileName, pregap, peak, speed, quality, testCRC, copyCRC, hasOK, arVersion, arConfidence)); }
+                 => Data.items.Add (new LogEacTrack (number, fileName, pregap, peak, speed, quality, testCRC, copyCRC, hasOK, arVersion, arConfidence));
 
                 public void SetCtConfidence (int number, int confidence)
-                { Bind.items[number].CtConfidence = confidence; }
+                 => Data.items[number].CtConfidence = confidence;
             }
 
 

@@ -120,35 +120,35 @@ namespace NongFormat
 
             public class Model
             {
-                public readonly Vector Bind;
+                public readonly Vector Data;
 
                 public Model (string filePath, int hashLength)
-                { Bind = new Vector (filePath, hashLength); }
+                 => Data = new Vector (filePath, hashLength);
 
                 public void Add (string name, byte[] storedHash, HashStyle hashStyle)
-                { Bind.items.Add (new HashedFile (name, storedHash, hashStyle)); }
+                 => Data.items.Add (new HashedFile (name, storedHash, hashStyle));
 
                 public void AddActual (string name, byte[] storedActualHash, HashStyle hashStyle=HashStyle.Binary)
                 {
                     var item = new HashedFile (name, storedActualHash, hashStyle, storedActualHash);
-                    Bind.items.Add (item);
+                    Data.items.Add (item);
                     item.IsMatch = storedActualHash==null? (bool?) null : true;
                 }
 
                 public void SetFileName (int index, string newName)
                 {
-                    HashedFile item = Bind.items[index];
+                    HashedFile item = Data.items[index];
                     item.oldFileName = item.FileName;
                     item.FileName = newName;
                 }
 
                 public void SetIsFound (int index, bool newValue)
                 {
-                    HashedFile item = Bind.items[index];
+                    HashedFile item = Data.items[index];
                     if (newValue != item.IsFound)
                     {
-                        if (item.IsFound == true) --Bind.FoundCount;
-                        if (newValue == true) ++Bind.FoundCount;
+                        if (item.IsFound == true) --Data.FoundCount;
+                        if (newValue == true) ++Data.FoundCount;
                         else if (newValue == false) item.actualHash = null;
                         item.IsFound = newValue;
                     }
@@ -156,18 +156,18 @@ namespace NongFormat
 
                 public void SetIsMatch (int index, bool newValue)
                 {
-                    HashedFile item = Bind.items[index];
+                    HashedFile item = Data.items[index];
                     if (newValue != item.IsMatch)
                     {
-                        if (item.IsMatch == true) --Bind.MatchCount;
-                        if (newValue == true) ++Bind.MatchCount;
+                        if (item.IsMatch == true) --Data.MatchCount;
+                        if (newValue == true) ++Data.MatchCount;
                         item.IsMatch = newValue;
                     }
                 }
 
                 public void SetOldFileName (int index, string newOldName)
                 {
-                    HashedFile item = Bind.items[index];
+                    HashedFile item = Data.items[index];
                     if (item.oldFileName != newOldName)
                     {
                         item.oldFileName = newOldName;
@@ -177,7 +177,7 @@ namespace NongFormat
 
                 public void SetActualHash (int index, byte[] newHash)
                 {
-                    HashedFile item = Bind.items[index];
+                    HashedFile item = Data.items[index];
                     item.actualHash = newHash;
                     if (newHash == null)
                         SetIsMatch (index, false);
@@ -187,7 +187,7 @@ namespace NongFormat
 
                 public void SetStoredHashToActual (int index)
                 {
-                    HashedFile item = Bind.items[index];
+                    HashedFile item = Data.items[index];
                     if (item.actualHash == null)
                     {
                         if (item.storedHash != null)
@@ -208,7 +208,7 @@ namespace NongFormat
 
                 public void SetStoredHash (int index, byte[] newHash)
                 {
-                    HashedFile item = Bind.items[index];
+                    HashedFile item = Data.items[index];
                     if (! newHash.SequenceEqual (item.storedHash))
                     {
                         item.storedHash = new byte[newHash.Length];

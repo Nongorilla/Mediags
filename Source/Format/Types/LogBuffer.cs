@@ -434,7 +434,7 @@ namespace NongFormat
                     else
                         break;
 
-                    if (tx < TracksModel.Bind.Items.Count)
+                    if (tx < TracksModel.Data.Items.Count)
                         TracksModel.SetCtConfidence (tx, ctConfidence);
                     if (Data.CueToolsConfidence == null || Data.CueToolsConfidence > ctConfidence)
                         Data.CueToolsConfidence = ctConfidence;

@@ -11,25 +11,25 @@ namespace NongFormat
         {
             public class Model
             {
-                public readonly Vector Bind;
+                public readonly Vector Data;
 
                 public Model (string rootDir)
-                { Bind = new Vector (rootDir); }
+                 => Data = new Vector (rootDir);
 
                 public void Add (string fileName)
-                { Bind.items.Add (new FileItem (fileName)); }
+                 => Data.items.Add (new FileItem (fileName));
 
                 public void SetName (int index, string fileName)
-                { Bind.items[index].Name = fileName; }
+                 => Data.items[index].Name = fileName;
 
                 public void SetIsFound (int index, bool newValue)
                 {
-                    bool? oldValue = Bind.items[index].IsFound;
+                    bool? oldValue = Data.items[index].IsFound;
                     if (newValue != oldValue)
                     {
-                        if (oldValue == true) --Bind.FoundCount;
-                        if (newValue == true) ++Bind.FoundCount;
-                        Bind.items[index].IsFound = newValue;
+                        if (oldValue == true) --Data.FoundCount;
+                        if (newValue == true) ++Data.FoundCount;
+                        Data.items[index].IsFound = newValue;
                     }
                 }
             }

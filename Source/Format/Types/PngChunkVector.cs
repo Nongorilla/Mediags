@@ -9,16 +9,16 @@ namespace NongFormat
         {
             public class Model
             {
-                public readonly Vector Bind;
+                public readonly Vector Data;
 
                 public Model()
-                { Bind = new Vector(); }
+                 => Data = new Vector();
 
                 public void Add (string type, UInt32 size, UInt32 storedCRC, UInt32? actualCRC = null)
-                { Bind.items.Add (new PngChunk (type, size, storedCRC, actualCRC)); }
+                 => Data.items.Add (new PngChunk (type, size, storedCRC, actualCRC));
 
                 public void SetActualCRC (int index, UInt32 crc)
-                { Bind.items[index].ActualCRC = crc; }
+                 => Data.items[index].ActualCRC = crc;
             }
 
             private readonly ObservableCollection<PngChunk> items;

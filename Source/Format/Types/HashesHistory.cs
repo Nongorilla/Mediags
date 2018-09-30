@@ -8,48 +8,48 @@ namespace NongFormat
     {
         public class Model
         {
-            public readonly HashesHistory Bind;
+            public readonly HashesHistory Data;
 
             public Model()
-            { Bind = new HashesHistory(); }
+             => Data = new HashesHistory();
 
             public void SetStoredSelfCRC (UInt32 crc)
-            { Bind.StoredCRC = crc; }
+             => Data.StoredCRC = crc;
 
             public void SetActualSelfCRC (UInt32 crc)
-            { Bind.ActualCRC = crc; }
+             => Data.ActualCRC = crc;
 
             public void SetIsDirty (bool newValue)
-            { Bind.IsDirty = newValue; }
+             => Data.IsDirty = newValue;
 
             public void SetProver (string signature)
-            { Bind.Prover = signature; }
+             => Data.Prover = signature;
 
             public void SetLastAction (string signature, string action)
-            { Bind.LastSig = signature; Bind.LastAction = action; }
+            { Data.LastSig = signature; Data.LastAction = action; }
 
             public void AddLine (string line)
             {
-                Bind.comment.Add (line);
-                Bind.NotifyPropertyChanged ("Comment");
+                Data.comment.Add (line);
+                Data.NotifyPropertyChanged ("Comment");
             }
 
             public void Add (string action, string signature)
             {
                 var now = DateTime.Now;
                 var lx = String.Format ("{0:0000}{1:00}{2:00} {3}: {4}: {5}", now.Year, now.Month, now.Day, now.TimeOfDay.ToString().Substring (0, 8), signature, action);
-                Bind.LastAction = action;
-                Bind.LastSig = signature;
-                Bind.comment.Add (lx);
-                Bind.IsDirty = true;
+                Data.LastAction = action;
+                Data.LastSig = signature;
+                Data.comment.Add (lx);
+                Data.IsDirty = true;
 
                 if (action == "proved")
-                    Bind.Prover = signature;
+                    Data.Prover = signature;
             }
 
             public void Replace (string action, string signature)
             {
-                Bind.comment.RemoveAt (Bind.comment.Count-1);
+                Data.comment.RemoveAt (Data.comment.Count-1);
                 Add (action, signature);
             }
         }

@@ -209,7 +209,7 @@ namespace NongFormat
         public PngFormat (Model model, Stream stream, string path) : base (model, stream, path)
         {
             this.BadCrcCount = null;
-            this.Chunks = model.ChunksModel.Bind;
+            this.Chunks = model.ChunksModel.Data;
             this.texts = new ObservableCollection<string>();
             this.Texts = new ReadOnlyObservableCollection<string> (this.texts);
         }

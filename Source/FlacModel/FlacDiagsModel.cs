@@ -31,7 +31,7 @@ namespace NongMediaDiags
             public Model (string root, Granularity report) : base()
             {
                 IssueModel = new Issue.Vector.Model();
-                this._data = new FlacDiags (root, report, FormatModel.Bind, IssueModel.Data);
+                this._data = new FlacDiags (root, report, FormatModel.Data, IssueModel.Data);
             }
 
 

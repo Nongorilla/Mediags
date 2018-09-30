@@ -79,7 +79,7 @@ namespace NongFormat
 
         protected FilesContainer (Model model, Stream stream, string path) : base (model, stream, path)
         {
-            this.Files = model.FilesModel.Bind;
+            this.Files = model.FilesModel.Data;
             this.AllowNonFile = true;
         }
 

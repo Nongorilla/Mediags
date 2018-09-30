@@ -24,7 +24,7 @@ namespace NongFormat
             public void CreateHistory()
             {
                 HistoryModel = new HashesHistory.Model();
-                Data.History = HistoryModel.Bind;
+                Data.History = HistoryModel.Data;
             }
 
             public void DestroyHistory()
@@ -350,7 +350,7 @@ namespace NongFormat
         public HashesContainer (Model model, Stream stream, string path, Encoding encoding = null) : base (model, stream, path)
         {
             this.encoding = encoding ?? LogBuffer.cp1252;
-            this.HashedFiles = model.HashedModel.Bind;
+            this.HashedFiles = model.HashedModel.Data;
         }
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)

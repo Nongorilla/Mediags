@@ -396,7 +396,7 @@ namespace NongMediaDiags
                     if (! Bind.Log.Issues.HasError && Bind.Autoname != NamingStrategy.Manual)
                     {
                         var trackWidth = Math.Max (Bind.Log.Tracks.WidestTrackWidth, 2);
-                        for (int logIx = 0; logIx < LogModel.TracksModel.Bind.Items.Count; ++logIx)
+                        for (int logIx = 0; logIx < LogModel.TracksModel.Data.Items.Count; ++logIx)
                         {
                             var flacModel = LogModel.TracksModel.GetMatch (logIx);
                             var newName = flacModel.Data.GetCleanFileName (Owner.Data.Autoname, Bind.Log.CalcedAlbumArtist, trackWidth);
@@ -566,7 +566,7 @@ namespace NongMediaDiags
                     if (Bind.Md5.Issues.MaxSeverity >= Severity.Error)
                         return;
 
-                    if (Md5Model.HistoryModel != null && Md5Model.HistoryModel.Bind.Prover != null)
+                    if (Md5Model.HistoryModel != null && Md5Model.HistoryModel.Data.Prover != null)
                     {
                         Md5Model.IssueModel.Add ("Highest quality previously proven.", Severity.Trivia);
                         Bind.IsProven = true;

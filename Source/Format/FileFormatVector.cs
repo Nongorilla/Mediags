@@ -13,30 +13,28 @@ namespace NongFormat
         {
             public class Model
             {
-                public readonly FileFormat.Vector Bind;
+                public readonly FileFormat.Vector Data;
 
                 public Model()
-                {
-                    Bind = new FileFormat.Vector();
-                }
+                 => Data = new FileFormat.Vector();
 
 
                 public void Add (FormatModelFactory factory, string[] names, string subname = null)
                 {
-                    Bind.items.Add (new FileFormat (factory, names, subname));
+                    Data.items.Add (new FileFormat (factory, names, subname));
                 }
 
 
                 public void Sort()
                 {
                     Comparison<FileFormat> comp = (f1, f2) => String.CompareOrdinal (f1.LongName, f2.LongName);
-                    Bind.items.Sort (comp);
+                    Data.items.Sort (comp);
                 }
 
 
                 public void ResetTotals()
                 {
-                    foreach (var format in Bind.items)
+                    foreach (var format in Data.items)
                     {
                         format.TrueTotal = 0;
                         format.TotalConverted = 0;

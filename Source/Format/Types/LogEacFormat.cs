@@ -659,9 +659,9 @@ namespace NongFormat
                     Data.TpIssue = i3;
                 }
 
-                for (int trackIndex = 0; trackIndex < TracksModel.Bind.Items.Count; ++trackIndex)
+                for (int trackIndex = 0; trackIndex < TracksModel.Data.Items.Count; ++trackIndex)
                 {
-                    var tk = TracksModel.Bind.Items[trackIndex];
+                    var tk = TracksModel.Data.Items[trackIndex];
 
                     if (tk.RipSeverest == null || tk.RipSeverest.Level < Severity.Error)
                         if (! tk.HasOK)
@@ -804,7 +804,7 @@ namespace NongFormat
         public Encoding Codepage { get; private set; }
 
         private LogEacFormat (Model model, Stream stream, string path) : base (model, stream, path)
-         => this.Tracks = model.TracksModel.Bind;
+         => this.Tracks = model.TracksModel.Data;
 
         public string GetCleanWorkName (NamingStrategy strategy)
         {

@@ -53,7 +53,7 @@ namespace NongMediaDiags
 
         protected Diags (Model model) : this()
         {
-            this.FileFormats = model.FormatModel.Bind;
+            this.FileFormats = model.FormatModel.Data;
         }
 
 

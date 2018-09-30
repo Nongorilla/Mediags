@@ -101,7 +101,7 @@ namespace NongFormat
         }
 
         private LogXldFormat (Model model, Stream stream, string path) : base (model, stream, path)
-         => Tracks = model.TracksModel.Bind;
+         => Tracks = model.TracksModel.Data;
 
         private static readonly byte[] logXldSig = Encoding.ASCII.GetBytes ("X Lossless Decoder version ");
         public LogEacTrack.Vector Tracks { get; private set; }
