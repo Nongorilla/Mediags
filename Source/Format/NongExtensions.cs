@@ -26,7 +26,7 @@ namespace NongFormat
         //   returns <0 if read or encoding error;
         //   else returns decoding with stream advanced to next unread byte, buf contains encoding.
         public static long ReadWobbly (this Stream stream, out byte[] buf)
-        { 
+        {
             int octet = stream.ReadByte();
             if (octet < 0)
             { buf = null; return octet; }
@@ -179,9 +179,9 @@ namespace NongFormat
 
     public static class Map1252
     {
-        public static int Length { get { return kv.Length; } }
-        public static int At (int index) { return kv[index]; }
-        public static int ArrayBinarySearch (int searchKey) { return Array.BinarySearch<int> (kv, searchKey); }
+        public static int Length => kv.Length;
+        public static int At (int index) => kv[index];
+        public static int ArrayBinarySearch (int searchKey) => Array.BinarySearch<int> (kv, searchKey);
 
         public static int To1252Bestfit (int codePoint)
         {

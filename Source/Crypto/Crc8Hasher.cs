@@ -45,15 +45,11 @@ namespace NongCrypto
         private byte crc;
 
         public Crc8Hasher()
-        {
-            crc = 0;
-        }
+         => crc = 0;
 
-        public override string Name
-        { get { return "Crc8"; } }
+        public override string Name => "Crc8";
 
-        public override uint HashLength
-        { get { return 1; } }
+        public override uint HashLength => 1;
 
         public override void Append (byte[] data, int offset, int count)
         {

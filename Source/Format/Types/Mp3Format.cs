@@ -227,13 +227,13 @@ namespace NongFormat
                 if (Data.Header.ChannelMode != Mp3ChannelMode.JointStereo)
                 {
                     IssueTags tags = Data.Header.ChannelMode==Mp3ChannelMode.Stereo? IssueTags.Overstandard : IssueTags.Substandard;
-                    IssueModel.Add ("Channel mode is " + Data.Header.ChannelMode + ".", Severity.Advisory, tags);
+                    IssueModel.Add ($"Channel mode is {Data.Header.ChannelMode}.", Severity.Advisory, tags);
                 }
 
                 if (Data.Header.SampleRate < 44100)
-                    IssueModel.Add ("Frequency is " + Data.Header.SampleRate + " Hz (expecting 44100 or better)", Severity.Advisory, IssueTags.Substandard);
+                    IssueModel.Add ($"Frequency is {Data.Header.SampleRate} Hz (expecting 44100 or better)", Severity.Advisory, IssueTags.Substandard);
                 else if (Data.Header.SampleRate > 44100)
-                    IssueModel.Add ("Frequency is " + Data.Header.SampleRate, Severity.Advisory, IssueTags.Overstandard);
+                    IssueModel.Add ($"Frequency is {Data.Header.SampleRate}", Severity.Advisory, IssueTags.Overstandard);
 
                 if (Data.Xing != null)
                 {
@@ -256,10 +256,10 @@ namespace NongFormat
                     {
                         var qi = Data.Xing.QualityIndicator;
                         if (qi < 0 || qi > 100)
-                            IssueModel.Add ("Quality indicator of " + qi + " is out of range.");
+                            IssueModel.Add ($"Quality indicator of {qi} is out of range.");
                         else
                             if (Data.Lame != null && Data.Lame.IsVbr && qi < 78)
-                                IssueModel.Add ("VBR quality of " + qi + " is substandard.", Severity.Advisory, IssueTags.Substandard);
+                                IssueModel.Add ($"VBR quality of {qi} is substandard.", Severity.Advisory, IssueTags.Substandard);
                     }
                 }
 
@@ -275,19 +275,19 @@ namespace NongFormat
                         IssueModel.Add ("Indicated LAME audio size incorrect or unrecognized tag block.", Severity.Warning);
 
                     if (Data.Lame.TagRevision == 0xF)
-                        IssueModel.Add ("Tag revision " + Data.Lame.TagRevision + "invalid.");
+                        IssueModel.Add ($"Tag revision {Data.Lame.TagRevision} invalid.");
 
                     if (Data.Lame.BitrateMethod == 0 || Data.Lame.BitrateMethod == 0xF)
-                        IssueModel.Add ("Bitrate method " + Data.Lame.BitrateMethod + " invalid.");
+                        IssueModel.Add ($"Bitrate method {Data.Lame.BitrateMethod} invalid.");
 
                     if (Data.Lame.IsAbr)
                         IssueModel.Add ("ABR encoding method is obsolete.", Severity.Advisory, IssueTags.Substandard);
 
                     if (Data.Lame.AudiophileReplayGain != 0)
-                        IssueModel.Add ("Audiophile ReplayGain (" + Data.Lame.AudiophileReplayGain + ") usage is obsolete.", Severity.Advisory, IssueTags.Substandard);
+                        IssueModel.Add ($"Audiophile ReplayGain ({Data.Lame.AudiophileReplayGain}) usage is obsolete.", Severity.Advisory, IssueTags.Substandard);
 
                     if (Data.Lame.IsCbr && Mp3Header.IsBadCbr (Data.Header.MpegVersionBits, Data.Lame.MinBitRate))
-                        IssueModel.Add ("Minimum bit rate of " + Data.Lame.MinBitRate + " not valid.", Severity.Advisory, IssueTags.Substandard);
+                        IssueModel.Add ($"Minimum bit rate of {Data.Lame.MinBitRate} not valid.", Severity.Advisory, IssueTags.Substandard);
                 }
 
                 if (Data.HasId3v1)
@@ -300,7 +300,7 @@ namespace NongFormat
                     {
                         var minor = GetMinorOfV1 (Data.id3v1Block);
                         Severity sev = minor == 0? Severity.Warning : Severity.Noise;
-                        IssueModel.Add ("Has ID3v1." + minor + " tags.", sev, IssueTags.HasId3v1);
+                        IssueModel.Add ($"Has ID3v1.{minor} tags.", sev, IssueTags.HasId3v1);
                     }
                 }
 
@@ -325,7 +325,7 @@ namespace NongFormat
                     }
 
                     if (Data.Id3v2TagRepair != null)
-                        IssueModel.Add ("ID3v2 tag size over by 1 (repair with " + Data.Id3v2TagRepair + ").",
+                        IssueModel.Add ($"ID3v2 tag size over by 1 (repair with {Data.Id3v2TagRepair}).",
                             Severity.Warning, IssueTags.Fussy,
                             "Patch EAC induced ID3v2 tag size error", RepairId3v2OffBy1);
                 }
@@ -337,7 +337,7 @@ namespace NongFormat
                     IssueModel.Add ("Has obsolete Lyrics3v2 block.", Severity.Advisory);
 
                 if (Data.DeadBytes != 0)
-                    IssueModel.Add ("Dead space preceeds audio, size=" + Data.DeadBytes, Severity.Warning, IssueTags.Substandard);
+                    IssueModel.Add ($"Dead space preceeds audio, size={Data.DeadBytes}", Severity.Warning, IssueTags.Substandard);
             }
 
 

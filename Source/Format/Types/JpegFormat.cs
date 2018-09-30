@@ -15,10 +15,10 @@ namespace NongFormat
     public class JpegFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "jpg", "jpeg" }; } }
+         => new string[] { "jpg", "jpeg" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -166,10 +166,10 @@ namespace NongFormat
                 {
                     // This spec is often violated.
                     if (Data.DensityX == 0 || Data.DensityY == 0)
-                        IssueModel.Add ("Invalid JFIF density of " + Data.DensityX + "x" + Data.DensityY, Severity.Trivia);
+                        IssueModel.Add ($"Invalid JFIF density of {Data.DensityX}x{Data.DensityY}", Severity.Trivia);
 
                     if ((int) Data.Units > 2)
-                        IssueModel.Add ("Invalid JFIF units of " + Data.Units, Severity.Warning);
+                        IssueModel.Add ($"Invalid JFIF units of {Data.Units}", Severity.Warning);
                 }
 
                 if (Data.eoiPos == null)
@@ -179,7 +179,7 @@ namespace NongFormat
                     {
                         var unparsedSize = Data.FileSize - Data.ValidSize;
                         if (unparsedSize > 0)
-                            IssueModel.Add ("Possible watermark, size=" + unparsedSize, Severity.Advisory);
+                            IssueModel.Add ($"Possible watermark, size={unparsedSize}", Severity.Advisory);
                     }
             }
         }
@@ -218,14 +218,14 @@ namespace NongFormat
             {
                 if (scope <= Granularity.Detail)
                     report.Add (String.Empty);
-                report.Add ("Header segments = " + SegmentCount);
+                report.Add ($"Header segments = {SegmentCount}");
                 if ((Apps & JpegApps.Jfif) != 0)
                 {
                     report.Add ("JFIF:");
-                    report.Add ("  Version = " + VersionMajor + "." + VersionMinor);
-                    report.Add ("  Density = " + DensityX + "x" + DensityY);
-                    report.Add ("  Density units = " + Units);
-                    report.Add ("  Thumbnail size = " + ThumbXLen + "x" + ThumbYLen);
+                    report.Add ($"  Version = {VersionMajor}.{VersionMinor}");
+                    report.Add ($"  Density = {DensityX}x{DensityY}");
+                    report.Add ($"  Density units = {Units}");
+                    report.Add ($"  Thumbnail size = {ThumbXLen}x{ThumbYLen}");
                 }
             }
         }

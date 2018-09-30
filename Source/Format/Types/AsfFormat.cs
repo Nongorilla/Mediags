@@ -5,10 +5,10 @@ namespace NongFormat
     public class AsfFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "asf", "wmv", "wma" }; } }
+         => new string[] { "asf", "wmv", "wma" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {

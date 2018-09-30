@@ -7,10 +7,10 @@ namespace NongFormat
     public class M3uFormat : FilesContainer
     {
         public static string[] Names
-        { get { return new string[] { "m3u" }; } }
+         => new string[] { "m3u" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {

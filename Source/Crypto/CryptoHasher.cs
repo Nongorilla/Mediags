@@ -17,12 +17,8 @@ namespace NongCrypto
         public abstract byte[] GetHashAndReset();
         public abstract void Append (byte[] data, int inputOffset, int inputCount);
 
-
         public void Append (byte[] data)
-        {
-            Append (data, 0, data.Length);
-        }
-
+         => Append (data, 0, data.Length);
 
         public void Append (byte[] data, int offset1, int count1, int offset2, int count2)
         {
@@ -45,12 +41,8 @@ namespace NongCrypto
             Append (data, offset2, count2);
         }
 
-
         public void Append (Stream stream)
-        {
-            Append (stream, 0, stream.Length);
-        }
-
+         => Append (stream, 0, stream.Length);
 
         public void Append (Stream stream, long offset, long count)
         {
@@ -88,7 +80,6 @@ namespace NongCrypto
 
             Append (buf, 0, len);
         }
-
 
         public void Append (Stream stream, long offset1, long count1, long offset2, long count2)
         {
@@ -147,7 +138,6 @@ namespace NongCrypto
             }
         }
 
-
         public void Append (BinaryReader reader)
         {
             int got = 0;
@@ -179,8 +169,8 @@ namespace NongCrypto
         protected HashAlgorithmProvider provider;
         protected CryptographicHash hasher;
 
-        public override string Name { get { return provider.AlgorithmName; } }
-        public override uint HashLength { get { return provider.HashLength; } }
+        public override string Name => provider.AlgorithmName;
+        public override uint HashLength => provider.HashLength;
 
         public override void Append (byte[] data, int offset, int count)
         {
@@ -203,7 +193,7 @@ namespace NongCrypto
     {
         protected System.Security.Cryptography.HashAlgorithm hasher;
 
-        public override uint HashLength { get { return (uint) hasher.HashSize / 8; } }
+        public override uint HashLength => (uint) hasher.HashSize / 8;
 
         public override void Append (byte[] data, int offset, int count)
         {

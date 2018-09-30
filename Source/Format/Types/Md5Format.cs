@@ -9,10 +9,10 @@ namespace NongFormat
     public class Md5Format : HashesContainer
     {
         public static string[] Names
-        { get { return new string[] { "md5" }; } }
+         => new string[] { "md5" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -59,6 +59,7 @@ namespace NongFormat
             }
         }
 
+
         private Md5Format (Model model, Stream stream, string path) : base (model, stream, path)
          => Validation = Validations.MD5;
 
@@ -74,8 +75,8 @@ namespace NongFormat
                 if (report.Count > 0)
                     report.Add (String.Empty);
 
-                report.Add (String.Format ("Stored self-CRC-32 = {0:X8}", History.StoredCRC));
-                report.Add ("Actual self-CRC-32 = " + (History.ActualCRC == null? "?" : String.Format ("{0:X8}", History.ActualCRC)));
+                report.Add ($"Stored self-CRC-32 = {History.StoredCRC:X8}");
+                report.Add ("Actual self-CRC-32 = " + (History.ActualCRC == null? "?" : $"{History.ActualCRC:X8}"));
             }
 
             report.Add ("Prover = " + (History.Prover ?? "(none)"));

@@ -18,7 +18,7 @@ namespace NongFormat
             public new HashesContainer Data => (HashesContainer) _data;
             public HashesHistory.Model HistoryModel { get; protected set; }
 
-            public Model (string rootPath, int hashLength)
+            protected Model (string rootPath, int hashLength)
              => HashedModel = new HashedFile.Vector.Model (rootPath, hashLength);
 
             public void CreateHistory()
@@ -128,7 +128,7 @@ namespace NongFormat
 
                     if (lx.Length < Data.HashedFiles.HashLength*2+3)
                     {
-                        IssueModel.Add ("Too short, line " + line + '.', Severity.Fatal);
+                        IssueModel.Add ($"Too short, line {line}.", Severity.Fatal);
                         return;
                     }
 
@@ -168,7 +168,7 @@ namespace NongFormat
                         }
                     }
 
-                    IssueModel.Add ("Badly formed, line " + line + '.', Severity.Fatal);
+                    IssueModel.Add ($"Badly formed, line {line}.", Severity.Fatal);
                 }
             }
 
@@ -217,7 +217,7 @@ namespace NongFormat
                         HistoryModel.SetActualSelfCRC (crc);
                         HistoryModel.SetStoredSelfCRC (crc);
 
-                        bb = cp.GetBytes (String.Format ("{0:X8}", Data.History.ActualCRC));
+                        bb = cp.GetBytes ($"{Data.History.ActualCRC:X8}");
                         ms.Seek (crcPosition, SeekOrigin.Begin);
                         ms.Write (bb, 0, bb.Length);
                         HistoryModel.SetIsDirty (false);
@@ -336,18 +336,18 @@ namespace NongFormat
 
 
         private static readonly char[] styleChar = new char[] { '?', ' ', '*', ':' };
-        public static char GetStyleChar (HashStyle hashStyle) { return styleChar[(int) hashStyle]; }
+        public static char GetStyleChar (HashStyle hashStyle) => styleChar[(int) hashStyle];
 
         public string Generator { get; private set; }
         public HashesHistory History { get; private set; }
 
         public HashedFile.Vector HashedFiles { get; private set; }
         public Validations Validation { get; protected set; }
-        public string HasherName { get { return Validation.ToString(); } }
+        public string HasherName => Validation.ToString();
 
         private Encoding encoding;
 
-        public HashesContainer (Model model, Stream stream, string path, Encoding encoding = null) : base (model, stream, path)
+        protected HashesContainer (Model model, Stream stream, string path, Encoding encoding = null) : base (model, stream, path)
         {
             this.encoding = encoding ?? LogBuffer.cp1252;
             this.HashedFiles = model.HashedModel.Data;
@@ -362,9 +362,9 @@ namespace NongFormat
                 report.Add (String.Empty);
 
             if (Generator != null)
-                report.Add ("Product = " + Generator);
+                report.Add ($"Product = {Generator}");
 
-            report.Add (HasherName + " count = " + HashedFiles.Items.Count);
+            report.Add ($"{HasherName} count = {HashedFiles.Items.Count}");
 
             foreach (HashedFile item in HashedFiles.Items)
                 report.Add (item.StoredHashToHex + ' ' + GetStyleChar (item.Style) + item.FileName);

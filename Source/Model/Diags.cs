@@ -18,9 +18,9 @@ namespace NongMediaDiags
     {
         public FileFormat.Vector FileFormats { get; protected set; }
 
-        public Func<string, bool?> QuestionAsk;
-        public Func<string, string, char> InputChar;
-        public Func<string, string, string, string> InputLine;
+        public Func<string,bool?> QuestionAsk;
+        public Func<string,string,char> InputChar;
+        public Func<string,string,string,string> InputLine;
         public event MessageSendHandler MessageSend;
         public event ReportCloseHandler ReportClose;
         public event FileVisitEventHandler FileVisit;
@@ -50,18 +50,11 @@ namespace NongMediaDiags
         public int TotalSignable { get; set; }
         public int ExpectedFiles { get; set; }
 
-
         protected Diags (Model model) : this()
-        {
-            this.FileFormats = model.FormatModel.Data;
-        }
-
+         => this.FileFormats = model.FormatModel.Data;
 
         protected Diags()
-        {
-            this.QuestionAsk = QuestionAskDefault;
-        }
-
+         => this.QuestionAsk = QuestionAskDefault;
 
         public bool IsParanoid
         {
@@ -69,13 +62,11 @@ namespace NongMediaDiags
             set { HashFlags = value ? HashFlags | Hashes.PcmMD5 : HashFlags & ~ Hashes.PcmMD5; }
         }
 
-
         public bool IsWebCheckEnabled
         {
             get { return (HashFlags & Hashes.WebCheck) != 0; }
             set { HashFlags = value ? HashFlags | Hashes.WebCheck : HashFlags & ~ Hashes.WebCheck; }
         }
-
 
         public bool IsBestTags
         {
@@ -83,13 +74,11 @@ namespace NongMediaDiags
             set { ErrEscalator = value ? ErrEscalator | IssueTags.BadTag : ErrEscalator & ~ IssueTags.BadTag; }
         }
 
-
         public bool IsFussy
         {
             get { return (ErrEscalator & IssueTags.Fussy) != 0; }
             set { ErrEscalator = value ? ErrEscalator | IssueTags.Fussy : ErrEscalator & ~ IssueTags.Fussy; }
         }
-
 
         public string FormatListText
         {
@@ -108,7 +97,6 @@ namespace NongMediaDiags
                 return sb.ToString();
             }
         }
-
 
         public IList<string> GetRollups (IList<string> rep, string verb)
         {
@@ -212,13 +200,9 @@ namespace NongMediaDiags
             return rep;
         }
 
-
         // Model should replace this default.
         public bool? QuestionAskDefault (string prompt)
-        {
-            return null;
-        }
-
+         => null;
 
         public void OnMessageSend (string message, Severity severity=Severity.NoIssue, Likeliness repairability=Likeliness.None)
         {
@@ -226,20 +210,17 @@ namespace NongMediaDiags
                 MessageSend (message, severity, repairability);
         }
 
-
         public void OnReportClose()
         {
             if (ReportClose != null)
                 ReportClose();
         }
 
-
         public void OnFileVisit (string directoryName, string fileName)
         {
             if (FileVisit != null)
                 FileVisit (directoryName, fileName);
         }
-
 
         public static string FormatDomainVersionText
         {

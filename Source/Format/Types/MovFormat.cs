@@ -5,10 +5,10 @@ namespace NongFormat
     public class MovFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "mov", "qt" }; } }
+         => new string[] { "mov", "qt" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static FormatBase.ModelBase CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -38,7 +38,7 @@ namespace NongFormat
     public class MovFormat2 : Mpeg4Container
     {
         public override string[] ValidNames
-        { get { return MovFormat.Names; } }
+         => MovFormat.Names;
 
         public new class Model : Mpeg4Container.Model
         {

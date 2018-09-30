@@ -37,7 +37,7 @@ namespace NongFormat
             public void Add (string action, string signature)
             {
                 var now = DateTime.Now;
-                var lx = String.Format ("{0:0000}{1:00}{2:00} {3}: {4}: {5}", now.Year, now.Month, now.Day, now.TimeOfDay.ToString().Substring (0, 8), signature, action);
+                var lx = $"{now.Year:0000}{now.Month:00}{now.Day:00} {now.TimeOfDay.ToString().Substring(0,8)}: {signature}: {action}";
                 Data.LastAction = action;
                 Data.LastSig = signature;
                 Data.comment.Add (lx);

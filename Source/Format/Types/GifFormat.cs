@@ -8,10 +8,10 @@ namespace NongFormat
     public class GifFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "gif" }; } }
+         => new string[] { "gif" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -68,10 +68,10 @@ namespace NongFormat
             if (report.Count != 0)
                 report.Add (String.Empty);
 
-            report.Add ("Dimensions = " + Width + 'x' + Height);
+            report.Add ($"Dimensions = {Width}x{Height}");
 
             if (scope <= Granularity.Detail)
-                report.Add ("Version = " + Version);
+                report.Add ($"Version = {Version}");
         }
     }
 }

@@ -14,10 +14,10 @@ namespace NongFormat
     public sealed class WavFormat : RiffContainer
     {
         public static string[] Names
-        { get { return new string[] { "wav" }; } }
+         => new string[] { "wav" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -104,7 +104,6 @@ namespace NongFormat
                 GetDiagnostics();
             }
 
-
             protected void GetDiagnostics()
             {
                 GetRiffDiagnostics();
@@ -112,7 +111,6 @@ namespace NongFormat
                 if (Data.CompCode != (int) WaveCompression.PCM)
                     IssueModel.Add ("Data is not PCM", Severity.Trivia, IssueTags.Substandard);
             }
-
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
@@ -153,7 +151,7 @@ namespace NongFormat
         public bool HasTags { get; private set; }
 
         private byte[] actualMediaMD5;
-        public string ActualMediaMD5ToHex { get { return ConvertTo.ToHexString (actualMediaMD5); } }
+        public string ActualMediaMD5ToHex => ConvertTo.ToHexString (actualMediaMD5);
 
         public int CompCode { get; private set; }
         public int ChannelCount { get; private set; }
@@ -170,19 +168,19 @@ namespace NongFormat
             base.GetDetailsBody (report, scope);
 
             if (ActualCRC32 != null)
-                report.Add (String.Format ("Actual CRC-32 = 0x{0:X8}", ActualCRC32));
+                report.Add ($"Actual CRC-32 = 0x{ActualCRC32:X8}");
             if (actualMediaMD5 != null)
-                report.Add ("Actual PCM data MD5 = " + ActualMediaMD5ToHex);
+                report.Add ($"Actual PCM data MD5 = {ActualMediaMD5ToHex}");
 
-            report.Add ("Compression = " + (WaveCompression) CompCode);
-            report.Add ("Number of channels = " + ChannelCount);
-            report.Add ("Sample rate = " + SampleRate + " Hz");
+            report.Add ($"Compression = {(WaveCompression) CompCode}");
+            report.Add ($"Number of channels = {ChannelCount}");
+            report.Add ($"Sample rate = {SampleRate} Hz");
 
             if (scope <= Granularity.Detail)
             {
-                report.Add ("Average bytes per second = " + AverageBPS);
-                report.Add ("Block align = " + BlockAlign + " bytes per sample slice");
-                report.Add ("Significant bits per sample = " + BitsPerSample);
+                report.Add ($"Average bytes per second = {AverageBPS}");
+                report.Add ($"Block align = {BlockAlign} bytes per sample slice");
+                report.Add ($"Significant bits per sample = {BitsPerSample}");
 
                 string lx = "Layout = | Audio |";
                 if (HasTags)

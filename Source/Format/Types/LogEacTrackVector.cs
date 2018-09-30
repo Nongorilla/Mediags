@@ -82,9 +82,7 @@ namespace NongFormat
 
 #region log-EAC matching rip track methods
 
-            public int WidestTrackWidth
-            { get { return Items[items.Count-1].Match.GetTag ("TRACKNUMBER").Length; } }
-
+            public int WidestTrackWidth => Items[items.Count-1].Match.GetTag ("TRACKNUMBER").Length;
 
             // On exit, returns null if none present
             //     else returns true if all present and same
@@ -105,7 +103,6 @@ namespace NongFormat
                 return false;
             }
 
-
             public bool? IsFlacTagsAllSameMulti (string flacTag)
             {
                 if (items.Count == 0)
@@ -122,7 +119,6 @@ namespace NongFormat
                 return false;
             }
 
-
             public bool AnyHas (string tagId)
             {
                 foreach (var it in items)
@@ -132,7 +128,6 @@ namespace NongFormat
             }
 #endregion
         }
-
 
         private LogEacTrack (int number, string path, string pregap, string peak, string speed,
                              string quality, uint? testCRC, uint? copyCRC, bool isOK, int? arVersion, int? confidence)
@@ -174,11 +169,11 @@ namespace NongFormat
         public int? ArConfidence { get; private set; }
         public int? CtConfidence { get; private set; }
 
-        public bool HasQuality { get { return ! String.IsNullOrWhiteSpace (Qual); } }
-        public bool IsBadCRC { get { return CopyCRC != null && TestCRC != null && TestCRC != CopyCRC; } }
+        public bool HasQuality => ! String.IsNullOrWhiteSpace (Qual);
+        public bool IsBadCRC => CopyCRC != null && TestCRC != null && TestCRC != CopyCRC;
 
         private FlacFormat.Model MatchModel = null;
-        public FlacFormat Match { get { return MatchModel?.Data; } }
+        public FlacFormat Match => MatchModel?.Data;
         public Issue RipSeverest { get; private set; }
     }
 }

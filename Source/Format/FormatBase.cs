@@ -297,12 +297,9 @@ namespace NongFormat
                 PropertyChanged (this, new PropertyChangedEventArgs (propName));
         }
 
-        public long ExcessSize
-        { get { return excess == null? 0 : excess.Length; } }
+        public long ExcessSize => excess == null ? 0 : excess.Length;
 
-        public string NamedFormat
-        { get { return System.IO.Path.GetExtension (Path).Substring (1); } }
-
+        public string NamedFormat => System.IO.Path.GetExtension (Path).Substring (1);
 
         protected FormatBase (Stream stream, string path)
         {
@@ -315,38 +312,33 @@ namespace NongFormat
         protected FormatBase (ModelBase model, Stream stream, string path) : this (stream, path)
          => this.Issues = model.IssueModel.Data;
 
-
         public abstract string[] ValidNames
         { get; }
 
-        public virtual bool IsBadHeader
-        { get { return false; } }
-
-        public virtual bool IsBadData
-        { get { return false; } }
+        public virtual bool IsBadHeader => false;
+        public virtual bool IsBadData => false;
 
         protected byte[] metaSHA1 = null;
-        public string NonmediaSHA1ToHex()
-        { return metaSHA1==null? null : ConvertTo.ToHexString (metaSHA1); }
+        public string NonmediaSHA1ToHex() => metaSHA1==null ? null : ConvertTo.ToHexString (metaSHA1);
 
         protected byte[] mediaSHA1 = null;
         public byte[] MediaSHA1 { get { var cp = new byte[mediaSHA1.Length]; mediaSHA1.CopyTo (cp, 0); return cp; } }
-        public string MediaSHA1ToHex() { return mediaSHA1==null? null : ConvertTo.ToHexString (mediaSHA1); }
+        public string MediaSHA1ToHex() => mediaSHA1==null ? null : ConvertTo.ToHexString (mediaSHA1);
         public bool HasMediaSHA1 => mediaSHA1 != null;
 
         private byte[] fileMD5 = null;
         public byte[] FileMD5 { get { var cp = new byte[fileMD5.Length]; fileMD5.CopyTo (cp, 0); return cp; } }
-        public string FileMD5ToHex { get { return fileMD5==null? null : ConvertTo.ToHexString (fileMD5); } }
-        public bool FileMD5Equals (byte[] a2) { return fileMD5.SequenceEqual (a2); }
+        public string FileMD5ToHex => fileMD5==null ? null : ConvertTo.ToHexString (fileMD5);
+        public bool FileMD5Equals (byte[] a2) => fileMD5.SequenceEqual (a2);
         public bool HasFileMD5 => fileMD5 != null;
 
         protected byte[] fileSHA1 = null;
         public byte[] FileSHA1 { get { var cp = new byte[fileSHA1.Length]; fileSHA1.CopyTo (cp, 0); return cp; } }
-        public string FileSHA1ToHex { get { return fileSHA1==null? null : ConvertTo.ToHexString (fileSHA1); } }
+        public string FileSHA1ToHex => fileSHA1==null ? null : ConvertTo.ToHexString (fileSHA1);
         public bool HasFileSHA1 => fileSHA1 != null;
 
         protected byte[] fileSHA256 = null;
-        public string FileSHA256ToHex { get { return fileSHA256==null? null : ConvertTo.ToHexString (fileSHA256); } }
+        public string FileSHA256ToHex => fileSHA256==null ? null : ConvertTo.ToHexString (fileSHA256);
         public bool HasFileSHA256 => fileSHA256 != null;
 
         protected static bool StartsWith (byte[] target, byte[] other)
@@ -487,26 +479,26 @@ namespace NongFormat
 
             if (mediaSHA1 != null)
             {
-                var ms1 = "Media SHA1= " + MediaSHA1ToHex();
+                var ms1 = $"Media SHA1= {MediaSHA1ToHex()}";
                 if (scope <= Granularity.Detail && mediaPosition >= 0)
-                    ms1 += String.Format (" ({0:X4}-{1:X4})", mediaPosition, mediaPosition+MediaCount-1);
+                    ms1 += $" ({mediaPosition:X4}-{mediaPosition+MediaCount-1:X4})";
                 report.Add (ms1);
             }
 
             if (metaSHA1 != null)
-                report.Add ("Meta SHA1 = " + NonmediaSHA1ToHex());
+                report.Add ($"Meta SHA1 = {NonmediaSHA1ToHex()}");
 
             if (fileMD5 != null)
-                report.Add ("File MD5  = " + FileMD5ToHex);
+                report.Add ($"File MD5  = {FileMD5ToHex}");
 
             if (fileSHA1 != null)
-                report.Add ("File SHA1 = " + FileSHA1ToHex);
+                report.Add ($"File SHA1 = {FileSHA1ToHex}");
 
             if (fileSHA256 != null)
-                report.Add ("File SHA256 = " + FileSHA256ToHex);
+                report.Add ($"File SHA256={FileSHA256ToHex}");
 
             if (scope <= Granularity.Detail)
-                report.Add ("File size = " + FileSize);
+                report.Add ($"File size = {FileSize}");
 
             return report;
         }

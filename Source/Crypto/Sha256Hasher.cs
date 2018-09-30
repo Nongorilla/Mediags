@@ -17,11 +17,9 @@ namespace NongCrypto
     public class Sha256Hasher : CryptoFullHasher
     {
         public Sha256Hasher()
-        {
-            hasher = new System.Security.Cryptography.SHA256CryptoServiceProvider();
-        }
+         => hasher = new System.Security.Cryptography.SHA256CryptoServiceProvider();
 
-        public override string Name { get { return "Sha256"; } }
+        public override string Name => "Sha256";
     }
 #endif
 }

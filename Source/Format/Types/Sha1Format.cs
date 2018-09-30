@@ -6,10 +6,10 @@ namespace NongFormat
     public class Sha1Format : HashesContainer
     {
         public static string[] Names
-        { get { return new string[] { "sha1" }; } }
+        => new string[] { "sha1" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+        => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -17,6 +17,7 @@ namespace NongFormat
                 return new Model (stream, path);
             return null;
         }
+
 
         public new class Model : HashesContainer.Model
         {
@@ -39,6 +40,7 @@ namespace NongFormat
                 base.CalcHashes (hashFlags, validationFlags);
             }
         }
+
 
         private Sha1Format (Model model, Stream stream, string path) : base (model, stream, path)
          => this.Validation = Validations.SHA1;

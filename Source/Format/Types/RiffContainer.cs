@@ -93,8 +93,7 @@ namespace NongFormat
         public int RiffChunkCount { get; private set; }
         public long JunkSize { get; private set; }
 
-        public long ExpectedPaddedSize
-        { get { return ((ValidSize - JunkSize + 2048 + 8) / 2048) * 2048; } }
+        public long ExpectedPaddedSize => ((ValidSize - JunkSize + 2048 + 8) / 2048) * 2048;
 
         protected RiffContainer (Model model, Stream stream, string path) : base (model, stream, path)
         { }
@@ -104,13 +103,13 @@ namespace NongFormat
             if (scope > Granularity.Detail)
                 return;
 
-            report.Add ("RIFF size = " + RiffSize);
+            report.Add ($"RIFF size = {RiffSize}");
 
             if (JunkSize > 0)
-                report.Add ("JUNK size = " + JunkSize);
+                report.Add ($"JUNK size = {JunkSize}");
 
             if (RiffChunkCount != 1)
-                report.Add ("RIFF chunks = " + RiffChunkCount);
+                report.Add ($"RIFF chunks = {RiffChunkCount}");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using NongIssue;
 
@@ -18,19 +18,19 @@ namespace NongFormat
         public static readonly Encoding cp1252 = Encoding.GetEncoding (1252);
 
         public int FilePosition
-        { get { return bufPos; } }
+         => bufPos;
 
         public int LinePosition
-        { get { return linePos; } }
+         => linePos;
 
         public int LineNum
         { get; private set; }
 
         public bool EOF
-        { get { return bufPos >= buf.Length; } }
+         => bufPos >= buf.Length;
 
         public string GetPlace()
-        { return "line " + LineNum.ToString(); }
+         => "line " + LineNum.ToString();
 
         public LogBuffer (byte[] data, Encoding encoding)
         {
@@ -262,7 +262,7 @@ namespace NongFormat
 
                     lx = parser.ReadLineLTrim();
                     if (! lx.StartsWith ("Filename "))
-                        Data.TkIssue = IssueModel.Add ("Track " + num + ": Missing 'Filename'.", Severity.Error, IssueTags.Failure);
+                        Data.TkIssue = IssueModel.Add ($"Track {num}: Missing 'Filename'.", Severity.Error, IssueTags.Failure);
                     else
                         lx = ParseTrack (lx, num);
                 }
@@ -301,7 +301,7 @@ namespace NongFormat
                     if (! trackErr)
                     {
                         trackErr = true;
-                        IssueModel.Add ("Track " + num + ": '" + lx + "'.");
+                        IssueModel.Add ($"Track {num}: '{lx}'.");
                     }
                     lx = parser.ReadLineLTrim();
                 }
@@ -320,18 +320,18 @@ namespace NongFormat
                     if (uint.TryParse (lx.Substring (9), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out word))
                         testCrc = word;
                     else
-                        Data.TpIssue = IssueModel.Add ("Track " + num + ": Invalid test CRC-32.", Severity.Error, IssueTags.Failure);
+                        Data.TpIssue = IssueModel.Add ($"Track {num}: Invalid test CRC-32.", Severity.Error, IssueTags.Failure);
                     lx = parser.ReadLineLTrim();
                 }
 
                 if (! lx.StartsWith ("Copy CRC "))
-                    IssueModel.Add ("Track " + num + ": Missing copy CRC-32.", Severity.Warning);
+                    IssueModel.Add ($"Track {num}: Missing copy CRC-32.", Severity.Warning);
                 else
                 {
                     if (uint.TryParse (lx.Substring (9), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out word))
                         copyCrc = word;
                     else
-                        Data.TkIssue = IssueModel.Add ("Track " + num + ": Invalid copy CRC-32.", Severity.Error, IssueTags.Failure);
+                        Data.TkIssue = IssueModel.Add ($"Track {num}: Invalid copy CRC-32.", Severity.Error, IssueTags.Failure);
                     lx = parser.ReadLineLTrim();
                 }
 

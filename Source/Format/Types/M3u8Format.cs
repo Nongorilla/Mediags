@@ -6,11 +6,10 @@ namespace NongFormat
     public class M3u8Format : FilesContainer
     {
         public static string[] Names
-        { get { return new string[] { "m3u8" }; } }
+         => new string[] { "m3u8" };
 
         public override string[] ValidNames
-        { get { return Names; } }
-
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -42,6 +41,7 @@ namespace NongFormat
                 }
             }
         }
+
 
         private M3u8Format (Model model, Stream stream, string path) : base (model, stream, path)
         { }

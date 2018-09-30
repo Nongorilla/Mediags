@@ -7,7 +7,7 @@ namespace NongFormat
     public class Mpeg1Format : RiffContainer
     {
         public override string[] ValidNames
-        { get { return Mpeg2Format.Names; } }
+         => Mpeg2Format.Names;
 
         public new class Model : RiffContainer.Model
         {
@@ -21,7 +21,8 @@ namespace NongFormat
             }
         }
 
-        public Mpeg1Format (Model model, Stream stream, string path) : base (model, stream, path)
+
+        private Mpeg1Format (Model model, Stream stream, string path) : base (model, stream, path)
         { }
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)

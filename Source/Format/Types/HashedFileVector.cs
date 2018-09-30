@@ -32,7 +32,7 @@ namespace NongFormat
         public HashStyle Style { get; private set; }
 
         public string FileName { get; private set; }
-        public string OldFileName { get { return oldFileName; } }
+        public string OldFileName => oldFileName;
 
         public byte[] StoredHash
         {
@@ -58,14 +58,14 @@ namespace NongFormat
             }
         }
 
-        public bool IsOriginalMatch { get { return IsMatch == true && IsRelative && oldFileName == null; } }
-        public bool IsRenamedMatch { get { return IsMatch == true && IsRelative && oldFileName != null; } }
-        public bool NotFoundOrNotMatch { get { return IsFound == false || IsMatch == false; } }
+        public bool IsOriginalMatch => IsMatch == true && IsRelative && oldFileName == null;
+        public bool IsRenamedMatch => IsMatch == true && IsRelative && oldFileName != null;
+        public bool NotFoundOrNotMatch => IsFound == false || IsMatch == false;
 
-        public string StoredHashToHex { get { return StoredHash == null? null : ConvertTo.ToHexString (StoredHash); } }
-        public string ActualHashToHex { get { return actualHash == null? null : ConvertTo.ToHexString (actualHash); } }
+        public string StoredHashToHex => StoredHash == null ? null : ConvertTo.ToHexString (StoredHash);
+        public string ActualHashToHex => actualHash == null ? null : ConvertTo.ToHexString (actualHash);
 
-        public override string ToString() { return FileName; }
+        public override string ToString() => FileName;
 
 
         public class Vector
@@ -99,7 +99,6 @@ namespace NongFormat
                     this.BaseDir += Path.DirectorySeparatorChar;
             }
 
-
             public HashedFile LookupByExtension (string ext)
             {
                 foreach (var item in items)
@@ -107,7 +106,6 @@ namespace NongFormat
                         return item;
                 return null;
             }
-
 
             public int LookupIndexByExtension (string ext)
             {

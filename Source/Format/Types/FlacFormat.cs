@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
 using NongIssue;
 using NongCrypto;
 
@@ -13,10 +13,10 @@ namespace NongFormat
     public partial class FlacFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "flac" }; } }
+         => new string[] { "flac" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -38,7 +38,7 @@ namespace NongFormat
                 Data.MetadataBlockStreamInfoSize = ConvertTo.FromBig24ToInt32 (hdr, 5);
                 if (Data.MetadataBlockStreamInfoSize < 34)
                 {
-                    IssueModel.Add ("Bad metablock size of " + Data.MetadataBlockStreamInfoSize, Severity.Fatal);
+                    IssueModel.Add ($"Bad metablock size of {Data.MetadataBlockStreamInfoSize}", Severity.Fatal);
                     return;
                 }
 
@@ -305,31 +305,31 @@ namespace NongFormat
             private void GetDiagnostics()
             {
                 if (Data.MetadataBlockStreamInfoSize != 0x22)
-                    IssueModel.Add ("Unexpected Metadata block size of " + Data.MetadataBlockStreamInfoSize, Severity.Advisory);
+                    IssueModel.Add ($"Unexpected Metadata block size of {Data.MetadataBlockStreamInfoSize}", Severity.Advisory);
 
                 if (Data.MinBlockSize < 16)
-                    IssueModel.Add ("Minimum block size too low", Severity.Error);
+                    IssueModel.Add ("Minimum block size too low");
 
                 if (Data.MinBlockSize > 65535)
-                    IssueModel.Add ("Maximum block size too high", Severity.Error);
+                    IssueModel.Add ("Maximum block size too high");
 
                 if (Data.RawSampleRate == 0xF)
-                    IssueModel.Add ("Invalid sample rate", Severity.Error);
+                    IssueModel.Add ("Invalid sample rate");
 
                 if (Data.RawSampleSize == 3 || Data.RawSampleSize == 7)
-                    IssueModel.Add ("Use of sample size index " + Data.RawSampleSize + " is reserved", Severity.Error);
+                    IssueModel.Add ($"Use of sample size index {Data.RawSampleSize} is reserved");
 
                 if (Data.RawChannelAssignment >= 0xB)
-                    IssueModel.Add ("Use of reserved (undefined) channel assignment " + Data.RawChannelAssignment, Severity.Warning);
+                    IssueModel.Add ($"Use of reserved (undefined) channel assignment {Data.RawChannelAssignment}", Severity.Warning);
 
                 if (Data.RawBlockSize == 0)
                     IssueModel.Add ("Block size index 0 use is reserved", Severity.Warning);
 
                 if (Data.RawSampleRate == 0xF)
-                    IssueModel.Add ("Sample rate index 15 use is invalid", Severity.Error);
+                    IssueModel.Add ("Sample rate index 15 use is invalid");
 
                 if (Data.RawChannelAssignment >= 0xB)
-                    IssueModel.Add ("Channel index " + Data.RawChannelAssignment + " use is reserved", Severity.Warning);
+                    IssueModel.Add ($"Channel index {Data.RawChannelAssignment} use is reserved", Severity.Warning);
 
                 if (Data.Blocks.Tags.Lines.Count != Data.Blocks.Tags.StoredTagCount)
                     IssueModel.Add ("Stored tag count wrong");
@@ -353,7 +353,7 @@ namespace NongFormat
                         picPlusPadSize += block.Size;
 
                 if (picPlusPadSize > 512*1024)
-                    IssueModel.Add ("Artwork plus padding consume " + picPlusPadSize + " bytes.", Severity.Trivia, IssueTags.Fussy);
+                    IssueModel.Add ($"Artwork plus padding consume {picPlusPadSize} bytes.", Severity.Trivia, IssueTags.Fussy);
             }
 
 
@@ -519,54 +519,45 @@ namespace NongFormat
         public long SampleOrFrameNumber { get; private set; }
 
         public int RawBlockingStrategy { get; private set; }
-        public string BlockingStrategyText { get { return (RawBlockingStrategy == 0? "Fixed" : "Variable") + " size"; } }
+        public string BlockingStrategyText => (RawBlockingStrategy == 0 ? "Fixed" : "Variable") + " size";
         public int RawBlockSize { get; private set; }
         public int BlockSize { get; private set; }
         public int RawSampleRate { get; private set; }
         public string SampleRateText { get; private set; }
         public int RawChannelAssignment { get; private set; }
-        public string ChannelAssignmentText { get { return ChannelAssignmentMap[RawChannelAssignment]; } }
+        public string ChannelAssignmentText => ChannelAssignmentMap[RawChannelAssignment];
         public int RawSampleSize { get; private set; }
         public string SampleSizeText { get; private set; }
 
         public Byte StoredAudioHeaderCRC8 { get; private set; }
         public Byte? ActualAudioHeaderCRC8 { get; private set; }
-        public string StoredAudioHeaderCRC8ToHex { get { return StoredAudioHeaderCRC8.ToString ("X2"); } }
-        public string ActualAudioHeaderCRC8ToHex
-        { get { return ActualAudioHeaderCRC8?.ToString ("X2"); } }
+        public string StoredAudioHeaderCRC8ToHex => StoredAudioHeaderCRC8.ToString ("X2");
+        public string ActualAudioHeaderCRC8ToHex => ActualAudioHeaderCRC8?.ToString ("X2");
 
         public UInt16 StoredAudioBlockCRC16 { get; private set; }
         public UInt16? ActualAudioBlockCRC16 { get; private set; }
-        public string StoredAudioBlockCRC16ToHex { get { return StoredAudioBlockCRC16.ToString ("X4"); } }
-        public string ActualAudioBlockCRC16ToHex
-        { get { return ActualAudioBlockCRC16?.ToString ("X4"); } }
+        public string StoredAudioBlockCRC16ToHex => StoredAudioBlockCRC16.ToString ("X4");
+        public string ActualAudioBlockCRC16ToHex => ActualAudioBlockCRC16?.ToString ("X4");
 
         private byte[] storedAudioDataMD5 = null;
         private byte[] actualAudioDataMD5 = null;
-        public string StoredAudioDataMD5ToHex { get { return storedAudioDataMD5==null? null : ConvertTo.ToHexString (storedAudioDataMD5); } }
-        public string ActualAudioDataMD5ToHex { get { return actualAudioDataMD5==null? null : ConvertTo.ToHexString (actualAudioDataMD5); } }
+        public string StoredAudioDataMD5ToHex => storedAudioDataMD5==null ? null : ConvertTo.ToHexString (storedAudioDataMD5);
+        public string ActualAudioDataMD5ToHex => actualAudioDataMD5==null ? null : ConvertTo.ToHexString (actualAudioDataMD5);
 
         public UInt32? ActualPcmCRC32 { get; private set; }
-        public string ActualPcmCRC32ToHex
-        { get { return ActualPcmCRC32?.ToString ("X8"); } }
+        public string ActualPcmCRC32ToHex => ActualPcmCRC32?.ToString ("X8");
 
-        public bool IsBadDataCRC16 { get { return ActualAudioBlockCRC16 != null && ActualAudioBlockCRC16.Value != StoredAudioBlockCRC16; } }
-        public bool IsBadDataMD5 { get { return actualAudioDataMD5 != null && ! actualAudioDataMD5.SequenceEqual (storedAudioDataMD5); } }
+        public bool IsBadDataCRC16 => ActualAudioBlockCRC16 != null && ActualAudioBlockCRC16.Value != StoredAudioBlockCRC16;
+        public bool IsBadDataMD5 => actualAudioDataMD5 != null && ! actualAudioDataMD5.SequenceEqual (storedAudioDataMD5);
 
         private FlacFormat (Model model, Stream stream, string path) : base (model, stream, path)
         { }
 
         public override bool IsBadHeader
-        {
-            get { return ActualAudioHeaderCRC8 != null && StoredAudioHeaderCRC8 != ActualAudioHeaderCRC8.Value; }
-        }
-
+         => ActualAudioHeaderCRC8 != null && StoredAudioHeaderCRC8 != ActualAudioHeaderCRC8.Value;
 
         public override bool IsBadData
-        {
-            get { return IsBadDataCRC16 || IsBadDataMD5; }
-        }
-
+         => IsBadDataCRC16 || IsBadDataMD5;
 
         public string GetTag (string name)
         {
@@ -647,49 +638,49 @@ namespace NongFormat
             report.Add ("Meta header:");
             if (scope <= Granularity.Detail)
             {
-                report.Add ("  Minimum block size = " + MinBlockSize);
-                report.Add ("  Maximum block size = " + MaxBlockSize);
-                report.Add ("  Minimum frame size = " + MinFrameSize);
-                report.Add ("  Maximum frame size = " + MaxFrameSize);
+                report.Add ($"  Minimum block size = {MinBlockSize}");
+                report.Add ($"  Maximum block size = {MaxBlockSize}");
+                report.Add ($"  Minimum frame size = {MinFrameSize}");
+                report.Add ($"  Maximum frame size = {MaxFrameSize}");
             }
 
-            report.Add ("  Sample rate = " + MetaSampleRate + " Hz");
-            report.Add ("  Number of channels = " + ChannelCount);
-            report.Add ("  Bits per sample = " + BitsPerSample);
+            report.Add ($"  Sample rate = {MetaSampleRate} Hz");
+            report.Add ($"  Number of channels = {ChannelCount}");
+            report.Add ($"  Bits per sample = {BitsPerSample}");
 
             if (scope <= Granularity.Detail)
             {
                 report.Add ("  Total samples = " + (TotalSamples != 0? TotalSamples.ToString() : " (unknown)"));
 
                 report.Add (String.Empty);
-                report.Add ("Raw audio header:" + "  " + ConvertTo.ToBitString (aHdr, 1));
+                report.Add ("Raw audio header: " + ConvertTo.ToBitString (aHdr, 1));
 
                 report.Add (String.Empty);
                 report.Add ("Cooked audio header:");
-                report.Add ("  Blocking strategy = " + BlockingStrategyText);
-                report.Add ("  Block size = " + BlockSize + " samples");
-                report.Add ("  Sample rate = " + SampleRateText);
-                report.Add ("  Channel assignment = " + ChannelAssignmentText);
-                report.Add ("  Sample size = " + SampleSizeText);
-                report.Add ("  Sample/frame number = " + SampleOrFrameNumber);
+                report.Add ($"  Blocking strategy = {BlockingStrategyText}");
+                report.Add ($"  Block size = {BlockSize} samples");
+                report.Add ($"  Sample rate = {SampleRateText}");
+                report.Add ($"  Channel assignment = {ChannelAssignmentText}");
+                report.Add ($"  Sample size = {SampleSizeText}");
+                report.Add ($"  Sample/frame number = {SampleOrFrameNumber}");
 
                 report.Add (String.Empty);
                 report.Add ("Checks:");
 
-                report.Add ("  Stored audio header CRC-8 = " + StoredAudioHeaderCRC8ToHex);
+                report.Add ($"  Stored audio header CRC-8 = {StoredAudioHeaderCRC8ToHex}");
                 if (ActualAudioHeaderCRC8 != null)
-                    report.Add ("  Actual audio header CRC-8 = " + ActualAudioHeaderCRC8ToHex);
+                    report.Add ($"  Actual audio header CRC-8 = {ActualAudioHeaderCRC8ToHex}");
 
-                report.Add ("  Stored audio block CRC-16 = " + StoredAudioBlockCRC16ToHex);
+                report.Add ($"  Stored audio block CRC-16 = {StoredAudioBlockCRC16ToHex}");
                 if (ActualAudioBlockCRC16 != null)
-                    report.Add ("  Actual audio block CRC-16 = " + ActualAudioBlockCRC16ToHex);
+                    report.Add ($"  Actual audio block CRC-16 = {ActualAudioBlockCRC16ToHex}");
 
-                report.Add ("  Stored PCM MD5 = " + StoredAudioDataMD5ToHex);
+                report.Add ($"  Stored PCM MD5 = {StoredAudioDataMD5ToHex}");
                 if (actualAudioDataMD5 != null)
-                    report.Add ("  Actual PCM MD5 = " + ActualAudioDataMD5ToHex);
+                    report.Add ($"  Actual PCM MD5 = {ActualAudioDataMD5ToHex}");
 
                 if (ActualPcmCRC32 != null)
-                    report.Add ("  Actual PCM CRC-32 = " + ActualPcmCRC32ToHex);
+                    report.Add ($"  Actual PCM CRC-32 = {ActualPcmCRC32ToHex}");
             }
 
             var sb = new StringBuilder();
@@ -718,9 +709,9 @@ namespace NongFormat
             {
                 report.Add (String.Empty);
                 report.Add ("Tags:");
-                report.Add ("  Vendor: " + Blocks.Tags.Vendor);
+                report.Add ($"  Vendor: {Blocks.Tags.Vendor}");
                 foreach (var item in Blocks.Tags.Lines)
-                    report.Add ("  " + item);
+                    report.Add ($"  {item}");
             }
         }
     }

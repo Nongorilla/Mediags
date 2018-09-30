@@ -5,10 +5,10 @@ namespace NongFormat
     public class ApeFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "ape" }; } }
+         => new string[] { "ape" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {

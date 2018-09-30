@@ -21,6 +21,7 @@ namespace NongFormat
             return null;
         }
 
+
         public class Model : FormatBase.ModelBase
         {
             public new readonly OggFormat Data;
@@ -94,6 +95,7 @@ namespace NongFormat
                 base.CalcHashes (hashFlags, validationFlags);
             }
         }
+
 
         private ObservableCollection<int> badPage = new ObservableCollection<int>();
         public Issue CdIssue { get; private set; }

@@ -31,6 +31,7 @@ namespace NongFormat
             }
         }
 
+
         private PngChunk (string type, UInt32 size, UInt32 storedCRC, UInt32? actualCRC)
         {
             this.Type = type;

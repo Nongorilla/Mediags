@@ -47,13 +47,11 @@ namespace NongMediaDiags
                 }
             }
 
-
             public Model (string root, Granularity report) : base()
             {
                 IssueModel = new Issue.Vector.Model();
                 this._data = new LameDiags (root, report, FormatModel.Data, IssueModel.Data);
             }
-
 
             public Severity ValidateLameRipsDeep (string signature, bool doLogTag)
             {
@@ -97,7 +95,6 @@ namespace NongMediaDiags
                 return exitCode;
             }
 
-
             public Severity ValidateLameRip (string arg, string signature, bool doLogTag)
             {
                 string err = null;
@@ -108,7 +105,7 @@ namespace NongMediaDiags
                         signature = null;
                     else if (Map1252.ToClean1252FileName (signature.Trim(null)) != signature || signature.Any (Char.IsWhiteSpace))
                     {
-                        ReportLine ("Invalid signature '" + signature + "'.", Severity.Error, false);
+                        ReportLine ($"Invalid signature '{signature}'.", Severity.Error, false);
                         return Severity.Fatal;
                     }
 
@@ -211,7 +208,7 @@ namespace NongMediaDiags
                         {
                             var dn = Path.GetDirectoryName (fb.Path);
 
-                            sw.WriteLine ("Diagnostics by the vitriolic " + Data.Product + " v" + Data.ProductVersion + ":");
+                            sw.WriteLine ($"Diagnostics by the vitriolic {Data.Product} v{Data.ProductVersion}:");
                             sw.WriteLine ();
                             sw.Write     (dn);
                             sw.WriteLine (Path.DirectorySeparatorChar);
@@ -251,7 +248,7 @@ namespace NongMediaDiags
                         using (var sw = new StreamWriter (Data.CurrentDirectory + Path.DirectorySeparatorChar
                                                         + Data.NoncompliantName, false, new UTF8Encoding (true)))
                         {
-                            sw.WriteLine ("Error found by the vitriolic " + Data.Product + " v" + Data.ProductVersion + ":");
+                            sw.WriteLine ($"Error found by the vitriolic {Data.Product} v{Data.ProductVersion}:");
                             sw.WriteLine ();
                             sw.Write (Data.CurrentDirectory);
                             sw.WriteLine (Path.DirectorySeparatorChar);
@@ -268,11 +265,9 @@ namespace NongMediaDiags
             }
         }
 
-
         public LameRip Rip { get; private set; }
         public Issue.Vector Issues { get; protected set; }
         public readonly FileFormat Mp3Format, LogFormat, M3uFormat, M3u8Format, Sha1xFormat;
-
 
         private LameDiags (string root, Granularity scope, FileFormat.Vector formats, Issue.Vector issues)
         {
@@ -289,9 +284,8 @@ namespace NongMediaDiags
             M3u8Format = FileFormats.Items.FirstOrDefault (it => it.PrimaryName=="m3u8");
         }
 
-
-        public string NoncompliantName { get { return "--NOT COMPLIANT WITH STANDARD--.txt"; } }
-        public string FailPrefix { get { return "!!_ERRORS_!!"; } }
+        public string NoncompliantName => "--NOT COMPLIANT WITH STANDARD--.txt";
+        public string FailPrefix => "!!_ERRORS_!!";
     }
 }
 #endif

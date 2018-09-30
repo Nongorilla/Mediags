@@ -18,19 +18,14 @@ namespace NongFormat
                 public Model()
                  => Data = new FileFormat.Vector();
 
-
-                public void Add (FormatModelFactory factory, string[] names, string subname = null)
-                {
-                    Data.items.Add (new FileFormat (factory, names, subname));
-                }
-
+                public void Add (FormatModelFactory factory, string[] names, string subname=null)
+                 => Data.items.Add (new FileFormat (factory, names, subname));
 
                 public void Sort()
                 {
                     Comparison<FileFormat> comp = (f1, f2) => String.CompareOrdinal (f1.LongName, f2.LongName);
                     Data.items.Sort (comp);
                 }
-
 
                 public void ResetTotals()
                 {
@@ -77,8 +72,7 @@ namespace NongFormat
         public int TotalSigned { get; set; }
 
         public string PrimaryName
-        { get { return names[0]; } }
-
+         => names[0];
 
         public FileFormat (FormatModelFactory factory, string[] names, string subname)
         {
@@ -94,7 +88,6 @@ namespace NongFormat
             this.Subname = subname;
             this.ModelFactory = factory;
         }
-
 
         public string LongName
         {

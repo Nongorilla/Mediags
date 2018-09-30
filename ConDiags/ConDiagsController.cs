@@ -240,10 +240,10 @@ namespace AppController
         {
             string exe = Process.GetCurrentProcess().ProcessName;
 
-            Console.WriteLine (ProductText + " v" + VersionText);
+            Console.WriteLine ($"{ProductText} v{VersionText}");
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine (exe + " [/R] [/f:<wildcard>] [/g:<granularity>] [/h:<hashes>] [/v:<validations>] [/w:<escalators>] [/e:<escalators>] [/out:<mirror>] [/p:<counter>] [/x:<exclusion>] [/k] <fileOrDirectory>");
+            Console.WriteLine ($"{exe} [/R] [/f:<wildcard>] [/g:<granularity>] [/h:<hashes>] [/v:<validations>] [/w:<escalators>] [/e:<escalators>] [/out:<mirror>] [/p:<counter>] [/x:<exclusion>] [/k] <fileOrDirectory>");
 
             Console.WriteLine();
             Console.WriteLine("Where <fileOrDirectory> is a file or directory name without wildcards.");

@@ -11,10 +11,10 @@ namespace NongFormat
     public class Mpeg2Format : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "mpg", "mpeg" , "vob" }; } }
+         => new string[] { "mpg", "mpeg" , "vob" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static FormatBase.ModelBase CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -76,7 +76,7 @@ namespace NongFormat
                 {
                     long unparsedSize = Data.FileSize - Data.ValidSize;
                     if (unparsedSize != 0)
-                        IssueModel.Add ("Possible watermark, size=" + unparsedSize, Severity.Trivia);
+                        IssueModel.Add ($"Possible watermark, size={unparsedSize}", Severity.Trivia);
                 }
             }
         }
@@ -93,7 +93,7 @@ namespace NongFormat
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {
             report.Add ("Format = MPEG-2");
-            report.Add ("Is VOB = " + IsVOB);
+            report.Add ($"Is VOB = {IsVOB}");
         }
     }
 }

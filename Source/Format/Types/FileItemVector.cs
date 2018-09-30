@@ -79,6 +79,6 @@ namespace NongFormat
         { get; private set; }
 
         public override string ToString()
-        { return Name; }
+         => Name;
     }
 }

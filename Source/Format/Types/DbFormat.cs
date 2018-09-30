@@ -6,13 +6,13 @@ namespace NongFormat
     public class DbFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "db" }; } }
+         => new string[] { "db" };
 
         public static string Subname
-        { get { return "Thumbs"; } }
+         => "Thumbs";
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -45,13 +45,13 @@ namespace NongFormat
     public class DbOtherFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "db" }; } }
+         => new string[] { "db" };
 
         public static string Subname
-        { get { return "*hidden*"; } }
+         => "*hidden*";
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {

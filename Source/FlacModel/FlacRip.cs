@@ -53,10 +53,9 @@ namespace NongMediaDiags
             set { isWip = value; NotifyPropertyChanged (null); }
         }
 
-        public bool IsCommentable { get { return Signature != null && NewComment != String.Empty; } }
-        public bool IsCommitable { get { return isWip && NewComment == null; } }
-        public bool HasChange { get { return TrackEditCount > 0 || TrackRenameCount > 0 || AlbumRenameCount > 0; } }
-
+        public bool IsCommentable => Signature != null && NewComment != String.Empty;
+        public bool IsCommitable => isWip && NewComment == null;
+        public bool HasChange => TrackEditCount > 0 || TrackRenameCount > 0 || AlbumRenameCount > 0;
 
         private FlacRip (FlacDiags owner, string path, NamingStrategy autoname, string signature)
         {
@@ -70,14 +69,12 @@ namespace NongMediaDiags
             this.NewComment = String.Empty;
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged (string propName)
         {
             if (PropertyChanged != null)
                 PropertyChanged (this, new PropertyChangedEventArgs (propName));
         }
-
 
         public string Trailer
         {

@@ -9,13 +9,13 @@ namespace NongFormat
     public partial class LogXldFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "log" }; } }
+         => new string[] { "log" };
 
         public static string Subname
-        { get { return "XLD"; } }
+         => "XLD";
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -100,6 +100,7 @@ namespace NongFormat
             }
         }
 
+
         private LogXldFormat (Model model, Stream stream, string path) : base (model, stream, path)
          => Tracks = model.TracksModel.Data;
 
@@ -110,21 +111,21 @@ namespace NongFormat
         public string RipDate { get; private set; }
         public string RipArtist { get; private set; }
         public string RipAlbum { get; private set; }
-        public string RipArtistAlbum { get { return RipArtist + " / " + RipAlbum; } }
+        public string RipArtistAlbum => RipArtist + " / " + RipAlbum;
 
         private string storedHash = null;
-        public string StoredHash { get { return storedHash; } }
+        public string StoredHash => storedHash;
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {
             if (scope <= Granularity.Detail && report.Count > 0)
                 report.Add (String.Empty);
 
-            report.Add ("XLD version = " + XldVersionText);
+            report.Add ($"XLD version = {XldVersionText}");
             report.Add ("Signature = " + (StoredHash?? "(missing)"));
-            report.Add ("Rip date = " + RipDate);
-            report.Add ("Rip artist = " + RipArtist);
-            report.Add ("Rip album = " + RipAlbum);
+            report.Add ($"Rip date = {RipDate}");
+            report.Add ($"Rip artist = {RipArtist}");
+            report.Add ($"Rip album = {RipAlbum}");
         }
     }
 }

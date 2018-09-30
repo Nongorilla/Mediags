@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
 using NongIssue;
 
 namespace NongFormat
@@ -12,13 +12,13 @@ namespace NongFormat
     public partial class LogEacFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "log" }; } }
+         => new string[] { "log" };
 
         public static string Subname
-        { get { return "EAC"; } }
+         => "EAC";
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -160,7 +160,7 @@ namespace NongFormat
                     FlacFormat flac = flacMod.Data;
 
                     if (flac.ActualPcmCRC32.Value != track.CopyCRC.Value)
-                        Data.TkIssue = IssueModel.Add ("Audio CRC-32 mismatch on '" + flac.Name + "'.", Severity.Fatal, IssueTags.Failure);
+                        Data.TkIssue = IssueModel.Add ($"Audio CRC-32 mismatch on '{flac.Name}'.", Severity.Fatal, IssueTags.Failure);
                     else
                         TracksModel.SetMatch (ix, flacMod);
 
@@ -174,11 +174,11 @@ namespace NongFormat
                     string trackNumTagCapture = reMatches.Count == 1? reMatches[0].Groups[1].ToString() : trackNumTag;
 
                     if (! int.TryParse (trackNumTagCapture, out int trackNum))
-                        IssueModel.Add ("Invalid TRACKNUMBER tag '" + trackNumTag + "'.");
+                        IssueModel.Add ($"Invalid TRACKNUMBER tag '{trackNumTag}'.");
                     else
                     {
                         if (expectNum >= 0 && expectNum != trackNum)
-                            IssueModel.Add ("Unexpected TRACKNUMBER '" + trackNum + "': Expecting '" + expectNum + "'.");
+                            IssueModel.Add ($"Unexpected TRACKNUMBER '{trackNum}': Expecting '{expectNum}'.");
                         expectNum = trackNum + 1;
                     }
                 }
@@ -300,12 +300,12 @@ namespace NongFormat
                         // Report when track number like 02 or 2/9.
                         var match = Regex.Match (trackTag, "^[1-9]+[0-9]*$");
                         if (! match.Success)
-                            IssueModel.Add ("Malformed TRACKNUMBER tag '" + trackTag + "'.", Severity.Warning, IssueTags.BadTag);
+                            IssueModel.Add ($"Malformed TRACKNUMBER tag '{trackTag} '.", Severity.Warning, IssueTags.BadTag);
 
                         var title = flac.GetTag ("TITLE");
-                        CheckWhite ("TITLE (track "+trackTag+")", title);
+                        CheckWhite ($"TITLE (track {trackTag})", title);
                         if (isSameArtist == false)
-                            CheckWhite ("ARTIST (track " + trackTag + ")", flac.GetTag ("ARTIST"));
+                            CheckWhite ($"ARTIST (track {trackTag})", flac.GetTag ("ARTIST"));
 
                         var ordTag = flac.GetTag ("ORIGINAL RELEASE DATE");
                         if (! String.IsNullOrEmpty (ordTag))
@@ -674,6 +674,7 @@ namespace NongFormat
             }
         }
 
+
         private static readonly byte[] logEacSig0x = new byte[] { (byte)'E', (byte)'A', (byte)'C', (byte)' ' };
         private static readonly byte[] logEacSig0y = Encoding.ASCII.GetBytes ("Exact Audio Copy V0");
         private static readonly byte[] logEacSig1x = Encoding.Unicode.GetBytes ("\uFEFFExact Audio Copy V");
@@ -684,7 +685,7 @@ namespace NongFormat
         public string RipDate { get; private set; }
         public string Artist { get; private set; }
         public string Album { get; private set; }
-        public string RipArtistAlbum { get { return Artist + " / " + Album; } }
+        public string RipArtistAlbum => Artist + " / " + Album;
         public string Drive { get; private set; }
         public string ReadOffset { get; private set; }
         public string Overread { get; private set; }
@@ -730,8 +731,7 @@ namespace NongFormat
             private set { readMode = value; readModeLongLazy = null; }
         }
 
-        public string EacVersionLong
-        { get { return EacVersionText?? "unknown"; } }
+        public string EacVersionLong => EacVersionText?? "unknown";
 
         public string AccurateRipLong
         {
@@ -776,7 +776,7 @@ namespace NongFormat
 
         private byte[] storedHash;
         public string SelfHashLong
-        { get { return storedHash==null? (EacVersionText==null || EacVersionText.StartsWith ("0")? "none" : "missing") : ((storedHash.Length * 8).ToString() + " bits"); } }
+         => storedHash==null? (EacVersionText==null || EacVersionText.StartsWith ("0")? "none" : "missing") : ((storedHash.Length * 8).ToString() + " bits");
 
         public Issue DsIssue { get; private set; }
         public Issue NzIssue { get; private set; }
@@ -875,7 +875,7 @@ namespace NongFormat
 
 
         public override bool IsBadData
-        { get { return ShIssue != null && ShIssue.Failure; } }
+         => ShIssue != null && ShIssue.Failure;
 
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
@@ -883,7 +883,7 @@ namespace NongFormat
             if (scope <= Granularity.Detail && report.Count > 0)
                 report.Add (String.Empty);
 
-            report.Add ("EAC version = " + EacVersionLong);
+            report.Add ($"EAC version = {EacVersionLong}");
 
             if (scope > Granularity.Detail)
                 return;
@@ -894,27 +894,27 @@ namespace NongFormat
             report.Add ("AccurateRip = " + (AccurateRip == null? "(none)" : AccurateRip.Value.ToString()));
             report.Add ("CUETools confidence = " + (CueToolsConfidence == null? "(none)" : CueToolsConfidence.Value.ToString()));
 
-            report.Add ("Rip album = " + RipArtistAlbum);
-            report.Add ("Rip date = " + RipDate);
-            if (CalcedAlbumArtist != null) report.Add ("Derived artist = " + CalcedAlbumArtist);
+            report.Add ($"Rip album = {RipArtistAlbum}");
+            report.Add ($"Rip date = {RipDate}");
+            if (CalcedAlbumArtist != null) report.Add ($"Derived artist = {CalcedAlbumArtist}");
 
-            report.Add ("Drive = " + Drive);
-            report.Add ("Interface = " + Interface);
-            report.Add ("Read mode = " + ReadMode);
-            if (AccurateStream != null) report.Add ("  Accurate Stream = " + AccurateStream);
-            if (DefeatCache != null) report.Add ("  Defeat cache = " + DefeatCache);
-            if (UseC2 != null) report.Add ("  Use C2 info = " + UseC2);
+            report.Add ($"Drive = {Drive}");
+            report.Add ($"Interface = {Interface}");
+            report.Add ($"Read mode = {ReadMode}");
+            if (AccurateStream != null) report.Add ($"  Accurate Stream = {AccurateStream}");
+            if (DefeatCache != null) report.Add ($"  Defeat cache = {DefeatCache}");
+            if (UseC2 != null) report.Add ($"  Use C2 info = {UseC2}");
 
-            if (ReadOffset != null) report.Add ("Drive offset = " + ReadOffset);
-            if (Overread != null) report.Add ("Overread = " + Overread);
-            if (FillWithSilence != null) report.Add ("Fill with silence = " + FillWithSilence);
-            if (TrimSilence != null) report.Add ("Trim silence = " + TrimSilence);
-            if (CalcWithNulls != null) report.Add ("Use nulls in CRC = " + CalcWithNulls);
-            if (Quality != null) report.Add ("Error recovery quality = " + Quality);
-            if (NormalizeTo != null) report.Add ("Normalization = " + NormalizeTo);
+            if (ReadOffset != null) report.Add ($"Drive offset = {ReadOffset}");
+            if (Overread != null) report.Add ($"Overread = {Overread}");
+            if (FillWithSilence != null) report.Add ($"Fill with silence = {FillWithSilence}");
+            if (TrimSilence != null) report.Add ($"Trim silence = {TrimSilence}");
+            if (CalcWithNulls != null) report.Add ($"Use nulls in CRC = {CalcWithNulls}");
+            if (Quality != null) report.Add ($"Error recovery quality = {Quality}");
+            if (NormalizeTo != null) report.Add ($"Normalization = {NormalizeTo}");
 
-            if (GapHandling != null) report.Add ("Gap handling = " + GapHandling);
-            if (SampleFormat != null) report.Add ("Sample format = " + SampleFormat);
+            if (GapHandling != null) report.Add ($"Gap handling = " + GapHandling);
+            if (SampleFormat != null) report.Add ($"Sample format = " + SampleFormat);
 
             report.Add ("Track count (ToC) = " + (TocTrackCount==null? "(none)" : TocTrackCount.ToString()));
             report.Add ("Track count (rip) = " + Tracks.Items.Count);

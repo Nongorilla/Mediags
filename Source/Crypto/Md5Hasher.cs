@@ -19,11 +19,9 @@ namespace NongCrypto
     public class Md5Hasher : CryptoFullHasher
     {
         public Md5Hasher()
-        {
-            hasher = new MD5CryptoServiceProvider();
-        }
+         => hasher = new MD5CryptoServiceProvider();
 
-        public override string Name { get { return "Md5"; } }
+        public override string Name => "Md5";
     }
 #endif
 }

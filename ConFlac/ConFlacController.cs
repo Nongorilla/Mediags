@@ -212,7 +212,7 @@ namespace AppController
             }
             else if (model.Data.Scope > Granularity.Advisory)
             {
-                Console.Error.WriteLine ("/g:" + model.Data.Scope + " with /sig ignored.");
+                Console.Error.WriteLine ($"/g:{model.Data.Scope} with /sig ignored.");
                 model.Data.Scope = Granularity.Advisory;
             }
 
@@ -248,10 +248,10 @@ namespace AppController
         {
             string exe = Process.GetCurrentProcess().ProcessName;
 
-            Console.WriteLine (ProductText + " v" + VersionText);
+            Console.WriteLine ($"{ProductText} v{VersionText}");
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine (exe + " [/autoname[:<strategy>]] [/fussy] [/g:<granularity>] [/k] [/md5] [/out:<mirror>] [/p:<n>] [/prove[:web]] [/rg] [/safety:<n>] [/sig:<signature>] [/ubertags] <directory>");
+            Console.WriteLine ($"{exe} [/autoname[:<strategy>]] [/fussy] [/g:<granularity>] [/k] [/md5] [/out:<mirror>] [/p:<n>] [/prove[:web]] [/rg] [/safety:<n>] [/sig:<signature>] [/ubertags] <directory>");
 
             Console.WriteLine ();
             Console.WriteLine ("Where <directory> is a relative or absolute directory name without wildcards.");

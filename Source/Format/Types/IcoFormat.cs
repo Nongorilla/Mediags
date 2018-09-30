@@ -34,10 +34,10 @@ namespace NongFormat
     public class IcoFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "ico" }; } }
+         => new string[] { "ico" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -91,7 +91,7 @@ namespace NongFormat
 
                     if (storedStart != actualStart || storedSize <= 0)
                     {
-                        IssueModel.Add ("Corrupt header near byte " + Data.ValidSize, Severity.Fatal);
+                        IssueModel.Add ($"Corrupt header near byte {Data.ValidSize}", Severity.Fatal);
                         return;
                     }
 
@@ -134,7 +134,7 @@ namespace NongFormat
 
         private readonly List<IconItem> icons;
         public ReadOnlyCollection<IconItem> Icons { get; private set; }
-        public int Count { get { return icons.Count; } }
+        public int Count => icons.Count;
 
         private IcoFormat (Model model, Stream stream, string path) : base (model, stream, path)
         {
@@ -147,7 +147,7 @@ namespace NongFormat
             if (report.Count > 0)
                 report.Add (String.Empty);
 
-            report.Add ("Image count = " + Icons.Count);
+            report.Add ($"Image count = {Icons.Count}");
 
             if (scope == Granularity.Detail)
             {
@@ -155,9 +155,9 @@ namespace NongFormat
                 report.Add ("Layout:");
                 foreach (var item in Icons)
                 {
-                    string lx = item.IsPNG? "  PNG" : "  BMP" + String.Format (": dimensions={0}x{1}", item.Width, item.Height);
+                    string lx = (item.IsPNG ? "  PNG" : "  BMP") + $": dimensions={item.Width}x{item.Height}";
                     if (! item.IsPNG)
-                        lx += String.Format (", palette={0}, bpp={1}", item.PaletteSize, item.BitsPerPixel);
+                        lx += $", palette={item.PaletteSize}, bpp={item.BitsPerPixel}";
                     report.Add (lx);
                 }
             }

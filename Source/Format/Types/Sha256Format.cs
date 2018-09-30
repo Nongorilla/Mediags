@@ -6,10 +6,10 @@ namespace NongFormat
     public class Sha256Format : HashesContainer
     {
         public static string[] Names
-        { get { return new string[] { "sha256" }; } }
+         => new string[] { "sha256" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -28,7 +28,6 @@ namespace NongFormat
                 base._data = Data = new Sha256Format (this, stream, path);
                 ParseHashes();
             }
-
 
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {

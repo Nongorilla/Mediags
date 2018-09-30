@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.IO;
+using System.Text;
 using NongIssue;
 using NongCrypto;
 
@@ -13,10 +13,10 @@ namespace NongFormat
     public class PngFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "png" }; } }
+         => new string[] { "png" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -118,7 +118,7 @@ namespace NongFormat
                                 IssueModel.Add ("Unexpected multiple gamma chunks.");
                             else
                                 if (chunkSize != 4)
-                                    IssueModel.Add ("Bad gamma chunk size '" + chunkSize + "', expecting '4'.");
+                                    IssueModel.Add ($"Bad gamma chunk size '{chunkSize}', expecting '4'.");
                                 else
                                     Data.Gamma = ConvertTo.FromBig32ToUInt32 (fBuf, (int) Data.ValidSize+8) / 100000f;
                             break;
@@ -135,16 +135,16 @@ namespace NongFormat
                     IssueModel.Add ("Invalid dimensions.");
 
                 if (Data.BitDepth != 1 && Data.BitDepth != 2 && Data.BitDepth != 4 && Data.BitDepth != 8 && Data.BitDepth != 16)
-                    IssueModel.Add ("Invalid bit depth '" + Data.BitDepth + "'.");
+                    IssueModel.Add ($"Invalid bit depth '{Data.BitDepth}'.");
 
                 if (Data.CompressionMethod != 0)
-                    IssueModel.Add ("Invalid compression '" + Data.CompressionMethod + "'.");
+                    IssueModel.Add ($"Invalid compression '{Data.CompressionMethod}'.");
 
                 if (Data.FilterMethod != 0)
-                    IssueModel.Add ("Invalid filter '" + Data.FilterMethod + "'.");
+                    IssueModel.Add ($"Invalid filter '{Data.FilterMethod}'.");
 
                 if (Data.InterlaceMethod != 0 && Data.InterlaceMethod != 1)
-                    IssueModel.Add ("Invalid interlace '" + Data.InterlaceMethod + "'.");
+                    IssueModel.Add ($"Invalid interlace '{Data.InterlaceMethod}'.");
             }
 
 
@@ -215,19 +215,18 @@ namespace NongFormat
         }
 
         public override bool IsBadData
-        { get { return BadCrcCount != null && BadCrcCount.Value != 0; } }
-
+         => BadCrcCount != null && BadCrcCount.Value != 0;
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {
-            report.Add ("Dimensions = " + Width + 'x' + Height);
-            report.Add ("Color type = " + ColorType + " (" + ColorTypeText + ')');
+            report.Add ($"Dimensions = {Width}x{Height}");
+            report.Add ($"Color type = {ColorType} ({ColorTypeText})");
 
             if (scope <= Granularity.Detail)
             {
                 report.Add ("Gamma = " + (Gamma == null? "None" : Gamma.ToString()));
-                report.Add ("Bit depth = " + BitDepth);
-                report.Add ("Interlace method = " + InterlaceMethod);
+                report.Add ($"Bit depth = {BitDepth}");
+                report.Add ($"Interlace method = {InterlaceMethod}");
             }
 
             if (Texts.Count > 0)
@@ -255,13 +254,13 @@ namespace NongFormat
                     sb.AppendLine (chunk.Type);
                     sb.Append ("  size = ");
                     sb.AppendLine (chunk.Size.ToString());
-                    sb.AppendFormat ("  stored CRC-32 = 0x{0:X8}", chunk.StoredCRC);
+                    sb.Append ($"  stored CRC-32 = 0x{chunk.StoredCRC:X8}");
                     sb.AppendLine();
                     sb.Append ("  actual CRC-32 = ");
                     if (chunk.ActualCRC == null)
                         sb.Append ('?');
                     else
-                        sb.AppendFormat ("0x{0:X8}", chunk.ActualCRC.Value);
+                        sb.Append ($"0x{chunk.ActualCRC.Value:X8}");
                     report.Add (sb.ToString());
                 }
             }

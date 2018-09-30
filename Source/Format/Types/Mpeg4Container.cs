@@ -16,7 +16,7 @@ namespace NongFormat
         {
             public new Mpeg4Container Data => (Mpeg4Container) _data;
 
-            public Model()
+            protected Model()
             { }
 
             protected void ParseMpeg4 (Stream stream, byte[] buf, string path)
@@ -127,13 +127,13 @@ namespace NongFormat
 
                 // Wide boxes are rare.
                 if (Data.Wide != 0)
-                    IssueModel.Add ("Number of wide boxes=" + Data.Wide + ".", Severity.Trivia);
+                    IssueModel.Add ($"Number of wide boxes={Data.Wide}.", Severity.Trivia);
 
                 if (Data.ExcessSize == 0)
                 {
                     var unparsedSize = Data.FileSize - Data.ValidSize;
                     if (unparsedSize != 0)
-                        IssueModel.Add ("Possible watermark, size=" + unparsedSize + ".", Severity.Advisory);
+                        IssueModel.Add ($"Possible watermark, size={unparsedSize}.", Severity.Advisory);
                 }
             }
         }
@@ -153,13 +153,13 @@ namespace NongFormat
             if (report.Count != 0)
                 report.Add (String.Empty);
 
-            report.Add ("Brand = " + Brand);
+            report.Add ($"Brand = {Brand}");
 
             if (scope <= Granularity.Detail)
             {
-                report.Add ("moov blocks = " + Moov);
-                report.Add ("mdat blocks = " + Mdat);
-                report.Add ("free blocks = " + Free);
+                report.Add ($"moov blocks = {Moov}");
+                report.Add ($"mdat blocks = {Mdat}");
+                report.Add ($"free blocks = {Free}");
             }
         }
     }

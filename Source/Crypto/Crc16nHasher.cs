@@ -45,15 +45,11 @@ namespace NongCrypto
         private UInt16 crc;
 
         public Crc16nHasher()
-        {
-            crc = 0;
-        }
+         => crc = 0;
 
-        public override string Name
-        { get { return "Crc16n"; } }
+        public override string Name => "Crc16n";
 
-        public override uint HashLength
-        { get { return 2; } }
+        public override uint HashLength => 2;
 
         public override void Append (byte[] array, int offset, int count)
         {

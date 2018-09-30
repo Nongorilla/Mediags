@@ -9,10 +9,10 @@ namespace NongFormat
     public class AviFormat : RiffContainer
     {
         public static string[] Names
-        { get { return new string[] { "avi", "divx" }; } }
+         => new string[] { "avi", "divx" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -69,10 +69,10 @@ namespace NongFormat
             if (report.Count > 0 && scope <= Granularity.Detail)
                     report.Add (String.Empty);
 
-            report.Add ("Codec = " + Codec);
-            report.Add ("Resolution = " + Width + 'x' + Height);
+            report.Add ($"Codec = {Codec}");
+            report.Add ($"Resolution = {Width}x{Height}");
             if (scope <= Granularity.Detail)
-                report.Add ("Streams = " + StreamCount);
+                report.Add ($"Streams = {StreamCount}");
         }
     }
 }

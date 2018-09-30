@@ -10,10 +10,10 @@ namespace NongFormat
     public class CueFormat : FilesContainer
     {
         public static string[] Names
-        { get { return new string[] { "cue" }; } }
+         => new string[] { "cue" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -100,7 +100,7 @@ namespace NongFormat
             {
                 if (scope <= Granularity.Detail || report.Count != 0)
                     report.Add (String.Empty);
-                report.Add ("Catalog = " + Catalog);
+                report.Add ($"Catalog = {Catalog}");
             }
         }
     }

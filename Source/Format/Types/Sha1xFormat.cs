@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NongCrypto;
@@ -9,10 +8,10 @@ namespace NongFormat
     public class Sha1xFormat : HashesContainer
     {
         public static string[] Names
-        { get { return new string[] { "sha1x" }; } }
+         => new string[] { "sha1x" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -46,7 +45,6 @@ namespace NongFormat
                     HashedModel.AddActual (mp3Model.Data.Name, mp3Model.Data.MediaSHA1, HashStyle.Media);
             }
 
-
             public override void CalcHashes (Hashes hashFlags, Validations validationFlags)
             {
                 if (Data.Issues.HasFatal)
@@ -58,6 +56,7 @@ namespace NongFormat
                     ComputeContentHashes (new Sha1Hasher(), Hashes.MediaSHA1);
             }
         }
+
 
         private Sha1xFormat (Model model, Stream stream, string path) : base (model, stream, path, Encoding.UTF8)
          => Validation = Validations.SHA1;

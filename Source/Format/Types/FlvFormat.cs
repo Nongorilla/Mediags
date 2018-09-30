@@ -9,10 +9,10 @@ namespace NongFormat
     public class FlvFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "flv" }; } }
+         => new string[] { "flv" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -77,8 +77,8 @@ namespace NongFormat
 
 
         private byte flags;
-        public bool HasVideo { get { return (flags & 1) != 0; } }
-        public bool HasAudio { get { return (flags & 4) != 0; } }
+        public bool HasVideo => (flags & 1) != 0;
+        public bool HasAudio => (flags & 4) != 0;
         public int PacketCount { get; private set; }
 
         private FlvFormat (Model model, Stream stream, string path) : base (model, stream, path)
@@ -89,10 +89,10 @@ namespace NongFormat
             if (report.Count != 0)
                 report.Add (String.Empty);
 
-            report.Add ("Has audio = " + HasAudio);
-            report.Add ("Has video = " + HasVideo);
+            report.Add ($"Has audio = {HasAudio}");
+            report.Add ($"Has video = {HasVideo}");
             if (scope <= Granularity.Detail)
-                report.Add ("Packet count = " + PacketCount);
+                report.Add ($"Packet count = {PacketCount}");
         }
     }
 }

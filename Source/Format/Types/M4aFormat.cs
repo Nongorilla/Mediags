@@ -6,10 +6,10 @@ namespace NongFormat
     public class M4aFormat : Mpeg4Container
     {
         public static string[] Names
-        { get { return new string[] { "m4a" }; } }
+         => new string[] { "m4a" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {

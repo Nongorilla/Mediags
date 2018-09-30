@@ -132,7 +132,7 @@ namespace NongFormat
     public class EbmlNodeMaster : EbmlNode
     {
         private List<EbmlNode> nodes;
-        public IList<EbmlNode> Nodes { get { return nodes; } }
+        public IList<EbmlNode> Nodes => nodes;
 
         public EbmlNodeMaster (EbmlSig element, long size) : base (element)
         {
@@ -298,10 +298,10 @@ namespace NongFormat
     public class MkvFormat : FormatBase
     {
         public static string[] Names
-        { get { return new string[] { "mkv", "mka" }; } }
+         => new string[] { "mkv", "mka" };
 
         public override string[] ValidNames
-        { get { return Names; } }
+         => Names;
 
         public static Model CreateModel (Stream stream, byte[] hdr, string path)
         {
@@ -318,7 +318,6 @@ namespace NongFormat
             public Model (Stream stream, string path)
             {
                 base._data = Data = new MkvFormat (this, stream, path);
-                
                 var bb = new byte[5];
 
                 Data.fbs.Position = Data.ValidSize = 4;
@@ -342,7 +341,7 @@ namespace NongFormat
 
                 var diff = Data.ValidSize + SegmentLength - Data.FileSize;
                 if (diff > 0)
-                    IssueModel.Add ("File appears truncated by " + diff + " bytes.", Severity.Error);
+                    IssueModel.Add ($"File appears truncated by {diff} bytes.", Severity.Error);
 
                 Data.segment = new EbmlNodeMaster (segmentSig, SegmentLength);
                 Data.layout.Add (Data.segment);
@@ -401,7 +400,7 @@ namespace NongFormat
                         }
                     }
 
-                    string msg = String.Format ("Parse fail at 0x{0:X} on [{1:X2}][{2:X2}][{3:X2}][{4:X2}].", Data.ValidSize, bb[0], bb[1], bb[2], bb[3]);
+                    string msg = $"Parse fail at 0x{Data.ValidSize:X} on [{bb[0]:X2}][{bb[1]:X2}][{bb[2]:X2}][{bb[3]:X2}].";
                     IssueModel.Add (msg, Severity.Fatal);
                     return;
 
@@ -414,7 +413,7 @@ namespace NongFormat
                 {
                     // By spec, everything should be within a single Segment.
                     Data.HasMisplacedAttachment = true;
-                    IssueModel.Add (String.Format ("Misplaced attachment at {0:X}", Data.ValidSize), Severity.Warning);
+                    IssueModel.Add ($"Misplaced attachment at {Data.ValidSize:X}", Severity.Warning);
                 }
 
                 Data.fbs.Position = Data.ValidSize;
@@ -495,7 +494,7 @@ namespace NongFormat
                             goto NEXT;
                         }
                     }
-                    err = String.Format ("Unknown element [{0:X2}][{1:X2}][{2:X2}]", buf[0], buf[1], buf[2]);
+                    err = $"Unknown element [{buf[0]:X2}][{buf[1]:X2}][{buf[2]:X2}]";
                     goto FATAL;
                 NEXT:
                     newMaster.AddNode (newNode);
@@ -629,7 +628,7 @@ namespace NongFormat
             new EbmlSig (new byte[] { 0x12, 0x54, 0xC3, 0x67 }, "Tags")
         };
 
-        private static EbmlSig[] masterSigs =
+        private static readonly EbmlSig[] masterSigs =
         {
             // SeekHead:
             new EbmlSig (new byte[] { 0x4D, 0xBB }, "Seek"),
@@ -667,7 +666,7 @@ namespace NongFormat
             new EbmlSig (new byte[] { 0x46, 0x7E }, "FileDescription")
         };
 
-        private static EbmlSig[] leafSigs =
+        private static readonly EbmlSig[] leafSigs =
         {
             // EBML:
             new EbmlSig (new byte[] { 0x42, 0x86 }, EbmlType.Unsigned, "EBMLVersion",        ParseFlag.Persist),
@@ -803,14 +802,14 @@ namespace NongFormat
             new EbmlSig (new byte[] { 0x73, 0x73 }, EbmlType.Utf8, "Tag")
         };
 
-        public long EbmlVersion { get { return root.SeekForUnsigned (0x4286); } }
-        public long EbmlReadVersion { get { return root.SeekForUnsigned (0x42F7); } }
-        public long EbmlMaxIdLength { get { return root.SeekForUnsigned (0x42F2); } }
-        public long EbmlMaxSizeLength { get { return root.SeekForUnsigned (0x42F3); } }
-        public string DocType { get { return root.SeekForASCII (0x4282); } }
-        public long DocTypeVersion { get { return root.SeekForUnsigned (0x4287); } }
-        public long DocTypeReadVersion { get { return root.SeekForUnsigned (0x4285); } }
-        public string Codec { get { return segment.SeekForASCII (0x86); } }
+        public long EbmlVersion => root.SeekForUnsigned (0x4286);
+        public long EbmlReadVersion => root.SeekForUnsigned (0x42F7);
+        public long EbmlMaxIdLength => root.SeekForUnsigned (0x42F2);
+        public long EbmlMaxSizeLength => root.SeekForUnsigned (0x42F3);
+        public string DocType => root.SeekForASCII (0x4282);
+        public long DocTypeVersion => root.SeekForUnsigned (0x4287);
+        public long DocTypeReadVersion => root.SeekForUnsigned (0x4285);
+        public string Codec => segment.SeekForASCII (0x86);
 
         private List<EbmlNodeMaster> layout = new List<EbmlNodeMaster>();
         private EbmlNodeMaster root = null, segment = null;
@@ -822,7 +821,7 @@ namespace NongFormat
         { }
 
         public override bool IsBadData
-        { get { return badCrcCount != null && badCrcCount.Value != 0; } }
+         => badCrcCount != null && badCrcCount.Value != 0;
 
         public override void GetDetailsBody (IList<string> report, Granularity scope)
         {

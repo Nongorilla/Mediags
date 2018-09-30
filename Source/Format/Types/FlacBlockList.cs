@@ -20,18 +20,16 @@ namespace NongFormat
     public abstract class FlacBlockItem
     {
         public int Size { get; private set; }
-        public string Name { get { return BlockType.ToString(); } }
+        public string Name => BlockType.ToString();
 
         public FlacBlockItem (int size)
-        { this.Size = size; }
+         => Size = size;
 
         public abstract FlacBlockType BlockType
         { get; }
 
-        public override string ToString ()
-        {
-            return BlockType.ToString();
-        }
+        public override string ToString()
+         => BlockType.ToString();
     }
 
 
@@ -41,7 +39,7 @@ namespace NongFormat
         { }
 
         public override FlacBlockType BlockType
-        { get { return FlacBlockType.Padding; } }
+         => FlacBlockType.Padding;
     }
 
 
@@ -50,12 +48,10 @@ namespace NongFormat
         public int ApplicationId { get; private set; }
 
         public FlacAppBlock (int size, int appId) : base (size)
-        {
-            this.ApplicationId = appId;
-        }
+         => this.ApplicationId = appId;
 
         public override FlacBlockType BlockType
-        { get { return FlacBlockType.Application; } }
+         => FlacBlockType.Application;
     }
 
 
@@ -64,12 +60,10 @@ namespace NongFormat
         private byte[] table;
 
         public FlacSeekTableBlock (int size, byte[] table) : base (size)
-        {
-            this.table = table;
-        }
+         => this.table = table;
 
         public override FlacBlockType BlockType
-        { get { return FlacBlockType.SeekTable; } }
+         => FlacBlockType.SeekTable;
 
         public override string ToString ()
         {
@@ -158,7 +152,7 @@ namespace NongFormat
         }
 
         public override FlacBlockType BlockType
-        { get { return FlacBlockType.Tags; } }
+         => FlacBlockType.Tags;
     }
 
 
@@ -174,9 +168,9 @@ namespace NongFormat
         }
 
         public override FlacBlockType BlockType
-        { get { return FlacBlockType.CueSheet; } }
+         => FlacBlockType.CueSheet;
 
-        public override string ToString ()
+        public override string ToString()
         {
             string result = base.ToString();
             if (IsCD)
@@ -200,12 +194,10 @@ namespace NongFormat
         }
 
         public override FlacBlockType BlockType
-        { get { return FlacBlockType.Picture; } }
+         => FlacBlockType.Picture;
 
-        public override string ToString ()
-        {
-            return base.ToString() + " (" + PicType + "-" + Width + "x" + Height + ")";
-        }
+        public override string ToString()
+         => base.ToString() + " (" + PicType + "-" + Width + "x" + Height + ")";
     }
 
 

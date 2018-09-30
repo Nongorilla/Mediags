@@ -53,7 +53,7 @@ namespace AppController
         private IWpfFlacViewFactory viewFactory;
         private FlacDiags.Model model;
 
-        public static string UberGuide { get { return @"TRACKNUMBER
+        public static string UberGuide => @"TRACKNUMBER
 Required.  Must be digits only with no leading zeroes.  Must be sequential and the order must match the order of tracks in the EAC log.
 
 ALBUM
@@ -82,7 +82,6 @@ Optional.  May contain multiple entries.  If present, all entries must be consis
 
 BARCODE, CATALOGNUMBER, COMPILATION, ORGANIZATION
 Optional.  If present, must be consistent for all tracks.";
- } }
 
         public WpfFlacController (string[] args, IWpfFlacViewFactory viewFactory)
         {
@@ -91,13 +90,11 @@ Optional.  If present, must be consistent for all tracks.";
             InitializeComponent();
         }
 
-
         void Job (object sender, DoWorkEventArgs jobArgs)
         {
             var args = (FlacJobArgs) jobArgs.Argument;
             jobArgs.Result = model.ValidateFlacRip (args.Path, args.Signature, true, false);
         }
-
 
         void JobCompleted (object sender, RunWorkerCompletedEventArgs args)
         {
@@ -125,13 +122,12 @@ Optional.  If present, must be consistent for all tracks.";
                 md5Ctrl.history.ScrollToEnd();
         }
 
-
         //
         // Constructor continuation:
         //
         private void Controller_Loaded (object sender, RoutedEventArgs e)
         {
-            Title = ProductText + " v" + VersionText;
+            Title = $"{ProductText} v{VersionText}";
 
             string exeDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly().Location);
             Directory.SetCurrentDirectory (exeDir);
@@ -212,7 +208,7 @@ Optional.  If present, must be consistent for all tracks.";
                 }
 
                 if (! argOK)
-                    model.IssueModel.Add ("Ignoring argument '" + arg + "'.", Severity.Warning);
+                    model.IssueModel.Add ($"Ignoring argument '{arg}'.", Severity.Warning);
             }
 
             return 0;
@@ -229,7 +225,6 @@ Optional.  If present, must be consistent for all tracks.";
             }
         }
 
-
         public static string VersionText
         {
             get
@@ -241,7 +236,6 @@ Optional.  If present, must be consistent for all tracks.";
                 return result + "w";
             }
         }
-
 
         private NamingStrategy GetUserStrategy()
         {
@@ -258,7 +252,6 @@ Optional.  If present, must be consistent for all tracks.";
             return result;
         }
 
-
         private void Sign_Click (object sender, RoutedEventArgs e)
         {
             model.ResetTotals();
@@ -273,7 +266,6 @@ Optional.  If present, must be consistent for all tracks.";
             bg.RunWorkerCompleted += JobCompleted;
             bg.RunWorkerAsync (jobArgs);
         }
-
 
         private void CommitBtn_Click (object sender, RoutedEventArgs e)
         {
@@ -290,7 +282,6 @@ Optional.  If present, must be consistent for all tracks.";
             }
         }
 
-
         private FormatBase GetFormatFromTab (TabItem tab)
         {
             if (model.RipModel != null && tab != null)
@@ -303,7 +294,6 @@ Optional.  If present, must be consistent for all tracks.";
             }
             return null;
         }
-
 
         private void ShowIssues (TabItem tabItem)
         {
@@ -321,7 +311,6 @@ Optional.  If present, must be consistent for all tracks.";
             if (diagsList.Items.Count > 1)
                 diagsList.ScrollIntoView (diagsList.Items[diagsList.Items.Count-1]);
         }
-
 
         private void InfoTabs_SelectionChanged (object sender, SelectionChangedEventArgs args)
         {
@@ -345,7 +334,6 @@ Optional.  If present, must be consistent for all tracks.";
                 }
         }
 
-
         private WrapPanel stratWrap;
         private void StrategyWrap_Loaded (object sender, RoutedEventArgs rea)
         {
@@ -362,7 +350,6 @@ Optional.  If present, must be consistent for all tracks.";
                 });
         }
 
-
         private void Browse_Click (object sender, RoutedEventArgs e)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog() { Filter="EAC log files (*.log)|*.log" };
@@ -371,13 +358,11 @@ Optional.  If present, must be consistent for all tracks.";
                 pathBox.Text = dlg.FileName;
         }
 
-
         private void ConsoleClearBtn_Click (object sender, RoutedEventArgs e)
         {
             model.FormatModel.ResetTotals();
             consoleBox.Text = null;
         }
-
 
         private void ConsoleMinusBtn_Click (object sender, RoutedEventArgs e)
         {
@@ -386,14 +371,12 @@ Optional.  If present, must be consistent for all tracks.";
                 consoleBox.FontSize = newSize;
         }
 
-
         private void ConsolePlusBtn_Click (object sender, RoutedEventArgs e)
         {
             var newSize = consoleBox.FontSize + 1;
             if (newSize <= 60)
                 consoleBox.FontSize = newSize;
         }
-
 
         private void FileLbl_Drop (object sender, DragEventArgs e)
         {
@@ -424,7 +407,6 @@ Steps 5 and 6 are confirmed by analyzing the log and FLAC files.",
 
             var pp = new Popup() { Child=bx, Placement=PlacementMode.MousePoint, StaysOpen=false, IsOpen=true };
         }
-
 
         private void GuideBlock_MouseDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
         {

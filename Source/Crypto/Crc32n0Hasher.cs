@@ -45,15 +45,11 @@ namespace NongCrypto
         private UInt32 crc;
 
         public Crc32n0Hasher()
-        {
-            crc = 0;
-        }
+         => crc = 0;
 
-        public override string Name
-        { get { return "Crc32n0"; } }
+        public override string Name => "Crc32n0";
 
-        public override uint HashLength
-        { get { return 4; } }
+        public override uint HashLength => 4;
 
         public override void Append (byte[] data, int offset, int count)
         {

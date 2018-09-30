@@ -38,11 +38,9 @@ namespace NongMediaDiags
 
         public readonly FileFormat FlacFormat, LogFormat, M3uFormat, Md5Format;
 
-        public string NoncompliantName { get { return "--NOT COMPLIANT WITH STANDARD--.txt"; } }
-        public string FailPrefix { get { return "!!_ERRORS_!!"; } }
-
-        string IDataErrorInfo.Error
-        { get { return "Nevermore"; } }
+        public string NoncompliantName => "--NOT COMPLIANT WITH STANDARD--.txt";
+        public string FailPrefix => "!!_ERRORS_!!";
+        string IDataErrorInfo.Error => "Nevermore";
 
         string IDataErrorInfo.this[string propName]
         {
