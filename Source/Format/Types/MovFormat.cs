@@ -10,7 +10,7 @@ namespace NongFormat
         public override string[] ValidNames
          => Names;
 
-        public static FormatBase.ModelBase CreateModel (Stream stream, byte[] hdr, string path)
+        public static FormatBase.Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (hdr.Length >= 0x20)
                 if (hdr[4]=='m' && hdr[5]=='o' && hdr[6]=='o' && hdr[7]=='v')
@@ -22,7 +22,7 @@ namespace NongFormat
         }
 
 
-        public class Model : FormatBase.ModelBase
+        public new class Model : FormatBase.Model
         {
             public new readonly MovFormat Data;
 

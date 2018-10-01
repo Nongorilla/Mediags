@@ -12,7 +12,7 @@ namespace NongFormat
 
     public abstract class HashesContainer : FormatBase
     {
-        public class Model : FormatBase.ModelBase
+        public new class Model : FormatBase.Model
         {
             public readonly HashedFile.Vector.Model HashedModel;
             public new HashesContainer Data => (HashesContainer) _data;

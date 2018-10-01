@@ -7,7 +7,7 @@ namespace NongFormat
 {
     public abstract class FilesContainer : FormatBase
     {
-        public abstract class Model : FormatBase.ModelBase
+        public abstract new class Model : FormatBase.Model
         {
             public readonly FileItem.Vector.Model FilesModel;
             public new FilesContainer Data => (FilesContainer) _data;

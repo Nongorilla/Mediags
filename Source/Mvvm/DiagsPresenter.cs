@@ -161,7 +161,7 @@ namespace AppViewModel
 
                 try
                 {
-                    foreach (FormatBase.ModelBase parsing in CheckRoot())
+                    foreach (FormatBase.Model parsing in CheckRoot())
                         if (parsing != null)
                             if (Data.tabInfo.TryGetValue (parsing.Data.NamedFormat, out TabInfo tInfo))
                             {

@@ -27,13 +27,13 @@ namespace NongFormat
     [DebuggerDisplay (@"\{{Name}}")]
     public abstract class FormatBase : INotifyPropertyChanged
     {
-        public class ModelBase
+        public class Model
         {
             protected FormatBase _data;
             public FormatBase Data => _data;
             public Issue.Vector.Model IssueModel { get; private set; }
 
-            public ModelBase()
+            public Model()
              => IssueModel = new Issue.Vector.Model();
 
             public virtual void CalcHashes (Hashes hashFlags, Validations validationFlags)
@@ -309,7 +309,7 @@ namespace NongFormat
             this.FileSize = stream.Length;
         }
 
-        protected FormatBase (ModelBase model, Stream stream, string path) : this (stream, path)
+        protected FormatBase (Model model, Stream stream, string path) : this (stream, path)
          => this.Issues = model.IssueModel.Data;
 
         public abstract string[] ValidNames
@@ -360,7 +360,7 @@ namespace NongFormat
         /// <param name="fs0">Handle to stream of unknown type.</param>
         /// <param name="path">Full name of fs0.</param>
         /// <returns>Abstract superclass of new instance.</returns>
-        static public FormatBase.ModelBase CreateModel
+        static public FormatBase.Model CreateModel
         (IList<FileFormat> formats, Stream fs0, string path,
             Hashes hashFlags, Validations validationFlags, string filter,
             out bool isKnown, out FileFormat actual)
@@ -368,7 +368,7 @@ namespace NongFormat
             isKnown = false;
             actual = null;
 
-            FormatBase.ModelBase model = null;
+            FormatBase.Model model = null;
             var isMisname = false;
             var ext = System.IO.Path.GetExtension (path);
             if (ext.Length < 2)

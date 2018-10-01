@@ -47,7 +47,7 @@ namespace NongFormat
         }
 
 
-        public class Model : FormatBase.ModelBase
+        public new class Model : FormatBase.Model
         {
             public new readonly IcoFormat Data;
 

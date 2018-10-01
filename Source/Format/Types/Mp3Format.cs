@@ -25,7 +25,7 @@ namespace NongFormat
         }
 
 
-        public class Model : FormatBase.ModelBase
+        public new class Model : FormatBase.Model
         {
             public Mp3XingBlock.Model XingModel { get; private set; }
             public Mp3LameBlock.Model LameModel { get; private set; }

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace NongFormat
 {
-    public delegate FormatBase.ModelBase FormatModelFactory (Stream stream, byte[] header, string path);
+    public delegate FormatBase.Model FormatModelFactory (Stream stream, byte[] header, string path);
 
     public class FileFormat
     {

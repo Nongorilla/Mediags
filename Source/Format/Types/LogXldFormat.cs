@@ -25,7 +25,7 @@ namespace NongFormat
         }
 
 
-        public partial class Model : FormatBase.ModelBase
+        public new class Model : FormatBase.Model
         {
             public new readonly LogXldFormat Data;
             public LogEacTrack.Vector.Model TracksModel;

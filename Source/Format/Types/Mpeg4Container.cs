@@ -12,7 +12,7 @@ namespace NongFormat
     /// </summary>
     public abstract class Mpeg4Container : FormatBase
     {
-        public abstract class Model : FormatBase.ModelBase
+        public abstract new class Model : FormatBase.Model
         {
             public new Mpeg4Container Data => (Mpeg4Container) _data;
 

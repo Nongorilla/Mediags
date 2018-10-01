@@ -80,7 +80,7 @@ namespace NongFormat
 
     public partial class LogEacFormat : FormatBase
     {
-        public partial class Model : FormatBase.ModelBase
+        public new partial class Model : FormatBase.Model
         {
             public static bool ToInt (string source, int offset, out int result)
             {

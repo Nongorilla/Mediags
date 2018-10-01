@@ -21,7 +21,7 @@ namespace NongFormat
             return null;
         }
 
-        public class Model : FormatBase.ModelBase
+        public new class Model : FormatBase.Model
         {
             public new readonly AsfFormat Data;
 

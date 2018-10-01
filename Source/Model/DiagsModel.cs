@@ -110,7 +110,7 @@ namespace NongMediaDiags
                                     var parm = meth.GetParameters();
                                     while (ret.BaseType != typeof (System.Object))
                                         ret = ret.BaseType;
-                                    if (ret == typeof (FormatBase.ModelBase) && parm.Length==3
+                                    if (ret == typeof (FormatBase.Model) && parm.Length==3
                                             && parm[0].ParameterType == typeof (Stream)
                                             && parm[1].ParameterType == typeof (System.Byte[])
                                             && parm[2].ParameterType == typeof (String))
@@ -251,7 +251,7 @@ namespace NongMediaDiags
             }
 
 
-            private bool RepairFile (FormatBase.ModelBase formatModel)
+            private bool RepairFile (FormatBase.Model formatModel)
             {
                 bool result = false;
 

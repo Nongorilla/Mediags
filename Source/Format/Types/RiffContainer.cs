@@ -6,7 +6,7 @@ namespace NongFormat
 {
     public abstract class RiffContainer : FormatBase
     {
-        public abstract class Model : FormatBase.ModelBase
+        public abstract new class Model : FormatBase.Model
         {
             public new RiffContainer Data => (RiffContainer) _data;
 

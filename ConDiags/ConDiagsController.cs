@@ -88,7 +88,7 @@ namespace AppController
                 try
                 {
 #endif
-                    foreach (FormatBase.ModelBase fmtModel in model.CheckRoot())
+                    foreach (FormatBase.Model fmtModel in model.CheckRoot())
                     { }
                     exitCode = (int) model.Data.Result;
 #if ! DEBUG

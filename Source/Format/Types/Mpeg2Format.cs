@@ -16,7 +16,7 @@ namespace NongFormat
         public override string[] ValidNames
          => Names;
 
-        public static FormatBase.ModelBase CreateModel (Stream stream, byte[] hdr, string path)
+        public static FormatBase.Model CreateModel (Stream stream, byte[] hdr, string path)
         {
             if (hdr.Length >= 0x28)
                 if (hdr[0]==0 && hdr[1]==0 && hdr[2]==1 && (hdr[3]==0xB3 || hdr[3]==0xBA))
@@ -29,7 +29,7 @@ namespace NongFormat
         }
 
 
-        private class Model : FormatBase.ModelBase
+        private new class Model : FormatBase.Model
         {
             public new readonly Mpeg2Format Data;
 

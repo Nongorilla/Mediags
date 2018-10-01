@@ -11,7 +11,7 @@ namespace NongMediaDiags
     {
         public partial class Model
         {
-            public IEnumerable<FormatBase.ModelBase> CheckRoot()
+            public IEnumerable<FormatBase.Model> CheckRoot()
             {
                 FileAttributes atts;
 
@@ -26,7 +26,7 @@ namespace NongMediaDiags
                 if ((atts & FileAttributes.Directory) == FileAttributes.Directory)
                 {
                     Data.Result = Severity.NoIssue;
-                    foreach (FormatBase.ModelBase fmtModel in CheckRootDir())
+                    foreach (FormatBase.Model fmtModel in CheckRootDir())
                         yield return fmtModel;
                 }
                 else
@@ -39,7 +39,7 @@ namespace NongMediaDiags
                 }
             }
 
-            private IEnumerable<FormatBase.ModelBase> CheckRootDir()
+            private IEnumerable<FormatBase.Model> CheckRootDir()
             {
                 foreach (string dn in new DirTraverser (Data.Root))
                 {
@@ -48,7 +48,7 @@ namespace NongMediaDiags
 
                     foreach (FileInfo fInfo in fileInfos)
                     {
-                        FormatBase.ModelBase fmtModel;
+                        FormatBase.Model fmtModel;
                         try
                         {
                             // Many exceptions also caught by outer caller:
@@ -71,13 +71,13 @@ namespace NongMediaDiags
             }
 
 
-            private FormatBase.ModelBase CheckFile (Stream stream, string path, out Severity resultCode)
+            private FormatBase.Model CheckFile (Stream stream, string path, out Severity resultCode)
             {
                 SetCurrentFile (Path.GetDirectoryName (path), Path.GetFileName (path));
 
                 bool isKnownExtension;
                 FileFormat trueFormat;
-                FormatBase.ModelBase fmtModel = null;
+                FormatBase.Model fmtModel = null;
                 try
                 {
                     fmtModel = FormatBase.CreateModel (Data.FileFormats.Items, stream, path, Data.HashFlags, Data.ValidationFlags,
