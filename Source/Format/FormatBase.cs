@@ -319,11 +319,11 @@ namespace NongFormat
         public virtual bool IsBadData => false;
 
         protected byte[] metaSHA1 = null;
-        public string NonmediaSHA1ToHex() => metaSHA1==null ? null : ConvertTo.ToHexString (metaSHA1);
+        public string NonmediaSHA1ToHex => metaSHA1==null ? null : ConvertTo.ToHexString (metaSHA1);
 
         protected byte[] mediaSHA1 = null;
         public byte[] MediaSHA1 { get { var cp = new byte[mediaSHA1.Length]; mediaSHA1.CopyTo (cp, 0); return cp; } }
-        public string MediaSHA1ToHex() => mediaSHA1==null ? null : ConvertTo.ToHexString (mediaSHA1);
+        public string MediaSHA1ToHex => mediaSHA1==null ? null : ConvertTo.ToHexString (mediaSHA1);
         public bool HasMediaSHA1 => mediaSHA1 != null;
 
         private byte[] fileMD5 = null;
@@ -479,14 +479,14 @@ namespace NongFormat
 
             if (mediaSHA1 != null)
             {
-                var ms1 = $"Media SHA1= {MediaSHA1ToHex()}";
+                var ms1 = $"Media SHA1= {MediaSHA1ToHex}";
                 if (scope <= Granularity.Detail && mediaPosition >= 0)
                     ms1 += $" ({mediaPosition:X4}-{mediaPosition+MediaCount-1:X4})";
                 report.Add (ms1);
             }
 
             if (metaSHA1 != null)
-                report.Add ($"Meta SHA1 = {NonmediaSHA1ToHex()}");
+                report.Add ($"Meta SHA1 = {NonmediaSHA1ToHex}");
 
             if (fileMD5 != null)
                 report.Add ($"File MD5  = {FileMD5ToHex}");
