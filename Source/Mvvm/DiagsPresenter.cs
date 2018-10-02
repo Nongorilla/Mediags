@@ -39,6 +39,7 @@ namespace AppViewModel
 
         public int CurrentTabNumber { get; set; }
         public M3uFormat M3u { get; private set; }
+        public Md5Format Md5 { get; private set; }
         public Mp3Format Mp3 { get; private set; }
         public OggFormat Ogg { get; private set; }
         public Sha1Format Sha1 { get; private set; }
@@ -146,6 +147,8 @@ namespace AppViewModel
                     Data.Ogg = ogg;
                 else if (fmt is Sha1Format sha1)
                     Data.Sha1 = sha1;
+                else if (fmt is Md5Format md5)
+                    Data.Md5 = md5;
 
                 TabInfo ti = Data.tabInfo[fmt.ValidNames[0]];
                 Data.CurrentTabNumber = ti.TabPosition;

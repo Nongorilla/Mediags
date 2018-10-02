@@ -66,6 +66,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Md5Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Sha1Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -106,6 +110,9 @@
     </Compile>
     <Compile Include="Controls\M3uControl.xaml.cs">
       <DependentUpon>M3uControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Md5Control.xaml.cs">
+      <DependentUpon>Md5Control.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Mp3Control.xaml.cs">
       <DependentUpon>Mp3Control.xaml</DependentUpon>

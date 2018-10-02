@@ -140,6 +140,18 @@
                 </TabItem.Style>
                 <app:M3uControl/>
             </TabItem>
+            <TabItem Header=".md5" HorizontalAlignment="Left">
+                <TabItem.Style>
+                    <Style TargetType="TabItem">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Md5}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabItem.Style>
+                <app:Md5Control/>
+            </TabItem>
             <TabItem x:Name="mp3Tab" Header=".mp3" HorizontalAlignment="Left" Margin="0" Width="57">
                 <TabItem.Style>
                     <Style TargetType="TabItem">
