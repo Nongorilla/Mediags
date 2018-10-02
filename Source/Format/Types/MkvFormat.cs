@@ -726,6 +726,7 @@ namespace NongFormat
             new EbmlSig (new byte[] { 0x6D, 0xE7 }, EbmlType.Unsigned, "MinCache"),
             new EbmlSig (new byte[] { 0x6D, 0xF8 }, EbmlType.Unsigned, "MaxCache"),
             new EbmlSig (new byte[] { 0x23, 0xE3, 0x83 }, EbmlType.Unsigned, "DefaultDuration"),
+            new EbmlSig (new byte[] { 0x23, 0x31, 0x4F }, EbmlType.Float, "TrackTimecodeScale"),
             new EbmlSig (new byte[] { 0x55, 0xEE }, EbmlType.Unsigned, "MaxBlockAdditionID"),
             new EbmlSig (new byte[] { 0x53, 0x6E }, EbmlType.Utf8,     "Name",              ParseFlag.Persist),
             new EbmlSig (new byte[] { 0x22, 0xB5, 0x9C }, EbmlType.Ascii, "Language",       ParseFlag.Persist),
