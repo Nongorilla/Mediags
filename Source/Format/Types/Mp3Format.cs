@@ -357,15 +357,20 @@ namespace NongFormat
                     hash = hasher.GetHashAndReset();
                     LameModel.SetActualDataCrc (BitConverter.ToUInt16 (hash, 0));
 
-                    if (Data.IsBadHeader)
-                        Data.ChIssue = IssueModel.Add ("CRC-16 check failed on audio header.", Severity.Error, IssueTags.Failure);
-
-                    if (Data.IsBadData)
-                        Data.CdIssue = IssueModel.Add ("CRC-16 check failed on audio data.", Severity.Error, IssueTags.Failure);
-                    else if (Data.IsBadHeader)
-                        Data.CdIssue = IssueModel.Add ("CRC-16 check successful on audio data.", Severity.Noise, IssueTags.Success);
-                    else
+                    if (! Data.IsBadData && ! Data.IsBadHeader)
                         Data.ChIssue = Data.CdIssue = IssueModel.Add ("CRC-16 checks successful.", Severity.Noise, IssueTags.Success);
+                    else
+                    {
+                        if (Data.IsBadHeader)
+                            Data.ChIssue = IssueModel.Add ("CRC-16 check failed on audio header.", Severity.Error, IssueTags.Failure);
+                        else
+                            Data.ChIssue = IssueModel.Add ("CRC-16 check successful on audio header.", Severity.Noise, IssueTags.Success);
+
+                        if (Data.IsBadData)
+                            Data.CdIssue = IssueModel.Add ("CRC-16 check failed on audio data.", Severity.Error, IssueTags.Failure);
+                        else
+                            Data.CdIssue = IssueModel.Add ("CRC-16 check successful on audio data.", Severity.Noise, IssueTags.Success);
+                    }
                 }
 
                 base.CalcHashes (hashFlags, validationFlags);
