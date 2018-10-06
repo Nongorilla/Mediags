@@ -158,9 +158,17 @@ namespace AppViewModel
 
             public void Parse()
             {
-                string err = null;
-                TabInfo firstTInfo = null;
-                int firstParsingIx = 0;
+                var bg = new BackgroundWorker();
+                bg.DoWork += Job;
+                bg.RunWorkerCompleted += JobCompleted;
+                bg.RunWorkerAsync();
+            }
+
+            TabInfo firstTInfo = null;
+            int firstParsingIx = 0;
+            void Job (object sender, DoWorkEventArgs jobArgs)
+            {
+                jobArgs.Result = (string) null;
 
                 try
                 {
@@ -174,9 +182,14 @@ namespace AppViewModel
                             }
                 }
                 catch (IOException ex)
-                { err = ex.Message; }
+                { jobArgs.Result = ex.Message; }
                 catch (ArgumentException ex)
-                { err = ex.Message; }
+                { jobArgs.Result = ex.Message; }
+            }
+
+            void JobCompleted (object sender, RunWorkerCompletedEventArgs args)
+            {
+                var err = (string) args.Result;
 
                 if (err != null)
                     Ui.ShowLine (err, Severity.Error, Likeliness.None);

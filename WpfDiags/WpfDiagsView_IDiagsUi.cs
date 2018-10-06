@@ -62,6 +62,16 @@ namespace AppView
 
         public void ShowLine (string message, Severity severity, Likeliness repairability)
         {
+            if (! Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke
+                (
+                    new Action<string,Severity,Likeliness> ((m, s, r) => ShowLine (m, s, r)),
+                    new object[] { message, severity, repairability }
+                );
+                return;
+            }
+
             if (! fileShown)
             {
                 fileShown = true;
