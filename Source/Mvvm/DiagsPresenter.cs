@@ -38,6 +38,7 @@ namespace AppViewModel
         private SortedList<string,TabInfo> tabInfo = new SortedList<string,TabInfo>();
 
         public int CurrentTabNumber { get; set; }
+        public int JobCounter { get; private set; } = 0;  // For unit tests.
         public M3uFormat M3u { get; private set; }
         public Md5Format Md5 { get; private set; }
         public Mp3Format Mp3 { get; private set; }
@@ -199,6 +200,8 @@ namespace AppViewModel
                     firstTInfo.SetIndex (firstParsingIx);
                     RefreshTab (firstTInfo.Current);
                 }
+
+                ++Data.JobCounter;
             }
         }
     }
