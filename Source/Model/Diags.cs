@@ -7,7 +7,7 @@ using NongFormat;
 
 namespace NongMediaDiags
 {
-    public enum Interaction { None, PromptToRepair };
+    public enum Interaction { None, PromptToRepair, RepairLater };
 
     public delegate void MessageSendHandler (string message, Severity severity, Likeliness repairability);
     public delegate void ReportCloseHandler ();
@@ -31,7 +31,7 @@ namespace NongMediaDiags
         public string Root { get; set; }
         public string Filter { get; private set; }
         public string Exclusion { get; private set; }
-        public Interaction Response { get; private set; }
+        public Interaction Response { get; protected set; }
         public Granularity Scope { get; set; }
         public Hashes HashFlags { get; set; }
         public Validations ValidationFlags { get; set; }

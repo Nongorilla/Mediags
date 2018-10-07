@@ -31,7 +31,7 @@ namespace NongMediaDiags
                 }
                 else
                 {
-                    var access = Data.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
+                    var access = Data.Response != Interaction.None ? FileAccess.ReadWrite : FileAccess.Read;
                     Stream st = new FileStream (Data.Root, FileMode.Open, access, FileShare.Read);
                     var fmtModel = CheckFile (st, Data.Root, out Severity result);
                     Data.Result = result;
@@ -52,7 +52,7 @@ namespace NongMediaDiags
                         try
                         {
                             // Many exceptions also caught by outer caller:
-                            var access = Data.Response == Interaction.PromptToRepair ? FileAccess.ReadWrite : FileAccess.Read;
+                            var access = Data.Response != Interaction.None ? FileAccess.ReadWrite : FileAccess.Read;
                             Stream stream = new FileStream (fInfo.FullName, FileMode.Open, access, FileShare.Read);
                             fmtModel = CheckFile (stream, fInfo.FullName, out Severity badness);
                             if (badness > Data.Result)
