@@ -214,7 +214,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UberApps"
         "ProductCode" = "8:{0A3E3D17-0DD7-47C2-A9F5-BFDBE1FAA93A}"
-        "PackageCode" = "8:{9DC4E868-6DF3-41D7-B6E7-8B5C1992C1CB}"
+        "PackageCode" = "8:{3B98038B-914C-4827-9CA5-2681A41A99E2}"
         "UpgradeCode" = "8:{3901ED70-4515-492C-B113-99858FADD3AF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -395,7 +395,7 @@
                                                     "Condition" = "8:CHECKBOXA2"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /verify:web \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /i:.pun /verify:web \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -431,7 +431,7 @@
                                                     "Condition" = "8:CHECKBOXA1 and CHECKBOXC1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /verify:web /sig:[EDITA1] /logtag \"/out:[TARGETDIR]UL-EAC1x.txt\" \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /i:.pun /verify:web /sig:[EDITA1] /logtag \"/out:[TARGETDIR]UL-EAC1x.txt\" \"%L\"\""
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_2026A1C3FA6F42078FA05AC786E07196"
                                                     {
@@ -439,7 +439,7 @@
                                                     "Condition" = "8:CHECKBOXA1 and not CHECKBOXC1"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /verify:web /sig:[EDITA1] /logtag \"%L\"\""
+                                                    "Value" = "8:cmd /T:2F /k \"\"[TARGETDIR]uberlame.exe\" /g:[BUTTON3] /i:.pun /verify:web /sig:[EDITA1] /logtag \"%L\"\""
                                                     }
                                                 }
                                             }
@@ -602,7 +602,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_936411EDA600470596C18D07BB1211E2"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_15DF4AD18878421582851D5EE0AE8587"
             {
             "Name" = "8:UberFLAC GUI"
             "Arguments" = "8:/sig:[EDITA1] /g:[BUTTON3]"
@@ -2371,7 +2371,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_16554790F6EC4BCF8F45272614464AD2"
             {
-            "SourcePath" = "8:..\\WpfFlac\\obj\\Debug\\WpfFlac.exe"
+            "SourcePath" = "8:..\\WpfFlac\\obj\\Release\\WpfFlac.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2399,7 +2399,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B0ED8D49DDC14A13BF472F85A8D1A075"
             {
-            "SourcePath" = "8:..\\ConDiags\\obj\\Debug\\mediags.exe"
+            "SourcePath" = "8:..\\ConDiags\\obj\\Release\\mediags.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2427,7 +2427,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CBE85B58C8E74378B9DE47C7D631A3DE"
             {
-            "SourcePath" = "8:..\\ConFlac\\obj\\Debug\\uberflac.exe"
+            "SourcePath" = "8:..\\ConFlac\\obj\\Release\\uberflac.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2455,7 +2455,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FE92816674AA466DA5C9380CD032203C"
             {
-            "SourcePath" = "8:..\\ConLame\\obj\\Debug\\uberlame.exe"
+            "SourcePath" = "8:..\\ConLame\\obj\\Release\\uberlame.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
