@@ -11,13 +11,28 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ThemeDarkDiags.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="issuesTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content=" Repair " Command="{Binding DoRepair}" Margin="3,0,0,0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasRepairer}" Value="false">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsRepairable}" Value="false">
+                                        <Setter Property="IsEnabled" Value="false" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <TextBlock Text="{Binding Path=FixedMessage}" />
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ListBox Grid.Row="3" ItemsSource="{Binding Issues.Items, Mode=OneWay}" DisplayMemberPath="FixedMessage" app:Extender.ScrollToBottom="True">
-        <ListBox.Resources>
-            <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource darkHeader}"/>
-            <Style TargetType="ListView" BasedOn="{StaticResource darkListView}"/>
-        </ListBox.Resources>
+    <ListBox ItemsSource="{Binding Issues.Items}" ItemTemplate="{StaticResource issuesTemplate}">
         <ListBox.ItemContainerStyle>
             <Style TargetType="{x:Type ListBoxItem}">
                 <Setter Property="FontSize" Value="12"/>
@@ -25,7 +40,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
-                            <ContentPresenter/>
+                            <ContentPresenter />
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

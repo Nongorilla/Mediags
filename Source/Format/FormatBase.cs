@@ -178,7 +178,7 @@ namespace NongFormat
 
             /// <summary>Attempt to change this file's extension to Names[0].</summary>
             /// <returns>Error text if failure; null if success.</returns>
-            public string RepairWrongExtension()
+            public string RepairWrongExtension (bool isFinalRepair)
             {
                 if (Data.Issues.HasFatal || Data.ValidNames.Length == 0)
                     return "Invalid attempt";
@@ -192,6 +192,8 @@ namespace NongFormat
                 try
                 {
                     File.Move (Data.Path, newPath);
+                    if (isFinalRepair)
+                        CloseFile();
                 }
                 catch (UnauthorizedAccessException ex)
                 { return ex.Message.TrimEnd (null); }
@@ -214,7 +216,7 @@ namespace NongFormat
             }
 
 
-            public string TrimWatermark()
+            public string TrimWatermark (bool isFinalRepair)
             {
                 if (Data.Issues.MaxSeverity >= Severity.Error || Data.Watermark != Likeliness.Probable)
                     return "Invalid attempt";
@@ -228,6 +230,8 @@ namespace NongFormat
                         using (Data.fbs = new FileStream (Data.Path, FileMode.Open, FileAccess.Write, FileShare.Read))
                         {
                             result = TrimWatermarkUpdate();
+                            if (isFinalRepair)
+                                CloseFile();
                         }
                     }
                     finally { Data.fbs = null; }
@@ -448,7 +452,7 @@ namespace NongFormat
                             // This repair should go last because it must close the file.
                             ++actual.TotalMisnamed;
                             model.IssueModel.Add ("True file format is ." + actual.PrimaryName, Severity.Warning, 0,
-                                                  "Rename to extension of ." + actual.PrimaryName, model.RepairWrongExtension);
+                                                  "Rename to extension of ." + actual.PrimaryName, model.RepairWrongExtension, true);
                         }
                     }
 

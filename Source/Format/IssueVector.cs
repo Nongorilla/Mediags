@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+#if MVVM
+using Nong.Mvvm;
+#endif
 
 namespace NongIssue
 {
@@ -55,7 +58,7 @@ namespace NongIssue
                  => Data = new Issue.Vector (warnEscalator, errEscalator);
 
                 public Issue Add (string message, Severity severity=Severity.Error, IssueTags tag=IssueTags.None,
-                                  string prompt=null, Func<string> repairer=null)
+                                  string prompt=null, Func<bool,string> repairer=null, bool isFinalRepairer=false)
                 {
                     System.Diagnostics.Debug.Assert ((prompt==null) == (repairer==null));
 
@@ -67,7 +70,7 @@ namespace NongIssue
                         ++Data.RepairableCount;
                     }
 
-                    var issue = new Issue (Data, message, severity, tag, prompt, repairer);
+                    var issue = new Issue (this, message, severity, tag, prompt, repairer, isFinalRepairer);
                     Data.items.Add (issue);
 
                     Severity level = issue.Level;
@@ -104,21 +107,27 @@ namespace NongIssue
                     Data.Items = new ReadOnlyObservableCollection<Issue> (Data.items);
                 }
 
-                public bool RepairerEquals (int index, Func<string> other)
+                public bool RepairerEquals (int index, Func<bool,string> other)
                  => Data.items[index].Repairer == other;
 
                 public string Repair (int index)
                 {
                     var issue = Data.items[index];
                     if (! issue.IsRepairable)
-                        return null;
+                        return "Error: Not repairable.";
 
-                    issue.RepairError = issue.Repairer();
+                    issue.RepairError = issue.Repairer (Data.RepairableCount <= 1 || issue.IsFinalRepairer);
                     issue.IsRepairSuccessful = issue.RepairError == null;
-                    if (issue.IsRepairSuccessful.Value == true)
+                    issue.NotifyPropertyChanged (null);
+                    if (! issue.IsFinalRepairer)
                         --Data.RepairableCount;
-
-                    Data.NotifyPropertyChanged (nameof (FixedMessage));
+                    else
+                    {
+                        Data.RepairableCount = 0;
+                        foreach (var item in Data.items)
+                            if (item.Repairer != null && item.IsRepairSuccessful == null)
+                                item.NotifyPropertyChanged (null);
+                    }
                     return issue.RepairError;
                 }
             }
@@ -134,41 +143,45 @@ namespace NongIssue
             public IssueTags ErrEscalator { get; private set; }
             public Severity MaxSeverity { get; private set; }
             public Issue Severest { get; private set; }
-
-            private int repairableCount;
-            public int RepairableCount
-            {
-                get { return repairableCount; }
-                set { repairableCount = value; NotifyPropertyChanged (nameof (RepairableCount)); }
-            }
+            public int RepairableCount { get; private set; }
 
             public bool HasError => MaxSeverity >= Severity.Error;
             public bool HasFatal => MaxSeverity >= Severity.Fatal;
         }
 
-        private readonly Vector owner;
+        private readonly Vector.Model owner;
 
+        public int Index { get; private set; }
         public string Message { get; private set; }
         public Severity BaseLevel { get; private set; }
         public IssueTags Tag { get; private set; }
         public string RepairPrompt { get; private set; }
         public string RepairError { get; private set; }
-        private Func<string> Repairer { get; set; }
+        private Func<bool,string> Repairer { get; set; }
+        public bool IsFinalRepairer { get; private set; }
         public bool? IsRepairSuccessful { get; private set; }
+#if MVVM
+        public System.Windows.Input.ICommand DoRepair { get; private set; }
+#endif
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged (string propName)
         { if (PropertyChanged != null) PropertyChanged (this, new PropertyChangedEventArgs (propName)); }
 
-        public Issue (Vector owner, string message, Severity level=Severity.Advisory, IssueTags tag=IssueTags.None,
-                      string prompt=null, Func<string> repairer=null)
+        private Issue (Vector.Model owner, string message, Severity level=Severity.Advisory, IssueTags tag=IssueTags.None,
+                      string prompt=null, Func<bool,string> repairer=null, bool isFinalRepairer=false)
         {
             this.owner = owner;
+            this.Index = owner.Data.Items.Count;
             this.Message = message;
             this.BaseLevel = level;
             this.Tag = tag;
             this.RepairPrompt = prompt;
             this.Repairer = repairer;
+            this.IsFinalRepairer = isFinalRepairer;
+#if MVVM
+            DoRepair = repairer == null ? null : new RelayCommand (() => owner.Repair (Index));
+#endif
         }
 
         public Severity Level
@@ -177,9 +190,9 @@ namespace NongIssue
             {
                 Severity result = BaseLevel;
                 if (result < Severity.Error)
-                    if ((Tag & owner.ErrEscalator) != 0)
+                    if ((Tag & owner.Data.ErrEscalator) != 0)
                         result = Severity.Error;
-                    else if ((Tag & owner.WarnEscalator) != 0)
+                    else if ((Tag & owner.Data.WarnEscalator) != 0)
                         result = Severity.Warning;
                 return result;
             }
@@ -202,7 +215,8 @@ namespace NongIssue
 
         public bool Failure => (Tag & IssueTags.Failure) != 0;
         public bool Success => (Tag & IssueTags.Success) != 0;
-        public bool IsRepairable => Repairer != null && IsRepairSuccessful != true;
+        public bool HasRepairer => Repairer != null;
+        public bool IsRepairable => owner.Data.RepairableCount > 0 && Repairer != null && IsRepairSuccessful == null;
         public bool IsReportable (Granularity granularity) => (int) Level >= (int) granularity;
         public override string ToString() => FixedMessage;
     }

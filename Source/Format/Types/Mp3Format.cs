@@ -377,7 +377,7 @@ namespace NongFormat
             }
 
 
-            public string RepairPhantomTag()
+            public string RepairPhantomTag (bool isFinalRepair)
             {
                 Debug.Assert (Data.fbs != null);
                 if (Data.fbs == null || Data.Issues.MaxSeverity >= Severity.Error || ! Data.HasId3v1Phantom)
@@ -391,6 +391,9 @@ namespace NongFormat
                     // Overwrite the prior penultimate v1 with the just truncated v1 tag.
                     Data.fbs.Position = Data.FileSize - 128;
                     Data.fbs.Write (Data.id3v1Block, 0, 128);
+
+                    if (isFinalRepair)
+                        CloseFile();
                 }
                 catch (UnauthorizedAccessException ex)
                 { result = ex.Message.TrimEnd (null); }
@@ -401,7 +404,7 @@ namespace NongFormat
             }
 
 
-            public string RepairId3v2OffBy1()
+            public string RepairId3v2OffBy1 (bool isFinalRepair)
             {
                 Debug.Assert (Data.fbs != null);
                 if (Data.fbs == null || Data.Issues.MaxSeverity >= Severity.Error || Data.storedId3v2DataSize == Data.actualId3v2DataSize)
@@ -417,6 +420,9 @@ namespace NongFormat
                     Data.fbs.Write (bb, 0, 2);
                     Data.Id3v2TagRepair = null;
                     Data.storedId3v2DataSize = Data.actualId3v2DataSize;
+
+                    if (isFinalRepair)
+                        CloseFile();
                 }
                 catch (UnauthorizedAccessException ex)
                 { result = ex.Message.TrimEnd (null); }

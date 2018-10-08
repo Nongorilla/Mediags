@@ -27,7 +27,7 @@ namespace UnitTest
                 Assert.AreEqual (2, mp3.Issues.Items.Count);
                 Assert.IsTrue (mp3.HasId3v1Phantom);
 
-                var repairMessage = mp3Model.RepairPhantomTag();
+                var repairMessage = mp3Model.RepairPhantomTag (true);
                 Assert.IsNull (repairMessage);
 
                 mp3Model.CalcHashes (Hashes.Intrinsic, Validations.None);
