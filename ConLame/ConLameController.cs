@@ -123,6 +123,11 @@ namespace AppController
                     if (argOK)
                         model.Data.Scope = arg;
                 }
+                else if (args[an].StartsWith ("/i:"))
+                {
+                    model.Data.Bypass = args[an].Substring (3);
+                    argOK = true;
+                }
                 else if (args[an] == "/k")
                 {
                     argOK = true;
@@ -221,7 +226,7 @@ namespace AppController
             Console.WriteLine (ProductText + " v" + VersionText);
             Console.WriteLine ();
             Console.WriteLine ("Usage:");
-            Console.WriteLine ($"{exe} [/fussy] [/g:<granularity>] [/k] [/logtag] [/out:<mirror>] [/p:<n>] [/safety:<n>] [/sig:<signature>] [/verify[:web]] <directory>");
+            Console.WriteLine ($"{exe} [/fussy] [/g:<granularity>] [/i:<ext>] [/k] [/logtag] [/out:<mirror>] [/p:<n>] [/safety:<n>] [/sig:<signature>] [/verify[:web]] <directory>");
             Console.WriteLine ();
             Console.WriteLine ("Where <directory> is a relative or absolute directory name without wildcards.");
             Console.Write ("Where <granularity> from ");
@@ -235,6 +240,9 @@ namespace AppController
 
             Console.WriteLine ();
             Console.WriteLine ("Use /g:verbose to get more feedback.");
+
+            Console.WriteLine ();
+            Console.WriteLine ("Use /i:.foo to ignore directories containing any file ending with .foo.");
 
             Console.WriteLine ();
             Console.WriteLine ("Use /k to wait for keypress before exiting.");

@@ -10,6 +10,7 @@ namespace NongMediaDiags
 {
     public partial class LameDiags : Diags
     {
+        public string Bypass { get; set; } = null;
         public int StopAfter { get; set; } = 3;
 
         public bool WillProve

@@ -121,11 +121,19 @@ namespace NongMediaDiags
                     Bind.digInfos = Bind.Dir.GetFiles ("*.sha1x");
                     Bind.m3uInfos = Bind.Dir.GetFiles ("*.m3u").Where (lf => lf.Name.EndsWith (".m3u")).ToArray();
                     Bind.m3u8Infos = Bind.Dir.GetFiles ("*.m3u8");
+                    if (! String.IsNullOrEmpty (Owner.Data.Bypass))
+                        Bind.bypassInfos = Bind.Dir.GetFiles ("*" + Owner.Data.Bypass);
                 }
                 catch (IOException ex)
                 {
                     Owner.ReportLine (ex.Message.Trim (null), Severity.Fatal);
                     Bind.Status = Severity.Fatal;
+                    return;
+                }
+
+                if (Bind.bypassInfos != null && Bind.bypassInfos.Length > 0)
+                {
+                    Owner.ReportLine ($"Ignoring directory containing file ending with '{Owner.Data.Bypass}'.", Severity.Advisory);
                     return;
                 }
 
@@ -590,7 +598,7 @@ namespace NongMediaDiags
 
 
         private IList<Mp3Format.Model> mp3Models;
-        private FileInfo[] logInfos, mp3Infos, digInfos, m3uInfos, m3u8Infos;
+        private FileInfo[] logInfos, mp3Infos, digInfos, m3uInfos, m3u8Infos, bypassInfos;
         public LogEacFormat Log { get; private set; }
         public Sha1xFormat Sha1x { get; private set; }
 
