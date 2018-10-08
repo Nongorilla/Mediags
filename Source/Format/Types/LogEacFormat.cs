@@ -820,7 +820,7 @@ namespace NongFormat
 
                 case NamingStrategy.ShortTitle:
                     if (isVarious)
-                        dirtyName = "- " + TaggedAlbum + " - " + date;
+                        dirtyName = TaggedAlbum + " - " + date;
                     else
                         dirtyName = CalcedAlbumArtist + " - " + date + " - " + TaggedAlbum;
                     break;
