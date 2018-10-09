@@ -101,7 +101,7 @@ namespace NongFormat
                             if (buf[4]=='m' && buf[5]=='d' && buf[6]=='a' && buf[7]=='t')
                             {
                                 // Sometimes there is a dummy header of 8 bytes of 0, then an mdat header.
-                                IssueModel.Add ("Has dummy mdat header", Severity.Trivia);
+                                IssueModel.Add ("Has dummy mdat header.", Severity.Noise);
                                 ++Data.Mdat;
                                 Data.ValidSize += 8;
                             }
@@ -127,7 +127,7 @@ namespace NongFormat
 
                 // Wide boxes are rare.
                 if (Data.Wide != 0)
-                    IssueModel.Add ($"Number of wide boxes={Data.Wide}.", Severity.Trivia);
+                    IssueModel.Add ($"Number of wide boxes={Data.Wide}.", Severity.Noise);
 
                 if (Data.ExcessSize == 0)
                 {
