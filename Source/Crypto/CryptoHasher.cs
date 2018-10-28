@@ -198,7 +198,7 @@ namespace NongCrypto
         public override void Append (byte[] data, int offset, int count)
         {
             if (count != 0)
-                hasher.TransformBlock (data, offset, count, data, 0);
+                hasher.TransformBlock (data, offset, count, data, offset);
         }
 
         static readonly byte[] bb0 = new byte[0];
