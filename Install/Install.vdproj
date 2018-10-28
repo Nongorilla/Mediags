@@ -213,22 +213,22 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UberApps"
-        "ProductCode" = "8:{67E4A401-D8D8-472D-B16F-ACEB35F1BFA5}"
-        "PackageCode" = "8:{0760C87E-E01C-49FE-A6E4-BEDE60DEAAFD}"
+        "ProductCode" = "8:{CA001E1F-9ECB-4FEB-B092-86181488AF2F}"
+        "PackageCode" = "8:{2D8698DE-BBBC-45EE-AB08-E670797C079F}"
         "UpgradeCode" = "8:{3901ED70-4515-492C-B113-99858FADD3AF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:4.3.0"
+        "ProductVersion" = "8:4.3.1"
         "Manufacturer" = "8:Nongorilla"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/Nongorilla/Mediags/issues"
         "Title" = "8:UberApps"
         "Subject" = "8:"
         "ARPCONTACT" = "8:github.com/Nongorilla"
-        "Keywords" = "8:v4.3.0.0"
+        "Keywords" = "8:v4.3.1.0"
         "ARPCOMMENTS" = "8:github.com/Nongorilla/Mediags"
         "ARPURLINFOABOUT" = "8:https://github.com/Nongorilla"
         "ARPPRODUCTICON" = "8:"
@@ -2371,7 +2371,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_16554790F6EC4BCF8F45272614464AD2"
             {
-            "SourcePath" = "8:..\\WpfFlac\\obj\\Release\\WpfFlac.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2399,7 +2399,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B0ED8D49DDC14A13BF472F85A8D1A075"
             {
-            "SourcePath" = "8:..\\ConDiags\\obj\\Release\\mediags.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2427,7 +2427,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CBE85B58C8E74378B9DE47C7D631A3DE"
             {
-            "SourcePath" = "8:..\\ConFlac\\obj\\Release\\uberflac.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
@@ -2455,7 +2455,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FE92816674AA466DA5C9380CD032203C"
             {
-            "SourcePath" = "8:..\\ConLame\\obj\\Release\\uberlame.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_73E7C649AC8F4287A33EABF085EF17FD"
