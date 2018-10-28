@@ -37,22 +37,12 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Format", "Source\Format\For
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Install", "Install\Install.vdproj", "{B23B4FE2-F914-402A-AD21-883A0F0F03DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDiags", "WpfDiags\WpfDiags.csproj", "{2E05183E-BF24-4CB2-955B-CBE246B5CF72}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DiagsMvvm", "Source\Mvvm\DiagsMvvm.shproj", "{F18EBDAB-D473-4B8A-9CC3-68A34B8ED463}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harness400", "Harness400\Harness400.csproj", "{B677D3DB-51D5-4997-8F24-0A0B7190A066}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Source\Crypto\Crypto.projitems*{19c19080-68d4-4bf6-8831-177e1a4f39f1}*SharedItemsImports = 13
 		Source\FlacModel\FlacModel.projitems*{2d10089e-71d1-4abf-8d96-985f7f84992d}*SharedItemsImports = 13
-		Source\Crypto\Crypto.projitems*{2e05183e-bf24-4cb2-955b-cbe246b5cf72}*SharedItemsImports = 4
-		Source\DiagsModel\DiagsModel.projitems*{2e05183e-bf24-4cb2-955b-cbe246b5cf72}*SharedItemsImports = 4
-		Source\Format\Format.projitems*{2e05183e-bf24-4cb2-955b-cbe246b5cf72}*SharedItemsImports = 4
-		Source\Model\Model.projitems*{2e05183e-bf24-4cb2-955b-cbe246b5cf72}*SharedItemsImports = 4
-		Source\Mvvm\Mvvm.projitems*{2e05183e-bf24-4cb2-955b-cbe246b5cf72}*SharedItemsImports = 4
-		Source\SystemIo\SystemIo.projitems*{2e05183e-bf24-4cb2-955b-cbe246b5cf72}*SharedItemsImports = 4
 		Source\Format\Format.projitems*{5ff37940-0914-4ad9-84c8-f7d6582199b3}*SharedItemsImports = 13
 		Source\Crypto\Crypto.projitems*{65230103-7586-4cac-b899-57c35ea056f3}*SharedItemsImports = 4
 		Source\DiagsModel\DiagsModel.projitems*{65230103-7586-4cac-b899-57c35ea056f3}*SharedItemsImports = 4
@@ -81,12 +71,10 @@ Global
 		Source\FlacModel\FlacModel.projitems*{b677d3db-51d5-4997-8f24-0a0b7190a066}*SharedItemsImports = 4
 		Source\Format\Format.projitems*{b677d3db-51d5-4997-8f24-0a0b7190a066}*SharedItemsImports = 4
 		Source\Model\Model.projitems*{b677d3db-51d5-4997-8f24-0a0b7190a066}*SharedItemsImports = 4
-		Source\Mvvm\Mvvm.projitems*{b677d3db-51d5-4997-8f24-0a0b7190a066}*SharedItemsImports = 4
 		Source\SystemIo\SystemIo.projitems*{b677d3db-51d5-4997-8f24-0a0b7190a066}*SharedItemsImports = 4
 		Source\Model\Model.projitems*{d9ce09ba-a0b7-4d92-ad0b-207c8b7bcb29}*SharedItemsImports = 13
 		Source\SystemIo\SystemIo.projitems*{e1fef0b7-1f2c-4aae-a280-b2f4f299e302}*SharedItemsImports = 13
 		Source\DiagsModel\DiagsModel.projitems*{e31d2b5e-7c26-4616-b752-40a9ee5ec14c}*SharedItemsImports = 13
-		Source\Mvvm\Mvvm.projitems*{f18ebdab-d473-4b8a-9cc3-68a34b8ed463}*SharedItemsImports = 13
 		Source\LameModel\LameModel.projitems*{f2df5c67-60ab-40bc-92dc-33f3c502127b}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -138,12 +126,6 @@ Global
 		{B23B4FE2-F914-402A-AD21-883A0F0F03DD}.Debug|Any CPU.ActiveCfg = Debug
 		{B23B4FE2-F914-402A-AD21-883A0F0F03DD}.Dev|Any CPU.ActiveCfg = Debug
 		{B23B4FE2-F914-402A-AD21-883A0F0F03DD}.Release|Any CPU.ActiveCfg = Release
-		{2E05183E-BF24-4CB2-955B-CBE246B5CF72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E05183E-BF24-4CB2-955B-CBE246B5CF72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E05183E-BF24-4CB2-955B-CBE246B5CF72}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E05183E-BF24-4CB2-955B-CBE246B5CF72}.Dev|Any CPU.Build.0 = Debug|Any CPU
-		{2E05183E-BF24-4CB2-955B-CBE246B5CF72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E05183E-BF24-4CB2-955B-CBE246B5CF72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B677D3DB-51D5-4997-8F24-0A0B7190A066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B677D3DB-51D5-4997-8F24-0A0B7190A066}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B677D3DB-51D5-4997-8F24-0A0B7190A066}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
@@ -164,7 +146,6 @@ Global
 		{E31D2B5E-7C26-4616-B752-40A9EE5EC14C} = {2EADBF38-5917-4944-9263-8CE2B5F24DDE}
 		{E1FEF0B7-1F2C-4AAE-A280-B2F4F299E302} = {2EADBF38-5917-4944-9263-8CE2B5F24DDE}
 		{5FF37940-0914-4AD9-84C8-F7D6582199B3} = {2EADBF38-5917-4944-9263-8CE2B5F24DDE}
-		{F18EBDAB-D473-4B8A-9CC3-68A34B8ED463} = {2EADBF38-5917-4944-9263-8CE2B5F24DDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D336D56E-2F5C-494B-9F82-1678F940F7BC}

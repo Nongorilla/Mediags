@@ -45,7 +45,6 @@
   </ItemGroup>
   <Import Project="..\Source\Crypto\Crypto.projitems" Label="Shared" />
   <Import Project="..\Source\DiagsModel\DiagsModel.projitems" Label="Shared" />
-  <Import Project="..\Source\Mvvm\Mvvm.projitems" Label="Shared" />
   <Import Project="..\Source\FlacModel\FlacModel.projitems" Label="Shared" />
   <Import Project="..\Source\Format\Format.projitems" Label="Shared" />
   <Import Project="..\Source\Model\Model.projitems" Label="Shared" />
