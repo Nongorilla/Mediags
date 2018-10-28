@@ -151,8 +151,8 @@ namespace AppController
                 }
                 else if (args[an].StartsWith ("/h:"))
                 {
-                    var arg = Hashes.None;
-                    argOk = Enum.TryParse<Hashes> (args[an].Substring (3), true, out arg);
+                    argOk = Enum.TryParse<Hashes> (args[an].Substring (3), true, out Hashes arg);
+                    argOk = argOk && arg == (arg & (Hashes.WebCheck - 1));
                     if (argOk)
                         hashes = arg;
                 }
