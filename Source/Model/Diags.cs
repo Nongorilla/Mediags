@@ -221,22 +221,5 @@ namespace NongMediaDiags
             if (FileVisit != null)
                 FileVisit (directoryName, fileName);
         }
-
-        public static string FormatDomainVersionText
-        {
-            get
-            {
-#if NETFX_CORE
-                Assembly assembly = typeof (FormatBase).GetTypeInfo().Assembly;
-                string result = assembly.GetName().Version.ToString();
-#else
-                var assembly = Assembly.GetExecutingAssembly();
-                string result = assembly.GetName().Version.ToString();
-#endif
-                if (result.Length > 3 && result.EndsWith (".0"))
-                    result = result.Substring (0, result.Length-2);
-                return result;
-            }
-        }
     }
 }
