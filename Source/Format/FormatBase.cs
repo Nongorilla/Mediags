@@ -91,19 +91,15 @@ namespace NongFormat
 
                 if ((hashFlags & Hashes.MetaSHA1) != 0 && Data.metaSHA1 == null)
                 {
-                    if (Data.MediaCount == 0 && Data.fileSHA1 != null)
-                        Data.metaSHA1 = Data.fileSHA1;
+                    var hasher = new Sha1Hasher();
+                    var suffixPos = Data.mediaPosition + Data.MediaCount;
+
+                    if (hitCache)
+                        hasher.Append (Data.fBuf, 0, (int) Data.mediaPosition, (int) suffixPos, (int) (Data.FileSize - suffixPos));
                     else
-                    {
-                        var hasher = new Sha1Hasher();
-                        var suffixPos = Data.mediaPosition + Data.MediaCount;
-                        if (Data.mediaPosition > 0 || suffixPos < Data.FileSize)
-                            if (hitCache)
-                                hasher.Append (Data.fBuf, 0, (int) Data.mediaPosition, (int) suffixPos, (int) (Data.FileSize - suffixPos));
-                            else
-                                hasher.Append (Data.fbs, 0, Data.mediaPosition, suffixPos, Data.FileSize - suffixPos);
-                        Data.metaSHA1 = hasher.GetHashAndReset();
-                    }
+                        hasher.Append (Data.fbs, 0, Data.mediaPosition, suffixPos, Data.FileSize - suffixPos);
+
+                    Data.metaSHA1 = hasher.GetHashAndReset();
                 }
             }
 
@@ -323,6 +319,7 @@ namespace NongFormat
         public virtual bool IsBadData => false;
 
         protected byte[] metaSHA1 = null;
+        public byte[] MetaSHA1 { get { var cp = new byte[metaSHA1.Length]; metaSHA1.CopyTo (cp, 0); return cp; } }
         public string NonmediaSHA1ToHex => metaSHA1==null ? null : ConvertTo.ToHexString (metaSHA1);
 
         protected byte[] mediaSHA1 = null;
@@ -445,6 +442,12 @@ namespace NongFormat
                     FormatBase fmt = model.Data;
                     if (! fmt.Issues.HasFatal)
                     {
+                        if (fmt.mediaPosition < 0)
+                        {
+                            fmt.mediaPosition = 0;
+                            fmt.MediaCount = fmt.FileSize;
+                        }
+
                         model.CalcHashes (hashFlags, validationFlags);
 
                         if (isMisname)
