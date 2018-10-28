@@ -40,10 +40,20 @@ namespace NongFormat
                                 IssueModel.Add ("Ignoring URL '" + name + "'.", Severity.Trivia);
                             else
                             {
-                                if (! System.IO.Path.IsPathRooted (item.Name))
-                                    name = Data.Files.RootDir + System.IO.Path.DirectorySeparatorChar + name;
-                                else if (Data.ForbidRooted)
-                                    IssueModel.Add ("File is rooted: '" + item.Name + "'.");
+                                try
+                                {
+                                    if (! System.IO.Path.IsPathRooted (name))
+                                        name = Data.Files.RootDir + System.IO.Path.DirectorySeparatorChar + name;
+                                    else if (Data.ForbidRooted)
+                                        IssueModel.Add ("File is rooted: '" + item.Name + "'.");
+                                }
+                                catch (ArgumentException ex)
+                                {
+                                    IssueModel.Add ($"Malformed file name '{name}': {ex.Message}");
+                                    FilesModel.SetIsFound (ix, false);
+                                    ++notFoundTotal;
+                                    continue;
+                                }
 
                                 // Exists doesn't seem to throw any exceptions, so no try/catch.
                                 bool isFound = File.Exists (name);
