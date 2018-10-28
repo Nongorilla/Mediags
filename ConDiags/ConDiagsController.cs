@@ -90,6 +90,7 @@ namespace AppController
 #endif
                     foreach (FormatBase.Model fmtModel in model.CheckRoot())
                     { }
+                    model.Data.OnReportClose();
                     exitCode = (int) model.Data.Result;
 #if ! DEBUG
                 }
